@@ -1,3 +1,5 @@
+import { Review } from "../../components/Review/Review";
+
 export function Landing() {
 
     return (
@@ -23,7 +25,7 @@ export function Landing() {
 
                 </div>
 
-
+                <Review />
             </html>
         </>
     )
