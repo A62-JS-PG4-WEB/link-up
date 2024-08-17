@@ -1,11 +1,15 @@
 import './App.css'
+import { Footer } from './components/Footer/Footer.jsx'
+import { Nav } from './components/Nav/Nav.jsx'
 
 function App() {
 
   return (
-    <h1 className="text-4xl font-bold text-red-800">
-      link up
-    </h1>
+    <>
+      <Nav />
+      <Footer />
+    </>
+
   )
 }
 
