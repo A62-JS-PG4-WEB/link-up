@@ -20,7 +20,10 @@ export function Landing() {
                             <button className="btn btn-primary">Get Started</button>
                         </div>
                     </div>
+
                 </div>
+
+
             </html>
         </>
     )
