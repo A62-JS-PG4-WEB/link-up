@@ -1,13 +1,16 @@
 
 
+
+
 export function Nav() {
 
     return (
 
         <>
+
             <div className="navbar bg-base-100">
                 <div className="flex-1">
-                    <a className="btn btn-ghost text-xl" data-theme="night">LinkUP</a>
+                    <a className="btn btn-ghost text-xl">LinkUP</a>
                 </div>
                 <div className="flex-none gap-2">
                     <div className="form-control">
@@ -37,6 +40,8 @@ export function Nav() {
                     </div>
                 </div>
             </div>
+
+
         </>
 
     )
