@@ -6,7 +6,7 @@ export const getUserByUsername = async (handle) => {
   return snapshot.val();
 };
 
-export const createUserUsername = async (username, uid, email) => {
+export const createUserUsername = async (username, uid, email, phone) => {
   const user = { username, uid, email, phone, createdOn: new Date().toString() };
   await set(ref(db, `users/${username}`), user);
 };

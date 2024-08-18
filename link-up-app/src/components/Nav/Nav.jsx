@@ -1,6 +1,19 @@
+import { NavLink, useNavigate } from "react-router-dom";
 import { Counter } from "../Counter/Counter";
+import { useContext } from "react";
+import { AppContext } from "../../state/app.context";
+import { logoutUser } from "../../services/auth.service";
 
 export function Nav() {
+    const { user, userData, setAppState } = useContext(AppContext);
+  const navigate = useNavigate();
+
+  const logout = async () => {
+    await logoutUser();
+    setAppState({ user: null, userData: null });
+    navigate('/register');
+  };
+  
     return (
         <div className="navbar bg-base-100">
             {/* Left section with LinkUP */}
@@ -31,7 +44,8 @@ export function Nav() {
                     <ul
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                        <li>
+                       <nav>
+                       <li>
                             <a className="justify-between">
                                 Profile
                                 <span className="badge">New</span>
@@ -39,8 +53,10 @@ export function Nav() {
                         </li>
                         <li><a>Settings</a></li>
                         <li><a>Login</a></li>
-                        <li><a>Register</a></li>
-                        <li><a>Logout</a></li>
+                        <li><a>{!user && <NavLink to="/register">Register</NavLink>}</a></li>
+                <li><a>{user && <button onClick={logout}>Logout</button>}</a></li>
+                        </nav>
+                       
                     </ul>
                 </div>
             </div>
