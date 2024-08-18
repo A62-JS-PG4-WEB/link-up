@@ -38,6 +38,8 @@ export function Nav() {
                             </a>
                         </li>
                         <li><a>Settings</a></li>
+                        <li><a>Login</a></li>
+                        <li><a>Register</a></li>
                         <li><a>Logout</a></li>
                     </ul>
                 </div>
