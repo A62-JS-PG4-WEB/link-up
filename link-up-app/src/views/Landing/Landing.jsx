@@ -5,7 +5,7 @@ export function Landing() {
     return (
 
         <>
-            <html data-theme="light dark">
+            <div data-theme="light dark">
 
                 <div
                     className="hero min-h-screen"
@@ -26,7 +26,7 @@ export function Landing() {
                 </div>
 
                 <Review />
-            </html>
+            </div>
         </>
     )
 }

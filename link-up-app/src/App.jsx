@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { AppContext } from './state/app.context.js'
 import { auth } from './config/firebase-config.js'
+import Login from './views/Login/Login.jsx'
 
 
 function App() {
@@ -27,9 +28,11 @@ function App() {
     <AppContext.Provider value={{ ...appState, setAppState }}>
             <Nav />
             <Routes>
-              <Route>
+          
+                 {/* <Route path="/" element={<Landing />} /> */}
+              <Route path='/login' element={!user && <Login />} />        
               <Route path='/register' element={!user && <Register />} />
-              </Route>
+             
             </Routes>
       <Landing />
       <Footer />
