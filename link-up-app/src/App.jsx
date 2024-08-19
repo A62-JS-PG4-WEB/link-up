@@ -28,13 +28,11 @@ function App() {
     <AppContext.Provider value={{ ...appState, setAppState }}>
             <Nav />
             <Routes>
-          
-                 {/* <Route path="/" element={<Landing />} /> */}
+                 <Route path='/' element={!user && < Landing />} />
               <Route path='/login' element={!user && <Login />} />        
               <Route path='/register' element={!user && <Register />} />
-             
             </Routes>
-      <Landing />
+    
       <Footer />
       </AppContext.Provider>
       </BrowserRouter>
