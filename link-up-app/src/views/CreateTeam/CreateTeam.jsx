@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../state/app.context";
-import { createTeam, teamUserOwner } from "../../services/teams.service";
+import { createOwnerships, createTeam, getOwnership, teamUserOwner } from "../../services/teams.service";
 
 export default function Teams() {
     const [team, setTeam] = useState({ name: '' });
@@ -28,16 +28,14 @@ export default function Teams() {
 
         try {
             const id = await createTeam(team.name.trim());
-            await teamUserOwner(id, userData.username)
+            const ownershipId = await createOwnerships('owner')
+            await teamUserOwner(id, userData.username, ownershipId);
             setTeam({ name: '' });
             console.log('success creating team');
-
 
         } catch (error) {
             console.error(error.message);
         }
-
-
     };
 
     return (
