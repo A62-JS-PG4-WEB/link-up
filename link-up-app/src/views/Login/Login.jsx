@@ -23,7 +23,7 @@ export default function Login() {
         e.preventDefault(); 
 
         if (!user.email || !user.password) {
-            return toast.error('No credentials provided!');
+            return console.error('No credentials provided!');
         }
 
         try {
@@ -32,11 +32,10 @@ export default function Login() {
                 user: credentials.user,
                 userData: null,
             });
-            navigate(location.state?.from?.pathname ?? '/');
+            navigate('/create-team');
             console.log('Successfully logged in');
         } catch (error) {
-            toast.error(error.message);
-            console.error('Login error:', error.message);
+           console.error('Login error:', error.message);
         }
     };
 
