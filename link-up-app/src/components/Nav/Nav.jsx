@@ -31,39 +31,40 @@ export function Nav() {
                 <div className="form-control">
                     <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
                 </div>
+                
                 <input type="checkbox" value="synthwave" className="toggle theme-controller" />
-                <div className="dropdown dropdown-end">
-                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                        <div className="w-10 rounded-full">
-                            <img
-                                alt="User avatar"
-                                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                            />
-                        </div>
-                    </div>
-                    <ul
-                        tabIndex={0}
-                        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                        {/* Navigation items */}
-                        <li>
-                            <NavLink to="/profile" className="justify-between">
-                                Profile
-                                <span className="badge">New</span>
-                            </NavLink>
-                        </li>
-                        <li><NavLink to="/settings">Settings</NavLink></li>
-                        <li>
-                            {!user ? (
-                                <NavLink to="/login">Login</NavLink>
+                {user ? (
+                                 <div className="dropdown dropdown-end">
+                                 <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                                     <div className="w-10 rounded-full">
+                                         <img
+                                             alt="User avatar"
+                                             src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                                         />
+                                     </div>
+                                 </div>
+                                 <ul
+                                     tabIndex={0}
+                                     className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                                     {/* Navigation items */}
+                                     <li>
+                                         <NavLink to="/profile" className="justify-between">
+                                             Profile
+                                             <span className="badge">New</span>
+                                         </NavLink>
+                                     </li>
+                                     <li><NavLink to="/settings">Settings</NavLink></li>
+                                     <button onClick={logout} className="btn btn-ghost">Logout</button>
+                                </ul>
+                             </div>
                             ) : (
-                                <button onClick={logout} className="btn btn-ghost">Logout</button>
+                                 <>
+                                 <NavLink to="/login">Log in</NavLink>
+                                 <button className="btn btn-active btn-ghost"> <NavLink to="/register">Sign up</NavLink></button>
+                                 
+                                 </>
                             )}
-                        </li>
-                        <li>
-                            {!user && <NavLink to="/register">Register</NavLink>}
-                        </li>
-                    </ul>
-                </div>
+                
             </div>
         </div>
     );
