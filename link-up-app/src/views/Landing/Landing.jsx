@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import { Review } from "../../components/Review/Review";
 
 export function Landing() {
@@ -19,7 +20,7 @@ export function Landing() {
                             <p className="mb-5">
                                 Connecting people, one message at a time. Whether you're collaborating with your team, catching up with friends, or building new communities, LinkUP makes communication seamless and fun. Dive in and start connecting today!
                             </p>
-                            <button className="btn btn-primary">Get Started</button>
+                            <button className="btn btn-primary"><NavLink to="/register">Get Started</NavLink></button>
                         </div>
                     </div>
 

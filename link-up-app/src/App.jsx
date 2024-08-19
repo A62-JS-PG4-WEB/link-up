@@ -22,19 +22,23 @@ function App() {
     setAppState({ ...appState, user });
   }
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
-    <BrowserRouter>
-    <AppContext.Provider value={{ ...appState, setAppState }}>
-            <Nav />
-            <Routes>
-                 <Route path='/' element={!user && < Landing />} />
-              <Route path='/login' element={!user && <Login />} />        
-              <Route path='/register' element={!user && <Register />} />
-            </Routes>
-    
-      <Footer />
-      </AppContext.Provider>
+      <BrowserRouter>
+        <AppContext.Provider value={{ ...appState, setAppState }}>
+          <Nav />
+          <Routes>
+            <Route path='/' element={!user && < Landing />} />
+            <Route path='/login' element={!user && <Login />} />
+            <Route path='/register' element={!user && <Register />} />
+          </Routes>
+
+          <Footer />
+        </AppContext.Provider>
       </BrowserRouter>
     </>
 
