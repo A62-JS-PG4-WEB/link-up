@@ -20,8 +20,7 @@ export function Nav() {
             <div className="flex items-center">
                 <a className="btn btn-ghost text-xl">LinkUP</a>
             </div>
-
-            {/* Center section with Counter */}
+            Center section with Counter
             <div className="flex-1 flex justify-center items-center">
                 <Counter />
             </div>
@@ -33,7 +32,7 @@ export function Nav() {
                 </div>
                 
                 <input type="checkbox" value="synthwave" className="toggle theme-controller" />
-                {user ? (
+                {user ? ( 
                                  <div className="dropdown dropdown-end">
                                  <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                                      <div className="w-10 rounded-full">

@@ -9,6 +9,8 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { AppContext } from './state/app.context.js'
 import { auth } from './config/firebase-config.js'
 import Login from './views/Login/Login.jsx'
+import Teams from './views/CreateTeam/CreateTeam.jsx'
+import { getUserData } from './services/users.service.js'
 
 
 function App() {
@@ -16,11 +18,30 @@ function App() {
     user: null,
     userData: null,
   });
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
 
   if (appState.user !== user) {
     setAppState({ ...appState, user });
   }
+
+
+    useEffect(() => {
+    if (!user) return;
+
+    const fetchUserData = async () => {
+      try {
+        const data = await getUserData(user.uid);
+        const userData = data[Object.keys(data)[0]];
+        console.log(userData);
+        
+        setAppState(prevState => ({ ...prevState, userData }));
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, [user]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -35,6 +56,7 @@ function App() {
             <Route path='/' element={!user && < Landing />} />
             <Route path='/login' element={!user && <Login />} />
             <Route path='/register' element={!user && <Register />} />
+            <Route path='/create-team' element={user && <Teams />} />
           </Routes>
 
           <Footer />
