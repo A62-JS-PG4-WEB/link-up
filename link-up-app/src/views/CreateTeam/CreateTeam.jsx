@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../state/app.context";
-import { createOwnerships, createTeam, getOwnership, teamUserOwner } from "../../services/teams.service";
+import { createTeam, getTeams } from "../../services/teams.service";
+import { MAX_TEAM_NAME_LENGTH, MIN_TEAM_NAME_LENGTH } from "../../common/constants";
 
 export default function Teams() {
     const [team, setTeam] = useState({ name: '' });
@@ -26,13 +27,21 @@ export default function Teams() {
     const handleCreateTeam = async (e) => {
         e.preventDefault();
 
-        try {
-            const id = await createTeam(team.name.trim());
-            const ownershipId = await createOwnerships('owner')
-            await teamUserOwner(id, userData.username, ownershipId);
-            setTeam({ name: '' });
-            console.log('success creating team');
+        if (team.name.length < MIN_TEAM_NAME_LENGTH || team.name.length > MAX_TEAM_NAME_LENGTH) {
+            alert(`Team name must be between ${MIN_TEAM_NAME_LENGTH} and ${MAX_TEAM_NAME_LENGTH}`);
+            return;
+        }
 
+        try {
+            const existentTeam = await getTeams(team.name);
+            if (existentTeam) {
+                alert(`Team ${team.name} already exists`);
+                return
+            }
+
+            await createTeam(team.name.trim(), userData.username, userData.username);
+            setTeam({ name: '' });
+            
         } catch (error) {
             console.error(error.message);
         }
