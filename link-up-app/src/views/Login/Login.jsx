@@ -20,7 +20,7 @@ export default function Login() {
     };
 
     const login = async (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
 
         if (!user.email || !user.password) {
             return console.error('No credentials provided!');
@@ -32,10 +32,9 @@ export default function Login() {
                 user: credentials.user,
                 userData: null,
             });
-            navigate('/create-team');
-            console.log('Successfully logged in');
+            navigate('/home');
         } catch (error) {
-           console.error('Login error:', error.message);
+            console.error('Login error:', error.message);
         }
     };
 
@@ -49,7 +48,7 @@ export default function Login() {
                         className="mx-auto h-10 w-auto"
                     />
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                    Log in to LinkUP
+                        Log in to LinkUP
                     </h2>
                 </div>
 
