@@ -11,6 +11,7 @@ import { auth } from './config/firebase-config.js'
 import Login from './views/Login/Login.jsx'
 import Teams from './views/CreateTeam/CreateTeam.jsx'
 import { getUserData } from './services/users.service.js'
+import Home from './views/Home/Home.jsx'
 
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
   }
 
 
-    useEffect(() => {
+  useEffect(() => {
     if (!user) return;
 
     const fetchUserData = async () => {
@@ -33,7 +34,7 @@ function App() {
         const data = await getUserData(user.uid);
         const userData = data[Object.keys(data)[0]];
         console.log(userData);
-        
+
         setAppState(prevState => ({ ...prevState, userData }));
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -56,7 +57,7 @@ function App() {
             <Route path='/' element={!user && < Landing />} />
             <Route path='/login' element={!user && <Login />} />
             <Route path='/register' element={!user && <Register />} />
-            <Route path='/create-team' element={user && <Teams />} />
+            <Route path='/home' element={user && <Home />} />
           </Routes>
 
           <Footer />
