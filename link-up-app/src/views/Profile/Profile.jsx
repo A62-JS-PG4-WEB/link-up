@@ -1,177 +1,224 @@
-import { useContext, useState } from "react";
-import { registerUser } from "../../services/auth.service";
+import { useState, useContext, useEffect } from "react";
 import { AppContext } from "../../state/app.context";
-import { useNavigate } from "react-router-dom";
-import { createUserUsername, getUserByUsername } from "../../services/users.service";
+import { updateProfilePicture, updateUsername, updateUserEmail, updateUserPassword, updateUserPhoneNumber, } from "../../services/users.service";
+import { auth } from "../../config/firebase-config";
+import { getDownloadURL, ref, uploadBytes, getStorage } from "firebase/storage";
+import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 
-export default function Register() {
-    const [user, setUser] = useState({
-        username: '',
-        phone: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-    });
-    const { setAppState } = useContext(AppContext);
-    const navigate = useNavigate();
+const storage = getStorage();
 
-    const updateUser = prop => e => {
-        setUser({
-            ...user,
-            [prop]: e.target.value,
-        });
-    };
+export default function Profile() {
+  const { user, setAppState } = useContext(AppContext);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
-    const register = async (e) => {
-        e.preventDefault();
+  useEffect(() => {
+    if (user) {
+      setUsername(user.displayName || "");
+      setEmail(user.email || "");
+      setPhoneNumber(user.phoneNumber || "");
+      setImagePreview(user.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp");
+    }
+  }, [user]);
 
-        if (!user.email.trim() || !user.password) {
-            return console.error('No credentials provided!');
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfileImage(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+
+  const handleImageUpload = async () => {
+    if (profileImage) {
+      const storageRef = ref(storage, `profiles/${auth.currentUser.uid}`);
+      try {
+        await uploadBytes(storageRef, profileImage);
+        const photoURL = await getDownloadURL(storageRef);
+
+        await updateProfilePicture(user, photoURL);
+
+        setAppState((prevState) => ({
+          ...prevState,
+          user: { ...user, photoURL },
+        }));
+        setMessage("Profile image updated successfully!");
+      } catch (error) {
+        setMessage(`Error: ${error.message}`);
+      }
+    }
+  };
+
+  
+  const handleSave = async () => {
+    setLoading(true);
+    setMessage("");
+    try {
+      if (username && username !== user.displayName) {
+        await updateUsername(user, username);
+      }
+  
+      if (email && email !== user.email) {
+        if (!oldPassword) {
+          setMessage("Old password is required to update email.");
+          setLoading(false);
+          return;
         }
-        if (user.password !== user.confirmPassword) {
-            console.info("Passwords do not match!");
-            return;
-        }
+  
+        // Reauthenticate the user
+        const credential = EmailAuthProvider.credential(user.email, oldPassword);
+        await reauthenticateWithCredential(auth.currentUser, credential);
+  
+        // Proceed with updating the email
+        await updateUserEmail(user, email);
+      }
+  
+      if (oldPassword && newPassword) {
+        await updateUserPassword(user, oldPassword, newPassword);
+      }
+  
+      setAppState((prevState) => ({
+        ...prevState,
+        user: auth.currentUser,
+      }));
+  
+      setMessage("Profile updated successfully!");
+    } catch (error) {
+      setMessage(`Error: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        if (user.username.length < 5 || user.username.length > 35) {
-            return console.error('Invalid username length');
-        }
 
-        try {
-            const userFromDB = await getUserByUsername(user.username);
-            if (userFromDB) {
-                return console.error(`User {${user.username}} already exists!`);
-            }
+  return (
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="container mx-auto p-8 bg-white rounded-lg shadow-lg max-w-lg">
+        <h1 className="text-2xl font-bold mb-4">Profile</h1>
 
-            const credential = await registerUser(user.email.trim(), user.password.trim());
-            await createUserUsername(user.username, credential.user.uid, user.email, user.phone);
-            setAppState({ user: credential.user, userData: null });
-            navigate('/'); 
-            console.log('Successfully registered');
-        } catch (error) {
-            console.error(error.message);
-        }
-    };
-
-    return (
-        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                <img
-                    alt="Your Company"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                    className="mx-auto h-10 w-auto"
-                />
-                <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                Get started with LinkUP
-                </h2>
-            </div>
-
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form onSubmit={register} className="space-y-6">
-
-                    <div>
-                        <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                            Email address
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                required
-                                placeholder='Type your email...'
-                                value={user.email}
-                                autoComplete="email"
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                onChange={updateUser('email')}
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
-                            Username
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                id="username"
-                                name="username"
-                                type="text"
-                                required
-                                autoComplete="username"
-                                placeholder='Your username...'
-                                value={user.username}
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                onChange={updateUser('username')}
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label htmlFor="phone" className="block text-sm font-medium leading-6 text-gray-900">
-                            Phone
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                id="phone"
-                                name="phone"
-                                type="tel"
-                                required
-                                placeholder='Phone number...'
-                                value={user.phone}
-                                autoComplete="phone"
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                onChange={updateUser('phone')}
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                            Password
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                required
-                                autoComplete="current-password"
-                                value={user.password}
-                                onChange={updateUser('password')}
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium leading-6 text-gray-900">
-                            Confirm password
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                id="confirmPassword"
-                                name="confirmPassword"
-                                type="password"
-                                required
-                                autoComplete="current-password"
-                                value={user.confirmPassword}
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                onChange={updateUser('confirmPassword')}
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <button
-                            type="submit"
-                            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        >
-                            Sign up
-                        </button>
-                    </div>
-                </form>
-            </div>
+        {/* Display Current Username */}
+        <div className="mb-6">
+          <p className="text-lg font-semibold">Current Username: {user?.displayName || "User"}</p>
         </div>
-    );
+
+        {/* Profile Picture Upload */}
+        <div className="flex items-center justify-center mb-6">
+          <div className="avatar">
+            <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+              <img src={imagePreview} alt="User avatar" />
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col items-center mb-6">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="file-input file-input-bordered file-input-primary w-full max-w-xs mb-4"
+          />
+          <button
+            onClick={handleImageUpload}
+            className="btn btn-primary mt-2"
+          >
+            Upload Photo
+          </button>
+        </div>
+
+        {/* Profile Form */}
+        <div className="flex flex-col space-y-4">
+          {/* Username */}
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Username</span>
+            </label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="input input-bordered w-full"
+            />
+          </div>
+
+          {/* Email */}
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Email</span>
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input input-bordered w-full"
+            />
+          </div>
+
+          {/* Phone Number */}
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Phone Number</span>
+            </label>
+            <input
+              type="tel"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              className="input input-bordered w-full"
+            />
+          </div>
+
+
+          {/* Old Password */}
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Old Password</span>
+            </label>
+            <input
+              type="password"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              className="input input-bordered w-full"
+            />
+          </div>
+
+          {/* New Password */}
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">New Password</span>
+            </label>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="input input-bordered w-full"
+            />
+          </div>
+
+          {/* Save Button */}
+          <div>
+            <button
+              onClick={handleSave}
+              className={`btn btn-primary mt-4 ${loading ? "loading" : ""}`}
+            >
+              {loading ? "Saving..." : "Save Changes"}
+            </button>
+            {message && (
+              <div className="mt-4 text-center">
+                <p className={`text-sm ${message.includes("Error") ? "text-red-500" : "text-green-500"}`}>
+                  {message}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
