@@ -46,7 +46,7 @@ export default function Register() {
             const credential = await registerUser(user.email.trim(), user.password.trim());
             await createUserUsername(user.username, credential.user.uid, user.email, user.phone);
             setAppState({ user: credential.user, userData: null });
-            navigate('/'); 
+            navigate('/home');
             console.log('Successfully registered');
         } catch (error) {
             console.error(error.message);
@@ -62,7 +62,7 @@ export default function Register() {
                     className="mx-auto h-10 w-auto"
                 />
                 <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                Get started with LinkUP
+                    Get started with LinkUP
                 </h2>
             </div>
 
