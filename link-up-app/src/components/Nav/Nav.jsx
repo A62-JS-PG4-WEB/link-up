@@ -17,7 +17,8 @@ export function Nav() {
     return (
         <div className="navbar bg-base-100">
             <div className="flex items-center">
-                <a className="btn btn-ghost text-xl">LinkUP</a>
+                <NavLink to="/" className="btn btn-ghost text-xl">LinkUP</NavLink>
+                
             </div>
             <div className="flex-1 flex justify-center items-center">
                 <Counter />
