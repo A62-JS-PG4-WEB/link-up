@@ -3,20 +3,29 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../state/app.context";
 import { createTeam, getTeams } from "../../services/teams.service";
 import { MAX_TEAM_NAME_LENGTH, MIN_TEAM_NAME_LENGTH } from "../../common/constants";
+import { addUserTeam } from "../../services/users.service";
 
-export default function Teams() {
+
+export default function CreateTeam({ onClose }) {
     const [team, setTeam] = useState({ name: '' });
     const { userData } = useContext(AppContext);
-    const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("UserData:", userData);
-    }, [userData]);
+        const handleClickOutside = (event) => {
+            if (event.target.classList.contains('popup-overlay')) {
+                onClose();
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [onClose]);
 
     const updateTeam = (key, value) => {
         if (team[key] !== value) {
-            console.log(value);
-
             setTeam({
                 ...team,
                 [key]: value,
@@ -36,25 +45,30 @@ export default function Teams() {
             const existentTeam = await getTeams(team.name);
             if (existentTeam) {
                 alert(`Team ${team.name} already exists`);
-                return
+                return;
             }
 
-            await createTeam(team.name.trim(), userData.username, userData.username);
+            const teamId = await createTeam(team.name.trim(), userData.username, userData.username);
             setTeam({ name: '' });
-            
+            await addUserTeam(teamId, userData.username);
+            onClose();
         } catch (error) {
             console.error(error.message);
         }
     };
 
     return (
-        <>
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form onSubmit={handleCreateTeam} className="space-y-6">
+        <div className="popup-overlay fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-60 z-50">
+            <div className="bg-gray-400 p-6 rounded shadow-lg relative">
+                <button
+                    onClick={onClose}
+                    className="absolute top-2 right-2 text-gray-700 hover:text-gray-900 bg-gray-400 p-2 rounded"
+                >
+                    &times;
+                </button>
+                <h2 className="text-lg font-semibold text-gray-900">Create New Team</h2>
+                <form onSubmit={handleCreateTeam} className="space-y-6 mt-4">
                     <div>
-                        <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
-                            Team name
-                        </label>
                         <div className="mt-2">
                             <input
                                 id="name"
@@ -65,20 +79,20 @@ export default function Teams() {
                                 placeholder="Name your Team"
                                 value={team.name}
                                 onChange={(e) => updateTeam('name', e.target.value)}
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm"
                             />
                         </div>
                     </div>
                     <div>
                         <button
                             type="submit"
-                            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            className="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-pink-600"
                         >
                             Submit
                         </button>
                     </div>
                 </form>
             </div>
-        </>
+        </div>
     );
 }

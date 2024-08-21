@@ -1,4 +1,4 @@
-import { get, set, ref, query, equalTo, orderByChild } from 'firebase/database';
+import { get, set, ref, query, equalTo, orderByChild, update } from 'firebase/database';
 import { db } from '../config/firebase-config';
 
 export const getUserByUsername = async (username) => {
@@ -14,4 +14,12 @@ export const createUserUsername = async (username, uid, email, phone) => {
 export const getUserData = async (uid) => {
   const snapshot = await get(query(ref(db, 'users'), orderByChild('uid'), equalTo(uid)));
   return snapshot.val();
+};
+
+export const addUserTeam = async (teamId, username) => {
+  console.log(teamId, username);
+
+  await update(ref(db), {
+    [`users/${username}/teams/${teamId}`]: true,
+  })
 };
