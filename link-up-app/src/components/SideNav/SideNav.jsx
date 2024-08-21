@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Teams from "../../views/Teams/Teams";
+import { logoutUser } from "../../services/auth.service";
 
 export default function SideNav() {
 
@@ -11,7 +12,6 @@ export default function SideNav() {
         setIsSidebarOpen(!isSidebarOpen);
         setJustOpenedSidebar(false);
     };
-
 
     const handleNavClick = () => {
         if (!isSidebarOpen) {
@@ -83,7 +83,7 @@ export default function SideNav() {
                         {isSidebarOpen && <span className="ml-4">Settings</span>}
                     </a>
                     <a
-                        href="#"
+                        href="/login"
                         className="flex items-center p-4 text-white hover:bg-gray-700"
                         onClick={handleNavClick}
                     >
@@ -91,7 +91,7 @@ export default function SideNav() {
                             <path fillRule="evenodd" d="M10 3.5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 15 4.5v7a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5z" />
                             <path fillRule="evenodd" d="M4.854 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .707.707L6.207 7.5H13.5a.5.5 0 0 1 0 1H6.207l2.354 2.354a.5.5 0 1 1-.707.707l-3-3z" />
                         </svg>
-                        {isSidebarOpen && <span className="ml-4">Logout</span>}
+                        {isSidebarOpen && <span className="ml-4" onClick={logoutUser}>Logout</span>}
                     </a>
                 </nav>
             </div>
