@@ -53,21 +53,22 @@ function App() {
     <>
       <BrowserRouter>
         <AppContext.Provider value={{ ...appState, setAppState }}>
-          <Nav />
+          {!user && <Nav />}
+
           <Routes>
-            <Route path='/' element={!user && < Landing />} />
+            <Route path='/' element={!user && <Landing />} />
             <Route path='/login' element={!user && <Login />} />
             <Route path='/register' element={!user && <Register />} />
             <Route path='/home' element={user && <Home />} />
             <Route path='/create-team' element={user && <CreateTeam />} />
           </Routes>
-
-          <Footer />
+          {!user && <Footer />}
         </AppContext.Provider>
       </BrowserRouter>
     </>
+  );
 
-  )
+
 }
 
 export default App

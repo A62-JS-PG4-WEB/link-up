@@ -17,8 +17,12 @@ export function Nav() {
     return (
         <div className="navbar bg-base-100">
             <div className="flex items-center">
-                <NavLink to="/" className="btn btn-ghost text-xl">LinkUP</NavLink>
-                
+                <NavLink
+                    to={user ? "/home" : "/"}
+                    className="btn btn-ghost text-xl"
+                >
+                    LinkUP
+                </NavLink>
             </div>
             <div className="flex-1 flex justify-center items-center">
                 <Counter />
