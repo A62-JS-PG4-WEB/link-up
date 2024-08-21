@@ -4,6 +4,9 @@ import { getTeamsInfoById, getUserTeams } from "../../services/teams.service";
 import CreateTeam from "../CreateTeam/CreateTeam";
 import AllTeams from "../AllTeams/AllTeams";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function Teams() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -18,12 +21,12 @@ export default function Teams() {
                 if (userData && userData.username) {
                     const allTeams = await getUserTeams(userData.username);
                     const listTeams = await getTeamsInfoById(allTeams);
-                    console.log(listTeams);
+                    // console.log(listTeams);
 
                     setTeams(listTeams);
                 }
             } catch (e) {
-                console.error("Error loading Teams", e);
+                toast.error("Error loading Teams", e);
             }
         };
 

@@ -13,6 +13,8 @@ import Teams from './views/CreateTeam/CreateTeam.jsx'
 import { getUserData } from './services/users.service.js'
 import Home from './views/Home/Home.jsx'
 import CreateTeam from './views/CreateTeam/CreateTeam.jsx'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
@@ -34,11 +36,10 @@ function App() {
       try {
         const data = await getUserData(user.uid);
         const userData = data[Object.keys(data)[0]];
-        console.log(userData);
 
         setAppState(prevState => ({ ...prevState, userData }));
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        toast.error('Error fetching user data:', error);
       }
     };
 
@@ -52,6 +53,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
+        {/* <ToastContainer stacked closeOnClick /> */}
         <AppContext.Provider value={{ ...appState, setAppState }}>
           <Nav />
           <Routes>
@@ -63,6 +65,7 @@ function App() {
           </Routes>
 
           <Footer />
+
         </AppContext.Provider>
       </BrowserRouter>
     </>
