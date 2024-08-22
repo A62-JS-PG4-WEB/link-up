@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Teams from "../../views/Teams/Teams";
 import { logoutUser } from "../../services/auth.service";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../state/app.context";
 
 export default function SideNav() {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [justOpenedSidebar, setJustOpenedSidebar] = useState(false);
+    const { user, setAppState } = useContext(AppContext);
+    const navigate = useNavigate();
 
+    const logout = async () => {
+        await logoutUser();
+        setAppState({ user: null, userData: null });
+        navigate('/login');
+    };
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -92,7 +101,8 @@ export default function SideNav() {
                             <path fillRule="evenodd" d="M10 3.5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 15 4.5v7a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5z" />
                             <path fillRule="evenodd" d="M4.854 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .707.707L6.207 7.5H13.5a.5.5 0 0 1 0 1H6.207l2.354 2.354a.5.5 0 1 1-.707.707l-3-3z" />
                         </svg>
-                        {isSidebarOpen && <span className="ml-4" onClick={logoutUser}>Logout</span>}
+                        {isSidebarOpen && <span className="ml-4" onClick={logout}>Logout</span>}
+                     
                     </a>
                 </nav>
             </div>

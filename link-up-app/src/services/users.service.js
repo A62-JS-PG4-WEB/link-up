@@ -7,7 +7,7 @@ export const getUserByUsername = async (username) => {
 };
 
 export const createUserUsername = async (username, uid, email, phone) => {
-  const user = { username, uid, email, phone, createdOn: new Date().toString() };
+  const user = { username, uid, email, phone, createdOn: new Date().getTime() };
   await set(ref(db, `users/${username}`), user);
 };
 
@@ -20,6 +20,14 @@ export const addUserTeam = async (teamId, username) => {
   console.log(teamId, username);
 
   await update(ref(db), {
-    [`users/${username}/teams/${teamId}`]: true,
+    [`users/${username}/teams/${teamId}`]: new Date().getTime(),
+  })
+};
+
+export const addUserChannel = async (channelId, username) => {
+  console.log(channelId, username);
+
+  await update(ref(db), {
+    [`users/${username}/channels/${channelId}`]: new Date().getTime(),
   })
 };
