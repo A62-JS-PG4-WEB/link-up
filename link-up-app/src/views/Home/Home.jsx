@@ -3,9 +3,7 @@ import SideNav from '../../components/SideNav/SideNav';
 
 export default function Home() {
     return (
-        <div className="flex h-screen">
-            {/* Side Navigation */}
-            <SideNav />
+        <div className="flex h-screen content">
 
             {/* Main Content */}
             <div className="flex-1 flex p-8 bg-gray-900 text-white">

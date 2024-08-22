@@ -23,7 +23,7 @@ export default function SideNav() {
     };
 
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen nav">
             <div
                 className={`${isSidebarOpen ? 'w-64' : 'w-16'
                     } bg-gray-800 h-full transition-all duration-300 ease-in-out`}

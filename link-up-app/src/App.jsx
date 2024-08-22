@@ -13,6 +13,8 @@ import Teams from './views/CreateTeam/CreateTeam.jsx'
 import { getUserData } from './services/users.service.js'
 import Home from './views/Home/Home.jsx'
 import CreateTeam from './views/CreateTeam/CreateTeam.jsx'
+import SideNav from './components/SideNav/SideNav.jsx'
+import Test from './Test.jsx'
 
 
 function App() {
@@ -53,13 +55,14 @@ function App() {
     <>
       <BrowserRouter>
         <AppContext.Provider value={{ ...appState, setAppState }}>
-          {!user && <Nav />}
+          {!user ? <Nav /> : <SideNav/>}
 
           <Routes>
             <Route path='/' element={!user && <Landing />} />
             <Route path='/login' element={!user && <Login />} />
             <Route path='/register' element={!user && <Register />} />
             <Route path='/home' element={user && <Home />} />
+            <Route path='/test' element={user && <Test />} />
             <Route path='/create-team' element={user && <CreateTeam />} />
           </Routes>
           {!user && <Footer />}
