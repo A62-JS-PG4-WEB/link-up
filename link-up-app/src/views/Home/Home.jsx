@@ -1,7 +1,20 @@
-import React from 'react';
-import SideNav from '../../components/SideNav/SideNav';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-export default function Home() {
+export default function Home({ team }) {
+    const location = useLocation();
+    const [currentTeam, setCurrentTeam] = useState(team || location.state?.team);
+
+    useEffect(() => {
+        if (team || location.state?.team) {
+            setCurrentTeam(team || location.state?.team);
+        }
+    }, [team, location.state]);
+
+    console.log('chosen team in home comp', currentTeam);
+
+
     return (
         <div className="flex h-screen content">
 
@@ -9,6 +22,12 @@ export default function Home() {
             <div className="flex-1 flex p-8 bg-gray-900 text-white">
                 {/* Channels Section */}
                 <div className="w-1/4 space-y-6">
+
+                    {/* Team */}
+                    <div className="bg-gray-800 p-4 rounded-lg mt-7">
+                       {currentTeam &&  <h3 className="text-lg font-semibold mb-2">{currentTeam.name}</h3>}
+                    </div>
+
                     {/* Text Channels */}
                     <div className="bg-gray-800 p-4 rounded-lg">
                         <h3 className="text-lg font-semibold mb-2">Text Channels</h3>
@@ -31,7 +50,7 @@ export default function Home() {
                 </div>
 
                 {/* Chat Section */}
-                <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6">
+                <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7">
                     {/* Chat Team Name */}
                     <h1 className="text-2xl font-bold mb-4">Star Wars</h1>
 
@@ -73,3 +92,12 @@ export default function Home() {
         </div>
     );
 }
+
+Home.propTypes = {
+    team: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        owner: PropTypes.string,
+        createdOn: PropTypes.string,
+        members: PropTypes.arrayOf(PropTypes.string),
+    }),
+};
