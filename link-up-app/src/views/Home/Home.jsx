@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Channels from '../Channels/Channels';
 
 export default function Home({ team }) {
     const location = useLocation();
@@ -32,6 +33,7 @@ export default function Home({ team }) {
                     <div className="bg-gray-800 p-4 rounded-lg">
                         <h3 className="text-lg font-semibold mb-2">Text Channels</h3>
                         <div className="space-y-2">
+                        <Channels />
                             <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># general</button>
                             <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># memes</button>
                             <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># announcements</button>
