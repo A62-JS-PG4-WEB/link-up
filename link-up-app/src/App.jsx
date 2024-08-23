@@ -24,10 +24,12 @@ function App() {
   });
   const [user, loading] = useAuthState(auth);
 
-  if (appState.user !== user) {
-    setAppState({ ...appState, user });
-  }
-
+  
+  useEffect(() => {
+    if (user) {
+      setAppState(prevState => ({ ...prevState, user }));
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;
