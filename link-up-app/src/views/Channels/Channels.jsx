@@ -6,8 +6,9 @@ import AllTeams from "../AllTeams/AllTeams";
 import { useNavigate } from "react-router-dom";
 import CreateChannel from "../CreateChannel/CreateChannel";
 import { getChannelsInfoById, getUserChannels } from "../../services/channels.service";
+import PropTypes from 'prop-types';
 
-export default function Channels() {
+export default function Channels({team}) {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const { userData } = useContext(AppContext);
     const [channels, setChannels] = useState([]);
@@ -30,6 +31,8 @@ export default function Channels() {
 
        loadChannels()
     }, [userData]);
+
+    console.log('currentTeam in Channels:', team);
 
     const handleToggleChannelsList = () => {
         setIsTeamsListVisible(!isTeamsListVisible);
@@ -62,7 +65,7 @@ export default function Channels() {
                     </button>
                    
                 </div>
-                {isPopupOpen && <CreateChannel onClose={handleClosePopup} />}
+                {isPopupOpen && <CreateChannel  team={team} onClose={handleClosePopup} />}
             </div>
 
            
@@ -73,3 +76,12 @@ export default function Channels() {
         </div>
     );
 }
+
+Channels.propTypes = {
+    team: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        owner: PropTypes.string,
+        createdOn: PropTypes.string,
+        members: PropTypes.arrayOf(PropTypes.string),
+    }),
+};

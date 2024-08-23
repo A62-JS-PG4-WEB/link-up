@@ -33,7 +33,7 @@ export default function Home({ team }) {
                     <div className="bg-gray-800 p-4 rounded-lg">
                         <h3 className="text-lg font-semibold mb-2">Text Channels</h3>
                         <div className="space-y-2">
-                        <Channels />
+                        <Channels team={currentTeam}/>
                             <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># general</button>
                             <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># memes</button>
                             <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># announcements</button>

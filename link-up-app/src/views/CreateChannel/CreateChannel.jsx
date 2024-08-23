@@ -4,9 +4,10 @@ import { AppContext } from "../../state/app.context";
 import { MAX_CHANNEL_NAME_LENGTH, MIN_CHANNEL_NAME_LENGTH } from "../../common/constants";
 import { addUserChannel } from "../../services/users.service";
 import { createChannel } from "../../services/channels.service";
+import { addChannelToTeam } from "../../services/teams.service";
 
 
-export default function CreateChannel ({ onClose }) {
+export default function CreateChannel ({ team, onClose }) {
     const [channel, setChannel] = useState({ name: '' });
     const { userData } = useContext(AppContext);
 
@@ -35,6 +36,7 @@ export default function CreateChannel ({ onClose }) {
 
     const handleCreateChannel = async (e) => {
         e.preventDefault();
+console.log(team);
 
         if (channel.name.length < MIN_CHANNEL_NAME_LENGTH || channel.name.length > MAX_CHANNEL_NAME_LENGTH) {
             alert(`Channel name must be between ${MIN_CHANNEL_NAME_LENGTH} and ${MAX_CHANNEL_NAME_LENGTH}`);
@@ -42,15 +44,11 @@ export default function CreateChannel ({ onClose }) {
         }
 
         try {
-            // const existentTeam = await getTeams(team.name);
-            // if (existentTeam) {
-            //     alert(`Team ${team.name} already exists`);
-            //     return;
-            // }
 
-            const channelId = await createChannel(channel.name.trim(), userData.username, userData.username);
+            const channelId = await createChannel(channel.name.trim(), userData.username, userData.username, team.id);
             setChannel({ name: '' });
-            await addUserChannel(channelId, userData.username);
+            await addUserChannel(channelId, userData.username);          
+            await addChannelToTeam(team.id, channelId);
             onClose();
         } catch (error) {
             console.error(error.message);

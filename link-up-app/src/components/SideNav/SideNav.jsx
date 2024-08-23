@@ -12,9 +12,13 @@ export default function SideNav() {
     const navigate = useNavigate();
 
     const logout = async () => {
-        await logoutUser();
-        setAppState({ user: null, userData: null });
-        navigate('/login');
+        try {
+            await logoutUser(); 
+            setAppState({ user: null, userData: null });
+            navigate('/login'); 
+        } catch (error) {
+            console.error("Logout failed", error); 
+        }
     };
 
     const toggleSidebar = () => {

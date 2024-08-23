@@ -7,7 +7,6 @@ const navigatetoHome = (team) => {
     navigate("/home", { state: { team } });
 }
 
-
 console.log('all teams', teams);
 
 return (
