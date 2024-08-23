@@ -3,6 +3,7 @@ import { registerUser } from "../../services/auth.service";
 import { AppContext } from "../../state/app.context";
 import { useNavigate } from "react-router-dom";
 import { createUserUsername, getUserByUsername } from "../../services/users.service";
+import { MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "../../common/constants";
 
 export default function Register() {
     const [user, setUser] = useState({
@@ -33,7 +34,7 @@ export default function Register() {
             return;
         }
 
-        if (user.username.length < 5 || user.username.length > 35) {
+        if (user.username.length < MIN_USERNAME_LENGTH || user.username.length > MAX_USERNAME_LENGTH) {
             return console.error('Invalid username length');
         }
 
