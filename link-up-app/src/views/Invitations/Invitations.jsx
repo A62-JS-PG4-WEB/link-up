@@ -14,7 +14,7 @@ export default function Invitations() {
             return;
         }
 
-        const unsubscribe = onValue(invitationsQuery('peshko@abv.bg'), (snapshot) => {
+        const unsubscribe = onValue(invitationsQuery(userData.email), (snapshot) => {
             const data = snapshot.val();
             const invitesList = data ? Object.values(data) : [];
             const filteredInvites = invitesList.filter(invite => invite.status === 'pending');
