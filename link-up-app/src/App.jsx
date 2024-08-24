@@ -12,6 +12,10 @@ import Login from './views/Login/Login.jsx'
 import Teams from './views/CreateTeam/CreateTeam.jsx'
 import { getUserData } from './services/users.service.js'
 import Home from './views/Home/Home.jsx'
+import CreateTeam from './views/CreateTeam/CreateTeam.jsx'
+import SideNav from './components/SideNav/SideNav.jsx'
+import Test from './Test.jsx'
+import AllNotifications from './views/AllNotifications/AllNotifications.jsx'
 
 
 function App() {
@@ -21,10 +25,12 @@ function App() {
   });
   const [user, loading] = useAuthState(auth);
 
-  if (appState.user !== user) {
-    setAppState({ ...appState, user });
-  }
-
+  
+  useEffect(() => {
+    if (user) {
+      setAppState(prevState => ({ ...prevState, user }));
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;
@@ -33,7 +39,6 @@ function App() {
       try {
         const data = await getUserData(user.uid);
         const userData = data[Object.keys(data)[0]];
-        console.log(userData);
 
         setAppState(prevState => ({ ...prevState, userData }));
       } catch (error) {
@@ -52,20 +57,24 @@ function App() {
     <>
       <BrowserRouter>
         <AppContext.Provider value={{ ...appState, setAppState }}>
-          <Nav />
+          {!user ? <Nav /> : <SideNav/>}
+
           <Routes>
-            <Route path='/' element={!user && < Landing />} />
+            <Route path='/' element={!user && <Landing />} />
             <Route path='/login' element={!user && <Login />} />
             <Route path='/register' element={!user && <Register />} />
             <Route path='/home' element={user && <Home />} />
+            <Route path='/test' element={user && <Test />} />
+            <Route path='/notifications' element={user && <AllNotifications />} />
+            <Route path='/create-team' element={user && <CreateTeam />} />
           </Routes>
-
-          <Footer />
+          {!user && <Footer />}
         </AppContext.Provider>
       </BrowserRouter>
     </>
+  );
 
-  )
+
 }
 
 export default App

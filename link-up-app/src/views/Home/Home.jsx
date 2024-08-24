@@ -1,20 +1,23 @@
-import React from 'react';
-import SideNav from '../../components/SideNav/SideNav';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import Channels from '../Channels/Channels';
+import Team from '../Team/Team';
 
-export default function Home() {
+export default function Home({ team }) {
+
     return (
-        <div className="flex h-screen">
-            {/* Side Navigation */}
-            <SideNav />
+        <div className="flex h-screen content">
 
             {/* Main Content */}
             <div className="flex-1 flex p-8 bg-gray-900 text-white">
-                {/* Channels Section */}
-                <div className="w-1/4 space-y-6">
+                <div className="w-1/4 space-y-6">    
+                    <Team team={team}/>
                     {/* Text Channels */}
                     <div className="bg-gray-800 p-4 rounded-lg">
                         <h3 className="text-lg font-semibold mb-2">Text Channels</h3>
                         <div className="space-y-2">
+                        <Channels team={team}/>
                             <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># general</button>
                             <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># memes</button>
                             <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># announcements</button>
@@ -33,7 +36,7 @@ export default function Home() {
                 </div>
 
                 {/* Chat Section */}
-                <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6">
+                <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7">
                     {/* Chat Team Name */}
                     <h1 className="text-2xl font-bold mb-4">Star Wars</h1>
 
@@ -75,3 +78,12 @@ export default function Home() {
         </div>
     );
 }
+
+Home.propTypes = {
+    team: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        owner: PropTypes.string,
+        createdOn: PropTypes.string,
+        members: PropTypes.arrayOf(PropTypes.string),
+    }),
+};

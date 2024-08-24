@@ -3,6 +3,7 @@ import { registerUser } from "../../services/auth.service";
 import { AppContext } from "../../state/app.context";
 import { useNavigate } from "react-router-dom";
 import { createUserUsername, getUserByUsername } from "../../services/users.service";
+import { MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "../../common/constants";
 
 export default function Register() {
     const [user, setUser] = useState({
@@ -10,7 +11,7 @@ export default function Register() {
         phone: '',
         email: '',
         password: '',
-        confirmPassword: '',
+        confirmPassword: ''
     });
     const { setAppState } = useContext(AppContext);
     const navigate = useNavigate();
@@ -33,7 +34,7 @@ export default function Register() {
             return;
         }
 
-        if (user.username.length < 5 || user.username.length > 35) {
+        if (user.username.length < MIN_USERNAME_LENGTH || user.username.length > MAX_USERNAME_LENGTH) {
             return console.error('Invalid username length');
         }
 
@@ -47,8 +48,7 @@ export default function Register() {
             await createUserUsername(user.username, credential.user.uid, user.email, user.phone);
             setAppState({ user: credential.user, userData: null });
             navigate('/home');
-            console.log('Successfully registered');
-        } catch (error) {
+            } catch (error) {
             console.error(error.message);
         }
     };
