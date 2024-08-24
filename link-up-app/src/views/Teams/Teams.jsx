@@ -19,8 +19,6 @@ export default function Teams() {
                 if (userData && userData.username) {
                     const allTeams = await getUserTeams(userData.username);
                     const listTeams = await getTeamsInfoById(allTeams);
-                    console.log(listTeams);
-
                     setTeams(listTeams);
                 }
             } catch (e) {

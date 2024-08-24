@@ -15,6 +15,7 @@ import Home from './views/Home/Home.jsx'
 import CreateTeam from './views/CreateTeam/CreateTeam.jsx'
 import SideNav from './components/SideNav/SideNav.jsx'
 import Test from './Test.jsx'
+import AllNotifications from './views/AllNotifications/AllNotifications.jsx'
 
 
 function App() {
@@ -38,7 +39,6 @@ function App() {
       try {
         const data = await getUserData(user.uid);
         const userData = data[Object.keys(data)[0]];
-        console.log(userData);
 
         setAppState(prevState => ({ ...prevState, userData }));
       } catch (error) {
@@ -65,6 +65,7 @@ function App() {
             <Route path='/register' element={!user && <Register />} />
             <Route path='/home' element={user && <Home />} />
             <Route path='/test' element={user && <Test />} />
+            <Route path='/notifications' element={user && <AllNotifications />} />
             <Route path='/create-team' element={user && <CreateTeam />} />
           </Routes>
           {!user && <Footer />}

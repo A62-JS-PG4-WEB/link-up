@@ -1,13 +1,19 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function AllTeams ({ teams }) {
 const navigate = useNavigate();
+const [selectedTeam, setSelectedTeam] = useState([]);
 
 const navigatetoHome = (team) => {
+    setSelectedTeam(team)
+    try {
+        localStorage.setItem('selectedTeam', JSON.stringify(team));
+    } catch (error) {
+        console.error("Failed to save team to localStorage", error);
+    }
     navigate("/home", { state: { team } });
 }
-
-console.log('all teams', teams);
 
 return (
     <div>

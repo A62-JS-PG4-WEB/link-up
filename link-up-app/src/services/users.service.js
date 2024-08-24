@@ -17,7 +17,6 @@ export const getUserData = async (uid) => {
 };
 
 export const addUserTeam = async (teamId, username) => {
-  console.log(teamId, username);
 
   await update(ref(db), {
     [`users/${username}/teams/${teamId}`]: new Date().getTime(),
@@ -25,9 +24,7 @@ export const addUserTeam = async (teamId, username) => {
 };
 
 export const addUserChannel = async (channelId, username) => {
-  console.log(channelId, username);
-
-  await update(ref(db), {
+    await update(ref(db), {
     [`users/${username}/channels/${channelId}`]: new Date().getTime(),
   })
 };

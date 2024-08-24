@@ -18,11 +18,9 @@ export default function Channels({team}) {
         const loadChannels = async () => {
             try {
                 if (userData && userData.username) {
-                    const allChannels = await getUserChannels(userData.username);
-                    const listTeams = await getChannelsInfoById(allChannels);
-                    console.log(listTeams);
-
-                    setChannels(listTeams);
+                    // const allChannels = await getUserChannels(userData.username);
+                    // const listTeams = await getChannelsInfoById(allChannels);
+                    // setChannels(listTeams);
                 }
             } catch (e) {
                 console.error("Error loading Channels", e);
@@ -31,8 +29,6 @@ export default function Channels({team}) {
 
        loadChannels()
     }, [userData]);
-
-    console.log('currentTeam in Channels:', team);
 
     const handleToggleChannelsList = () => {
         setIsTeamsListVisible(!isTeamsListVisible);

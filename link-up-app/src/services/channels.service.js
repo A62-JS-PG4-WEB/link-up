@@ -2,7 +2,6 @@ import { equalTo, get, orderByChild, orderByValue, push, query, ref, update } fr
 import { db } from "../config/firebase-config";
 
 export const createChannel = async (name, owner, member, teamID) => {
-console.log(teamID);
 
     const channel = { name, owner, createdOn: new Date().toString() };
     const result = await push(ref(db, 'channels'), channel);
@@ -17,9 +16,7 @@ console.log(teamID);
 };
 
 export const getUserChannels = async (username) => {
-    const snapshot = await get(ref(db, `users/${username}/channels`));
-    // console.log(snapshot.val());
- 
+    const snapshot = await get(ref(db, `users/${username}/channels`)); 
      return Object.keys(snapshot.val());
 }
 
