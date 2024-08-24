@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Channels from '../Channels/Channels';
-import Team from '../Team/Team';
+import Team from '../../components/Team/Team';
 
 export default function Home({ team }) {
 
@@ -11,13 +11,13 @@ export default function Home({ team }) {
 
             {/* Main Content */}
             <div className="flex-1 flex p-8 bg-gray-900 text-white">
-                <div className="w-1/4 space-y-6">    
-                    <Team team={team}/>
+                <div className="w-1/4 space-y-6">
+                    <Team team={team} />
                     {/* Text Channels */}
                     <div className="bg-gray-800 p-4 rounded-lg">
                         <h3 className="text-lg font-semibold mb-2">Text Channels</h3>
                         <div className="space-y-2">
-                        <Channels team={team}/>
+                            <Channels team={team} />
                             <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># general</button>
                             <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># memes</button>
                             <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># announcements</button>
