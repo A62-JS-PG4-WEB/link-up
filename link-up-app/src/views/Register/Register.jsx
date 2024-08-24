@@ -11,7 +11,7 @@ export default function Register() {
         phone: '',
         email: '',
         password: '',
-        confirmPassword: '',
+        confirmPassword: ''
     });
     const { setAppState } = useContext(AppContext);
     const navigate = useNavigate();
@@ -48,8 +48,7 @@ export default function Register() {
             await createUserUsername(user.username, credential.user.uid, user.email, user.phone);
             setAppState({ user: credential.user, userData: null });
             navigate('/home');
-            console.log('Successfully registered');
-        } catch (error) {
+            } catch (error) {
             console.error(error.message);
         }
     };

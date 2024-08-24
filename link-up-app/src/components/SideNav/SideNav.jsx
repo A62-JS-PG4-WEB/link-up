@@ -3,6 +3,7 @@ import Teams from "../../views/Teams/Teams";
 import { logoutUser } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../state/app.context";
+import Invitations from "../../views/Invitations/Invitations";
 
 export default function SideNav() {
 
@@ -13,11 +14,12 @@ export default function SideNav() {
 
     const logout = async () => {
         try {
-            await logoutUser(); 
+            localStorage.clear();
+            await logoutUser();
             setAppState({ user: null, userData: null });
-            navigate('/login'); 
+            navigate('/login');
         } catch (error) {
-            console.error("Logout failed", error); 
+            console.error("Logout failed", error);
         }
     };
 
@@ -69,10 +71,7 @@ export default function SideNav() {
                         className="flex items-center p-4 text-white hover:bg-gray-700"
                         onClick={handleNavClick}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-bell" viewBox="0 0 16 16">
-                            <path d="M8 16a2 2 0 0 0 1.985-1.75h-3.97A2 2 0 0 0 8 16zm.104-14.247a.5.5 0 0 1 .633.057A5.022 5.022 0 0 1 13 6c0 .628.134 1.197.359 1.75.228.561.539 1.098.875 1.591.18.27.366.545.535.841.172.301.327.623.45.987.124.366.18.768.18 1.248H0c0-.48.056-.882.18-1.248.123-.364.278-.686.45-.987.169-.296.355-.571.535-.84.336-.494.647-1.03.875-1.592A5.978 5.978 0 0 0 3 6c0-1.512.572-2.904 1.614-3.966a.5.5 0 0 1 .633-.057c.682.483 1.55.773 2.527.773s1.845-.29 2.527-.773z" />
-                        </svg>
-                        {isSidebarOpen && <span className="ml-4">Notifications</span>}
+                        {isSidebarOpen && <Invitations />}
                     </a>
                     <a
                         href="#"
@@ -106,7 +105,7 @@ export default function SideNav() {
                             <path fillRule="evenodd" d="M4.854 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .707.707L6.207 7.5H13.5a.5.5 0 0 1 0 1H6.207l2.354 2.354a.5.5 0 1 1-.707.707l-3-3z" />
                         </svg>
                         {isSidebarOpen && <span className="ml-4" onClick={logout}>Logout</span>}
-                     
+
                     </a>
                 </nav>
             </div>

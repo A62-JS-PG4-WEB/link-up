@@ -22,8 +22,6 @@ export const getTeams = async (name) => {
 
 export const getUserTeams = async (username) => {
     const snapshot = await get(ref(db, `users/${username}/teams`));
-    // console.log(snapshot.val());
-
     return Object.keys(snapshot.val());
 };
 

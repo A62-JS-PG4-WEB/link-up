@@ -1,14 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../state/app.context";
-import { MAX_CHANNEL_NAME_LENGTH, MIN_CHANNEL_NAME_LENGTH } from "../../common/constants";
-import { addUserChannel } from "../../services/users.service";
-import { createChannel } from "../../services/channels.service";
-import { addChannelToTeam } from "../../services/teams.service";
+import { createTeam } from "../../services/teams.service";
+import { addUserTeam } from "../../services/users.service";
+import { createInvitation } from "../../services/invitations.service";
 
 
-export default function CreateChannel ({ team, onClose }) {
-    const [channel, setChannel] = useState({ name: '' });
+export default function AddMembers({ onClose }) {
+    const [emailInput, setEmailInput] = useState({ email: '' });
     const { userData } = useContext(AppContext);
 
     useEffect(() => {
@@ -25,31 +23,37 @@ export default function CreateChannel ({ team, onClose }) {
         };
     }, [onClose]);
 
-    const updateChannel = (key, value) => {
-        if (channel[key] !== value) {
-            setChannel({
-                ...channel,
+    const updateEmailInput = (key, value) => {
+        
+        if (emailInput[key] !== value) {
+            setEmailInput({
+                ...emailInput,
                 [key]: value,
             });
         }
     };
 
-    const handleCreateChannel = async (e) => {
-        e.preventDefault();
-
-
-        if (channel.name.length < MIN_CHANNEL_NAME_LENGTH || channel.name.length > MAX_CHANNEL_NAME_LENGTH) {
-            alert(`Channel name must be between ${MIN_CHANNEL_NAME_LENGTH} and ${MAX_CHANNEL_NAME_LENGTH}`);
-            return;
-        }
+    const handleAddMembers = async (e) => {
+       
+         e.preventDefault();
 
         try {
 
-            const channelId = await createChannel(channel.name.trim(), userData.username, userData.username, team.id);
-            setChannel({ name: '' });
-            await addUserChannel(channelId, userData.username);          
-            await addChannelToTeam(team.id, channelId);
-            onClose();
+            const teamName = JSON.parse(localStorage.getItem('selectedTeam')).name;
+            const invitation = {
+                type: "team",
+                status: "pending",
+                message: `You are invitated to team ${teamName}`,
+                email: emailInput.email,
+                senderUsername: userData.username,      
+                createdOn:  new Date().getTime(),
+                updatedOn: new Date().getTime()
+            };
+        
+           await createInvitation(invitation);
+
+           setEmailInput({ email: '' });
+           onClose();
         } catch (error) {
             console.error(error.message);
         }
@@ -64,19 +68,19 @@ export default function CreateChannel ({ team, onClose }) {
                 >
                     &times;
                 </button>
-                <h2 className="text-lg font-semibold text-gray-900">Create New Channel</h2>
-                <form onSubmit={handleCreateChannel} className="space-y-6 mt-4">
+                <h2 className="text-lg font-semibold text-gray-900">Invite Team Member</h2>
+                <form onSubmit={handleAddMembers} className="space-y-6 mt-4">
                     <div>
                         <div className="mt-2">
                             <input
-                                id="name"
-                                name="name"
-                                type="text"
+                                id="email"
+                                name="email"
+                                type="email"
                                 required
-                                autoComplete="name"
-                                placeholder="Name your Channel"
-                                value={channel.name}
-                                onChange={(e) => updateChannel('name', e.target.value)}
+                                autoComplete="email"
+                                placeholder="email"
+                                value={emailInput.email}
+                                onChange={(e) => updateEmailInput('email', e.target.value)}
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm"
                             />
                         </div>
