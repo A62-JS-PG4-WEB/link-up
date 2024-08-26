@@ -38,8 +38,7 @@ export default function Team({team}) {
         <div className="bg-gray-800 p-4 rounded-lg mt-7">
         {currentTeam && (
             <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold mb-2">{currentTeam.name}</h3>
-               
+                <h3 className="text-lg font-semibold mb-2">{currentTeam.name}</h3>            
                 {userData?.username === currentTeam.owner && (
                 <div>
                     <button

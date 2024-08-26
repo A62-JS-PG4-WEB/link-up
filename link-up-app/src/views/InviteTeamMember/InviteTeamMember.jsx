@@ -46,6 +46,7 @@ export default function InviteTeamMember({ onClose, team }) {
                 type: "team",
                 status: "pending",
                 teamID: teamId,
+                teamName: teamName,
                 message: `You are invitated to team ${teamName}`,
                 email: emailInput.email,
                 senderUsername: userData.username,      
