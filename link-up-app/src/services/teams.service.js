@@ -50,3 +50,9 @@ export const addChannelToTeam = async (teamID, channelID) => {
         console.error("Error adding channel to team:", error);
       }
 }
+
+export const addTeamMember = async (teamId, member) => {
+    await update(ref(db), {
+        [`teams/${teamId}/members/${member}`]: new Date().getTime(),
+    });
+}

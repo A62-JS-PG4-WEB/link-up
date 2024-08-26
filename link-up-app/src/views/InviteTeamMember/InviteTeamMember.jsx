@@ -5,7 +5,7 @@ import { addUserTeam } from "../../services/users.service";
 import { createInvitation } from "../../services/invitations.service";
 
 
-export default function InviteTeamMember({ onClose }) {
+export default function InviteTeamMember({ onClose, team }) {
     const [emailInput, setEmailInput] = useState({ email: '' });
     const { userData } = useContext(AppContext);
 
@@ -40,9 +40,12 @@ export default function InviteTeamMember({ onClose }) {
         try {
 
             const teamName = JSON.parse(localStorage.getItem('selectedTeam')).name;
+            const teamId = JSON.parse(localStorage.getItem('selectedTeam')).id;
+            
             const invitation = {
                 type: "team",
                 status: "pending",
+                teamID: teamId,
                 message: `You are invitated to team ${teamName}`,
                 email: emailInput.email,
                 senderUsername: userData.username,      
