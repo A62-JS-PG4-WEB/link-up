@@ -29,7 +29,7 @@ export default function Teams() {
         if (isTeamsListVisible) {
             loadTeams();
         }
-    }, [userData, isTeamsListVisible]);
+    }, [userData, isTeamsListVisible, teams]);
 
     const handleToggleTeamsList = () => {
         setIsTeamsListVisible(!isTeamsListVisible);

@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { registerUser } from "../../services/auth.service";
 import { AppContext } from "../../state/app.context";
 import { useNavigate } from "react-router-dom";
-import { createUserUsername, getUserByUsername } from "../../services/users.service";
+import { createUserUsername, getUserByEmail, getUserByUsername } from "../../services/users.service";
 import { MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "../../common/constants";
 
 export default function Register() {
@@ -39,10 +39,15 @@ export default function Register() {
         }
 
         try {
+            const userEmail = await getUserByEmail(user.email.trim());
+            if (userEmail) {
+                return alert(`User with email ${user.email} already exists!`);
+            };
+
             const userFromDB = await getUserByUsername(user.username);
             if (userFromDB) {
-                return console.error(`User {${user.username}} already exists!`);
-            }
+                return alert(`User ${user.username} already exists!`);
+            };
 
             const credential = await registerUser(user.email.trim(), user.password.trim());
             await createUserUsername(user.username, credential.user.uid, user.email, user.phone);

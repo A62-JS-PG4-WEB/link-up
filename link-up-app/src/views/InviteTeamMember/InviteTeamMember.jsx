@@ -5,7 +5,7 @@ import { addUserTeam } from "../../services/users.service";
 import { createInvitation } from "../../services/invitations.service";
 
 
-export default function AddMembers({ onClose }) {
+export default function InviteTeamMember({ onClose }) {
     const [emailInput, setEmailInput] = useState({ email: '' });
     const { userData } = useContext(AppContext);
 

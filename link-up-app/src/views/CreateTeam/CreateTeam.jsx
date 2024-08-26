@@ -22,7 +22,7 @@ export default function CreateTeam({ onClose }) {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [onClose]);
+    }, [onClose, team]);
 
     const updateTeam = (key, value) => {
         if (team[key] !== value) {
