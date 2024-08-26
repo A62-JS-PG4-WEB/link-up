@@ -8,7 +8,7 @@ import CreateChannel from "../CreateChannel/CreateChannel";
 import { getChannelsInfoById, getUserChannels } from "../../services/channels.service";
 import PropTypes from 'prop-types';
 
-export default function Channels({team}) {
+export default function Channels({ team }) {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const { userData } = useContext(AppContext);
     const [channels, setChannels] = useState([]);
@@ -27,7 +27,7 @@ export default function Channels({team}) {
             }
         };
 
-       loadChannels()
+        loadChannels()
     }, [userData]);
 
     const handleToggleChannelsList = () => {
@@ -47,10 +47,6 @@ export default function Channels({team}) {
         <div className="channels">
             <div className="flex items-center space-x-2">
                 <span className="flex items-center mr-4">
-                 
-                    {/* <span className="ml-4">Teams</span> */}
-                    
-                  
                 </span>
                 <div className="teamButtons flex justify-end space-x-2 w-full">
                     <button
@@ -59,16 +55,16 @@ export default function Channels({team}) {
                     >
                         +
                     </button>
-                   
+
                 </div>
-                {isPopupOpen && <CreateChannel  team={team} onClose={handleClosePopup} />}
+                {isPopupOpen && <CreateChannel team={team} onClose={handleClosePopup} />}
             </div>
 
-           
-                {/* <div className="teamsList">
+
+            {/* <div className="teamsList">
                     <AllTeams teams={teams} />
                 </div> */}
-           
+
         </div>
     );
 }

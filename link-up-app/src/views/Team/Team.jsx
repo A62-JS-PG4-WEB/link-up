@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import AddMembers from "../InviteTeamMember/InviteTeamMember";
+import { AppContext } from "../../state/app.context";
 
 export default function Team({team}) {
 
     const location = useLocation();
     const [currentTeam, setCurrentTeam] = useState(team || location.state?.team);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    
+    const {userData} = useContext(AppContext);
+
     useEffect(() => {
 
         if (!team) {
@@ -22,7 +24,7 @@ export default function Team({team}) {
         } else {
             setCurrentTeam(team || location.state?.team);
         }
-    }, [team, location.state]);
+    }, [userData, team, location.state]);
     
     const handleAddClick = () => {
         setIsPopupOpen(true);
@@ -37,13 +39,20 @@ export default function Team({team}) {
         {currentTeam && (
             <div className="flex justify-between items-center">
                 <h3 className="text-lg font-semibold mb-2">{currentTeam.name}</h3>
-                <button
-                    onClick={handleAddClick}
-                    className="p-2 bg-gray-600 text-white rounded"
-                >
-                    +
-                </button>
-                {isPopupOpen && <AddMembers onClose={handleClosePopup} team={team} />}
+               
+                {userData?.username === currentTeam.owner && (
+                <div>
+                    <button
+                        onClick={handleAddClick}
+                        className="p-2 bg-gray-600 text-white rounded"
+                    >
+                        +
+                    </button>
+                    {isPopupOpen && (
+                        <AddMembers onClose={handleClosePopup} team={team} />
+                    )}
+                </div>
+            )}
             </div>
         )}
     </div>

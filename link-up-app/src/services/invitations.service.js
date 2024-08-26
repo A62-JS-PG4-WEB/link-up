@@ -24,3 +24,28 @@ export const getInvitations = async (email) => {
 
     return data ? Object.values(data) : [];
 };
+
+export const acceptInvitation = async (id, receiverUsername) => {
+
+await update(ref(db), {
+        [`invitations/${id}/status`]: 'accepted',
+        [`invitations/${id}/receiverUsername`]: receiverUsername,
+        [`invitations/${id}/updatedOn`]: new Date().toDateString(),
+    });
+    const snapshot = await get(ref(db, `invitations/${id}`))
+               return snapshot.val().teamID;
+}
+
+
+export const rejectInvitation = async (id, receiverUsername) => {
+
+    await update(ref(db), {
+            [`invitations/${id}/status`]: 'rejected',
+            [`invitations/${id}/receiverUsername`]: receiverUsername,
+            [`invitations/${id}/updatedOn`]: new Date().toDateString(),
+        });
+
+       
+        
+         
+    }

@@ -33,3 +33,4 @@ export const addUserChannel = async (channelId, username) => {
     [`users/${username}/channels/${channelId}`]: new Date().getTime(),
   })
 };
+
