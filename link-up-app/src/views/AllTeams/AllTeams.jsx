@@ -12,7 +12,7 @@ const navigatetoHome = (team) => {
     } catch (error) {
         console.error("Failed to save team to localStorage", error);
     }
-    navigate("/home", { state: { team } });
+    navigate("/home", { state: { selectedTeam } });
 }
 
 return (

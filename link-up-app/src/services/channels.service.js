@@ -19,6 +19,9 @@ export const getUserChannels = async (username) => {
     const snapshot = await get(ref(db, `users/${username}/channels`)); 
      return Object.keys(snapshot.val());
 }
+// const ch = await getUserChannels('vankata')
+
+
 
 export const getChannelsInfoById = async (channels) => {
     try {

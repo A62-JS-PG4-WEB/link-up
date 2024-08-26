@@ -24,7 +24,7 @@ export default function Team({team}) {
         } else {
             setCurrentTeam(team || location.state?.team);
         }
-    }, [userData, team, location.state]);
+    }, [userData, location.state]);
     
     const handleAddClick = () => {
         setIsPopupOpen(true);

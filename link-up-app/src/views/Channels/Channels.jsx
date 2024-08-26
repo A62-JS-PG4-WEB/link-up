@@ -3,24 +3,44 @@ import { AppContext } from "../../state/app.context";
 import { getTeamsInfoById, getUserTeams } from "../../services/teams.service";
 import CreateTeam from "../CreateTeam/CreateTeam";
 import AllTeams from "../AllTeams/AllTeams";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CreateChannel from "../CreateChannel/CreateChannel";
 import { getChannelsInfoById, getUserChannels } from "../../services/channels.service";
 import PropTypes from 'prop-types';
 
 export default function Channels({ team }) {
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const location = useLocation();
     const { userData } = useContext(AppContext);
-    const [channels, setChannels] = useState([]);
-    const navigate = useNavigate()
+    const [currentTeam, setCurrentTeam] = useState(team || location.state?.team);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [channels, setChannels] = useState([])
+
+    useEffect(() => {
+
+        if (!team) {
+            const savedTeam = localStorage.getItem('selectedTeam');
+
+            if (savedTeam) {
+                try {
+                    setCurrentTeam(JSON.parse(savedTeam));
+                } catch (error) {
+                    console.error("Failed to parse team from localStorage", error);
+                }
+            }
+        } else {
+            setCurrentTeam(team || location.state?.team);
+        }
+    }, [userData, location.state]);
 
     useEffect(() => {
         const loadChannels = async () => {
             try {
                 if (userData && userData.username) {
-                    // const allChannels = await getUserChannels(userData.username);
-                    // const listTeams = await getChannelsInfoById(allChannels);
-                    // setChannels(listTeams);
+                    const allChannels = await getUserChannels(userData.username);
+                    const listTeams = await getChannelsInfoById(allChannels);
+                    setChannels(listTeams);
+                    console.log(listTeams);
+
                 }
             } catch (e) {
                 console.error("Error loading Channels", e);
@@ -28,7 +48,7 @@ export default function Channels({ team }) {
         };
 
         loadChannels()
-    }, [userData]);
+    }, [userData, setChannels]);
 
     const handleToggleChannelsList = () => {
         setIsTeamsListVisible(!isTeamsListVisible);
@@ -45,26 +65,22 @@ export default function Channels({ team }) {
 
     return (
         <div className="channels">
-            <div className="flex items-center space-x-2">
-                <span className="flex items-center mr-4">
-                </span>
-                <div className="teamButtons flex justify-end space-x-2 w-full">
-                    <button
-                        onClick={handleCreateChannelClick}
-                        className="p-2 bg-gray-600 text-white rounded"
-                    >
-                        +
-                    </button>
-
-                </div>
-                {isPopupOpen && <CreateChannel team={team} onClose={handleClosePopup} />}
+            <div className="flex items-center justify-between mb-2">
+                <h3 className="text-lg font-semibold">Text Channels</h3>
+                <button
+                    onClick={handleCreateChannelClick}
+                    className="p-2 bg-gray-600 text-white rounded"
+                >
+                    +
+                </button>
             </div>
+            <div className="space-y-2">
+                {channels?.map((ch) => (
+                    <button key={ch.id} className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># {ch.name}</button>
 
-
-            {/* <div className="teamsList">
-                    <AllTeams teams={teams} />
-                </div> */}
-
+                ))}
+            </div>
+            {isPopupOpen && <CreateChannel team={currentTeam} onClose={handleClosePopup} />}
         </div>
     );
 }
@@ -74,6 +90,7 @@ Channels.propTypes = {
         name: PropTypes.string.isRequired,
         owner: PropTypes.string,
         createdOn: PropTypes.string,
+        id: PropTypes.string,
         members: PropTypes.arrayOf(PropTypes.string),
     }),
 };
