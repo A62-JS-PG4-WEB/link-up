@@ -10,7 +10,7 @@ import { addChannelToTeam } from "../../services/teams.service";
 export default function CreateChannel ({ team, onClose }) {
     const [channel, setChannel] = useState({ name: '' });
     const { userData } = useContext(AppContext);
-
+    
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (event.target.classList.contains('popup-overlay')) {
@@ -23,7 +23,7 @@ export default function CreateChannel ({ team, onClose }) {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [onClose]);
+    }, [onClose, userData]);
 
     const updateChannel = (key, value) => {
         if (channel[key] !== value) {
@@ -46,6 +46,8 @@ export default function CreateChannel ({ team, onClose }) {
         try {
 
             const channelId = await createChannel(channel.name.trim(), userData.username, userData.username, team.id);
+            console.log(team);
+            
             setChannel({ name: '' });
             await addUserChannel(channelId, userData.username);          
             await addChannelToTeam(team.id, channelId);

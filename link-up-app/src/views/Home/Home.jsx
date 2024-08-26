@@ -14,14 +14,8 @@ export default function Home({ team }) {
                 <div className="w-1/4 space-y-6">    
                     <Team team={team}/>
                     {/* Text Channels */}
-                    <div className="bg-gray-800 p-4 rounded-lg">
-                        <h3 className="text-lg font-semibold mb-2">Text Channels</h3>
-                        <div className="space-y-2">
-                        <Channels team={team}/>
-                            <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># general</button>
-                            <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># memes</button>
-                            <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># announcements</button>
-                        </div>
+                    <div className="bg-gray-800 p-4 rounded-lg">   
+                        <Channels team={team}/>           
                     </div>
 
                     {/* Voice Channels */}
@@ -83,6 +77,7 @@ Home.propTypes = {
     team: PropTypes.shape({
         name: PropTypes.string.isRequired,
         owner: PropTypes.string,
+        id: PropTypes.string,
         createdOn: PropTypes.string,
         members: PropTypes.arrayOf(PropTypes.string),
     }),
