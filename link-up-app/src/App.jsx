@@ -24,6 +24,7 @@ function App() {
     userData: null,
   });
   const [user, loading] = useAuthState(auth);
+  const [invitations, setInvitations] = useState([]);
 
   
   useEffect(() => {
@@ -56,7 +57,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <AppContext.Provider value={{ ...appState, setAppState }}>
+        <AppContext.Provider value={{ ...appState, setAppState, invitations, setInvitations }}>
           {!user ? <Nav /> : <SideNav/>}
 
           <Routes>
