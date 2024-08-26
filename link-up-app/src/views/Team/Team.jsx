@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import AddMembers from "../AddMembers/AddMembers";
+import AddMembers from "../InviteTeamMember/InviteTeamMember";
 
 export default function Team({team}) {
 
