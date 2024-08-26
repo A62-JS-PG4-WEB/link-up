@@ -47,18 +47,19 @@ export default function Team({ team }) {
                     <div className="text-sm">
                         {currentTeam.owner && <p><strong>Owner:</strong> {currentTeam.owner}</p>}
                         {currentTeam.createdOn && <p><strong>Created On:</strong> {new Date(currentTeam.createdOn).toLocaleDateString()}</p>}
-                        {Array.isArray(currentTeam.members) && currentTeam.members.length > 0 ? (
+                        {currentTeam.members && Object.keys(currentTeam.members).length > 0 ? (
                             <div>
                                 <strong>Members:</strong>
                                 <ul className="ml-4 list-disc">
-                                    {currentTeam.members.map((member, index) => (
-                                        <li key={index}>{member}</li>
+                                    {Object.keys(currentTeam.members).map((memberKey, index) => (
+                                        <li key={index}>{memberKey}</li>
                                     ))}
                                 </ul>
                             </div>
                         ) : (
                             <p>No members found</p>
                         )}
+
                     </div>
                 </div>
             ) : (
