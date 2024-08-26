@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { AppContext } from "../../state/app.context";
-import { updateProfilePicture, updateUsername, updateUserEmail, updateUserPassword, updateUserPhoneNumber, } from "../../services/users.service";
+import { updateProfilePicture, updateUserEmail, updateUserPassword, updateUserPhoneNumber, } from "../../services/users.service";
 import { auth } from "../../config/firebase-config";
 import { getDownloadURL, ref, uploadBytes, getStorage } from "firebase/storage";
 import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
@@ -8,7 +8,7 @@ import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 const storage = getStorage();
 
 export default function Profile() {
-  const { user, setAppState } = useContext(AppContext);
+  const { userData, user, setAppState } = useContext(AppContext);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -45,11 +45,11 @@ export default function Profile() {
         await uploadBytes(storageRef, profileImage);
         const photoURL = await getDownloadURL(storageRef);
 
-        await updateProfilePicture(user, photoURL);
-
+        await updateProfilePicture(userData.username, photoURL);
+console.log(userData.username)
         setAppState((prevState) => ({
           ...prevState,
-          user: { ...user, photoURL },
+          userData: { ...userData.username, photoURL },
         }));
         setMessage("Profile image updated successfully!");
       } catch (error) {
@@ -63,9 +63,9 @@ export default function Profile() {
     setLoading(true);
     setMessage("");
     try {
-      if (username && username !== user.displayName) {
-        await updateUsername(user, username);
-      }
+      // if (username && username !== user.displayName) {
+      //   await updateUsername(user, username);
+      // }
   
       if (email && email !== user.email) {
         if (!oldPassword) {

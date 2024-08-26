@@ -1,28 +1,29 @@
-import { get, set, ref, query, equalTo, orderByChild } from 'firebase/database';
+import { get, set, ref, query, equalTo, orderByChild, update } from 'firebase/database';
 import { auth, db } from '../config/firebase-config';
 import { updateProfile, updateEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
-import { ref as dbRef, update } from "firebase/database";
 import { getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const updateUserPhoneNumber = async (user, phoneNumber) => {
+export const updateUserPhoneNumber = async (user, phone) => {
+  console.log('updating user' , user.username)
   try {
-    const userRef = dbRef(db, `users/${user.uid}`);
-    await update(userRef, { phoneNumber });
+    const userRef = ref(db, `users/${user.username}`);
+    await update(userRef, { phone });
 
-    await updateProfile(auth.currentUser, { phoneNumber });
+    await updateProfile(auth.currentUser, { phone });
 
-    return phoneNumber;
+    return phone;
   } catch (error) {
     throw new Error(`Failed to update phone number: ${error.message}`);
   }
 };
 export const updateProfilePicture = async (user, photoURL) => {
+  console.log(user);
   try {
     await updateProfile(auth.currentUser, { photoURL });
 
-    const userRef = dbRef(db, `users/${user.uid}`);
+    const userRef = ref(db, `users/${user}`);
     await update(userRef, { photoURL });
 
     return photoURL;
@@ -92,18 +93,18 @@ export const updateUserPassword = async (user, oldPassword, newPassword) => {
   }
 };
 
-export const updateUsername = async (user, newUsername) => {
-  try {
-    await updateProfile(auth.currentUser, { displayName: newUsername });
+// export const updateUsername = async (user, newUsername) => {
+//   try {
+//     await updateProfile(auth.currentUser, { displayName: newUsername });
 
-    const userRef = dbRef(db, `users/${user.uid}`);
-    await update(userRef, { displayName: newUsername });
+//     const userRef = dbRef(db, `users/${user.username}`);
+//     await update(userRef, { displayName: newUsername });
 
-    return newUsername;
-  } catch (error) {
-    throw new Error(`Failed to update username: ${error.message}`);
-  }
-};
+//     return newUsername;
+//   } catch (error) {
+//     throw new Error(`Failed to update username: ${error.message}`);
+//   }
+// };
 export const getUserByUsername = async (username) => {
   const snapshot = await get(ref(db, `users/${username}`));
   return snapshot.val();
