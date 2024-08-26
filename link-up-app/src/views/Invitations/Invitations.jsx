@@ -19,7 +19,6 @@ export default function Invitations() {
             const invitesList = data ? Object.values(data) : [];
             const filteredInvites = invitesList.filter(invite => invite.status === 'pending');
             setInvitations(filteredInvites);
-
             const newInvites = filteredInvites.filter(invite => !notifiedInvitations.has(invite.id));
 
             newInvites.forEach(invite => {

@@ -5,12 +5,12 @@ import { MAX_CHANNEL_NAME_LENGTH, MIN_CHANNEL_NAME_LENGTH } from "../../common/c
 import { addUserChannel } from "../../services/users.service";
 import { createChannel } from "../../services/channels.service";
 import { addChannelToTeam } from "../../services/teams.service";
+import PropTypes from 'prop-types';
 
-
-export default function CreateChannel ({ team, onClose }) {
+export default function CreateChannel({ team, onClose, onChannelCreated }) {
     const [channel, setChannel] = useState({ name: '' });
     const { userData } = useContext(AppContext);
-    
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (event.target.classList.contains('popup-overlay')) {
@@ -47,11 +47,12 @@ export default function CreateChannel ({ team, onClose }) {
 
             const channelId = await createChannel(channel.name.trim(), userData.username, userData.username, team.id);
             console.log(team);
-            
+
             setChannel({ name: '' });
-            await addUserChannel(channelId, userData.username);          
+            await addUserChannel(channelId, userData.username);
             await addChannelToTeam(team.id, channelId);
             onClose();
+            onChannelCreated();
         } catch (error) {
             console.error(error.message);
         }
@@ -96,3 +97,15 @@ export default function CreateChannel ({ team, onClose }) {
         </div>
     );
 }
+
+CreateChannel.propTypes = {
+    team: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        owner: PropTypes.string,
+        createdOn: PropTypes.string,
+        id: PropTypes.string,
+        members: PropTypes.arrayOf(PropTypes.string),
+    }),
+    onClose: PropTypes.func.isRequired,
+    onChannelCreated: PropTypes.func.isRequired,
+};

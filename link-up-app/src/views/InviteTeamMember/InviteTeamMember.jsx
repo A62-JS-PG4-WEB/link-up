@@ -50,12 +50,11 @@ export default function InviteTeamMember({ onClose, team }) {
                 message: `You are invitated to team ${teamName}`,
                 email: emailInput.email,
                 senderUsername: userData.username,      
-                createdOn:  new Date().getTime(),
+                createdOn: new Date().getTime(),
                 updatedOn: new Date().getTime()
             };
         
            await createInvitation(invitation);
-
            setEmailInput({ email: '' });
            onClose();
         } catch (error) {

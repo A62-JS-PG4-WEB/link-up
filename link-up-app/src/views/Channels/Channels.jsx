@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../../state/app.context";
 import { getTeamsInfoById, getUserTeams } from "../../services/teams.service";
 import CreateTeam from "../CreateTeam/CreateTeam";
@@ -13,7 +13,8 @@ export default function Channels({ team }) {
     const { userData } = useContext(AppContext);
     const [currentTeam, setCurrentTeam] = useState(team || location.state?.team);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [channels, setChannels] = useState([])
+    const [channels, setChannels] = useState([]);
+    const [channelUpdated, setChannelUpdated] = useState(false);
 
     useEffect(() => {
 
@@ -30,28 +31,26 @@ export default function Channels({ team }) {
         } else {
             setCurrentTeam(team || location.state?.team);
         }
-    }, [userData, location.state]);
+    }, [location.state, team]);
 
     useEffect(() => {
         const loadChannels = async () => {
             try {
                 if (userData && userData.username) {
                     const allChannels = await getUserChannels(userData.username);
-                    const listTeams = await getChannelsInfoById(allChannels);
-                    setChannels(listTeams);
-                    console.log(listTeams);
-
+                    const listChannels = await getChannelsInfoById(allChannels);
+                    const relevantChannels = listChannels.filter((ch) => ch.team === currentTeam.id);
+                    setChannels(relevantChannels);
                 }
             } catch (e) {
                 console.error("Error loading Channels", e);
             }
         };
-
         loadChannels()
-    }, [userData, setChannels]);
+    }, [userData, currentTeam, channelUpdated]);
 
-    const handleToggleChannelsList = () => {
-        setIsTeamsListVisible(!isTeamsListVisible);
+    const handleChannelCreated = () => {
+        setChannelUpdated(prev => !prev);
     };
 
     const handleCreateChannelClick = () => {
@@ -75,12 +74,12 @@ export default function Channels({ team }) {
                 </button>
             </div>
             <div className="space-y-2">
-                {channels?.map((ch) => (
-                    <button key={ch.id} className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># {ch.name}</button>
-
-                ))}
+                {channels.length > 0 &&
+                    (channels?.map((ch) => (
+                        <button key={ch.id} className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># {ch.name}</button>
+                    )))}
             </div>
-            {isPopupOpen && <CreateChannel team={currentTeam} onClose={handleClosePopup} />}
+            {isPopupOpen && <CreateChannel team={currentTeam} onClose={handleClosePopup} onChannelCreated={handleChannelCreated} />}
         </div>
     );
 }
