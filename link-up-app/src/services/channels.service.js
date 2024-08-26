@@ -30,8 +30,8 @@ export const getChannelsInfoById = async (channels) => {
             return snapshot.val(); 
         });
         const filteredChannels = await Promise.all(promises);
-
         return filteredChannels;
+        
     } catch (error) {
         console.error("Error fetching channels information:", error);
         throw error;
