@@ -1,14 +1,10 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../../state/app.context";
-import { getTeamsInfoById, getUserTeams } from "../../services/teams.service";
-import CreateTeam from "../../views/CreateTeam/CreateTeam";
-import AllTeams from "../../views/AllTeams/AllTeams";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import CreateChannel from "../../views/CreateChannel/CreateChannel";
 import { getChannelsInfoById, getUserChannels } from "../../services/channels.service";
 import PropTypes from 'prop-types';
 import { deleteChannelById } from "../../services/channels.service";
-import Chat from "../Chat/Chat";
 
 export default function Channels({ team, onSelectChannel }) {
     const location = useLocation();
@@ -62,7 +58,13 @@ export default function Channels({ team, onSelectChannel }) {
     };
 
     const handleChannelClick = async (channel) => {
-        onSelectChannel(channel); 
+
+        try {
+            localStorage.setItem('selectedChat', JSON.stringify(channel));
+            onSelectChannel(channel);
+        } catch (error) {
+            console.error("Failed to save Chat to localStorage", error);
+        }
     };
 
     const handleDeleteChannel = async (channelId) => {

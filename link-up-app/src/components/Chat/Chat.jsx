@@ -1,14 +1,40 @@
-import { useLocation, useParams } from "react-router-dom";
 import PropTypes from 'prop-types';
+import { useEffect, useState } from "react";
 
 export default function Chat({channel}) {
-    // const { channelId } = useParams();
-    // const location = useLocation();
-    // const { channel } = location.state || {};
+    const [currentChat, setCurrentChat] =  useState(channel || location.state?.channel);
+
+    useEffect(() => {
+        const savedChat = localStorage.getItem('selectedChat');
+        if (savedChat) {
+            try {
+                setCurrentChat(JSON.parse(savedChat));
+            } catch (error) {
+                console.error("Failed to parse channel from localStorage", error);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!channel) {
+        const savedChat = localStorage.getItem('selectedChat');
+        console.log(savedChat);
+        
+        if (savedChat) {
+            try {
+                setCurrentChat(JSON.parse(savedChat));
+            } catch (error) {
+                console.error("Failed to parse channel from localStorage", error);
+            }
+        }
+    } else {
+            setCurrentChat(channel || location.state?.channel);
+        }
+    }, [channel]);
 
     return (
         <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7">
-            <h1 className="text-2xl font-bold mb-4 text-white">{channel?.name || "Loading..."}</h1>
+            <h1 className="text-2xl font-bold mb-4 text-white"># {currentChat?.name || "Loading..."}</h1>
 
             <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto">
                 <div className="chat chat-start">
