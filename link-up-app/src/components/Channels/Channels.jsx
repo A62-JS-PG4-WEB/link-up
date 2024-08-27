@@ -10,8 +10,9 @@ import PropTypes from 'prop-types';
 import { deleteChannelById } from "../../services/channels.service";
 
 export default function Channels({ team }) {
+    const location = useLocation();
     const { userData } = useContext(AppContext);
-    const [currentTeam, setCurrentTeam] = useState(team);
+    const [currentTeam, setCurrentTeam] = useState(team || location.state?.team);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [channels, setChannels] = useState([]);
     const [channelUpdated, setChannelUpdated] = useState(false);
@@ -29,7 +30,7 @@ export default function Channels({ team }) {
         } else {
             setCurrentTeam(team);
         }
-    }, [team]);
+    }, [location.state, team]);
 
     useEffect(() => {
         const loadChannels = async () => {
@@ -62,7 +63,7 @@ export default function Channels({ team }) {
     const handleDeleteChannel = async (channelId) => {
         if (window.confirm("Are you sure you want to delete this channel?")) {
             try {
-                await deleteChannelById(channelId);
+                await deleteChannelById(channelId, currentTeam.id);
                 setChannelUpdated((prev) => !prev);
             } catch (error) {
                 console.error("Failed to delete channel", error);

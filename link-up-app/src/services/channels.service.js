@@ -21,7 +21,7 @@ export const getUserChannels = async (username) => {
 }
 // const ch = await getUserChannels('vankata')
 
-export const deleteChannelById = async (channelId) => {
+export const deleteChannelById = async (channelId, teamID) => {
     try {
         const channelSnapshot = await get(ref(db, `channels/${channelId}`));
         const channelData = channelSnapshot.val();
@@ -33,6 +33,7 @@ export const deleteChannelById = async (channelId) => {
         const members = channelData.members ? Object.keys(channelData.members) : [];
 
         await remove(ref(db, `channels/${channelId}`));
+        await remove(ref(db, `teams/${teamID}/channels/${channelId}`));
 
         const updates = {};
         members.forEach((member) => {
