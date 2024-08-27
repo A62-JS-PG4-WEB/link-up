@@ -1,14 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Channels from '../../components/Channels/Channels';
 import Team from '../Team/Team';
 import TextChannelsSection from '../../components/TextChannelsSection/TextChannelsSection';
 import VoiceChannels from '../../components/VoiceChannels/VoiceChannels';
 import Chat from '../../components/Chat/Chat';
 
 export default function Home({ team }) {
-    const [selectedChannel, setSelectedChannel] = useState(null);
+    const [selectedChat, setSelectedChat] = useState(null);
+
+    useEffect(() => {
+        const savedChat = localStorage.getItem('selectedChat');
+        if (savedChat) {
+            try {
+                setSelectedChat(JSON.parse(savedChat));
+            } catch (error) {
+                console.error("Failed to parse chat from localStorage", error);
+            }
+        }
+    }, []);
+
+    const handleSelectChannel = (channel) => {
+        setSelectedChat(channel);
+        try {
+            localStorage.setItem('selectedChat', JSON.stringify(channel));
+        } catch (error) {
+            console.error("Failed to save chat to localStorage", error);
+        }
+    };
 
     return (
         <div className="flex h-screen content">
@@ -18,27 +36,22 @@ export default function Home({ team }) {
                 <div className="w-1/4 space-y-6">
                     <Team team={team} />
                     {/* Text Channels */}
-                 <TextChannelsSection team={team} onSelectChannel={setSelectedChannel} />
-
+                    <TextChannelsSection team={team} onSelectChannel={handleSelectChannel} />
                     {/* Voice Channels */}
                     <VoiceChannels team={team} />
                 </div>
-
                 {/* Chat Section */}
-            
-                    {/* Messages Container */}
-                  <div className="flex-1">
-                    {selectedChannel ? (
-                        <Chat channel={selectedChannel} />
+                {/* Messages Container */}
+                <div className="flex-1">
+                    {selectedChat ? (
+                        <Chat channel={selectedChat} />
                     ) : (
-                        <div className="flex items-center justify-center h-full text-gray-500">
-                            Select a channel to start chatting
-                        </div>
+                        <div className="text-white">Please select a channel to start chatting.</div>
                     )}
                 </div>
-                </div>
             </div>
-      
+        </div>
+
     );
 }
 
