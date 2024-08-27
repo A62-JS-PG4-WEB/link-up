@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import CreateChannel from "../../views/CreateChannel/CreateChannel";
 import { getChannelsInfoById, getUserChannels } from "../../services/channels.service";
 import PropTypes from 'prop-types';
-import { deleteChannelById } from "../../services/channels.service"; // Import the delete function
+import { deleteChannelById } from "../../services/channels.service";
 
 export default function Channels({ team }) {
     const { userData } = useContext(AppContext);
