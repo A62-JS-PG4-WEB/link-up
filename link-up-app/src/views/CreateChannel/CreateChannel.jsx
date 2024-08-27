@@ -46,7 +46,7 @@ export default function CreateChannel({ team, onClose, onChannelCreated }) {
         try {
 
             const channelId = await createChannel(channel.name.trim(), userData.username, userData.username, team.id);
-            console.log(team);
+            // console.log(team);
 
             setChannel({ name: '' });
             await addUserChannel(channelId, userData.username);
@@ -89,7 +89,7 @@ export default function CreateChannel({ team, onClose, onChannelCreated }) {
                             type="submit"
                             className="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-pink-600"
                         >
-                            Submit
+                            Create
                         </button>
                     </div>
                 </form>

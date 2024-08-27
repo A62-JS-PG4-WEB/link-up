@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Channels from '../Channels/Channels';
+import Channels from '../../components/Channels/Channels';
 import Team from '../Team/Team';
+import TextChannelsSection from '../../components/TextChannelsSection/TextChannelsSection';
 
 export default function Home({ team }) {
 
@@ -11,12 +12,10 @@ export default function Home({ team }) {
 
             {/* Main Content */}
             <div className="flex-1 flex p-8 bg-gray-900 text-white">
-                <div className="w-1/4 space-y-6">    
-                    <Team team={team}/>
+                <div className="w-1/4 space-y-6">
+                    <Team team={team} />
                     {/* Text Channels */}
-                    <div className="bg-gray-800 p-4 rounded-lg">   
-                        <Channels team={team}/>           
-                    </div>
+                    <TextChannelsSection team={team} />
 
                     {/* Voice Channels */}
                     <div className="bg-gray-800 p-4 rounded-lg">

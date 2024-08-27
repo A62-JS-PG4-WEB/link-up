@@ -1,10 +1,10 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../../state/app.context";
 import { getTeamsInfoById, getUserTeams } from "../../services/teams.service";
-import CreateTeam from "../CreateTeam/CreateTeam";
-import AllTeams from "../AllTeams/AllTeams";
+import CreateTeam from "../../views/CreateTeam/CreateTeam";
+import AllTeams from "../../views/AllTeams/AllTeams";
 import { useLocation, useNavigate } from "react-router-dom";
-import CreateChannel from "../CreateChannel/CreateChannel";
+import CreateChannel from "../../views/CreateChannel/CreateChannel";
 import { getChannelsInfoById, getUserChannels } from "../../services/channels.service";
 import PropTypes from 'prop-types';
 
