@@ -5,8 +5,10 @@ import Channels from '../../components/Channels/Channels';
 import Team from '../Team/Team';
 import TextChannelsSection from '../../components/TextChannelsSection/TextChannelsSection';
 import VoiceChannels from '../../components/VoiceChannels/VoiceChannels';
+import Chat from '../../components/Chat/Chat';
 
 export default function Home({ team }) {
+    const [selectedChannel, setSelectedChannel] = useState(null);
 
     return (
         <div className="flex h-screen content">
@@ -16,53 +18,27 @@ export default function Home({ team }) {
                 <div className="w-1/4 space-y-6">
                     <Team team={team} />
                     {/* Text Channels */}
-                    <TextChannelsSection team={team} />
+                 <TextChannelsSection team={team} onSelectChannel={setSelectedChannel} />
 
                     {/* Voice Channels */}
                     <VoiceChannels team={team} />
                 </div>
 
                 {/* Chat Section */}
-                <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7">
-                    {/* Chat Team Name */}
-                    <h1 className="text-2xl font-bold mb-4">Star Wars</h1>
-
+            
                     {/* Messages Container */}
-                    <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto">
-                        <div className="chat chat-start">
-                            <div className="chat-image avatar">
-                                <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Tailwind CSS chat bubble component"
-                                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                                </div>
-                            </div>
-                            <div className="chat-header">
-                                Obi-Wan Kenobi
-                                <time className="text-xs opacity-50">12:45</time>
-                            </div>
-                            <div className="chat-bubble">You were the Chosen One!</div>
-                            <div className="chat-footer opacity-50">Delivered</div>
+                  <div className="flex-1">
+                    {selectedChannel ? (
+                        <Chat channel={selectedChannel} />
+                    ) : (
+                        <div className="flex items-center justify-center h-full text-gray-500">
+                            Select a channel to start chatting
                         </div>
-                        <div className="chat chat-end">
-                            <div className="chat-image avatar">
-                                <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Tailwind CSS chat bubble component"
-                                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                                </div>
-                            </div>
-                            <div className="chat-header">
-                                Anakin
-                                <time className="text-xs opacity-50">12:46</time>
-                            </div>
-                            <div className="chat-bubble">I hate you!</div>
-                            <div className="chat-footer opacity-50">Seen at 12:46</div>
-                        </div>
-                    </div>
+                    )}
+                </div>
                 </div>
             </div>
-        </div>
+      
     );
 }
 

@@ -1,10 +1,11 @@
 import Channels from "../Channels/Channels"
 import PropTypes from 'prop-types';
-export default function TextChannelsSection({ team }) {
+
+export default function TextChannelsSection({ team, onSelectChannel  }) {
     return (
         <>
             <div className="bg-gray-800 p-4 rounded-lg">
-                <Channels team={team} />
+            <Channels team={team} onSelectChannel={onSelectChannel} />
             </div>
         </>
 
@@ -17,5 +18,6 @@ TextChannelsSection.propTypes = {
         id: PropTypes.string,
         createdOn: PropTypes.string,
         members: PropTypes.arrayOf(PropTypes.string),
-    }),
+    }).isRequired,
+    onSelectChannel: PropTypes.func.isRequired,
 };
