@@ -74,9 +74,9 @@ export default function VoiceChannels({ team }) {
     );
 }
 
-VoiceChannels.propTypes = {
-    team: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        owner: PropTypes.string.isRequired,
-    }).isRequired,
-};
+// VoiceChannels.propTypes = {
+//     team: PropTypes.shape({
+//         id: PropTypes.string.isRequired,
+//         owner: PropTypes.string.isRequired,
+//     }).isRequired,
+// };

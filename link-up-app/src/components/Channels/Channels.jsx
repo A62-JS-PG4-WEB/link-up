@@ -8,8 +8,9 @@ import CreateChannel from "../../views/CreateChannel/CreateChannel";
 import { getChannelsInfoById, getUserChannels } from "../../services/channels.service";
 import PropTypes from 'prop-types';
 import { deleteChannelById } from "../../services/channels.service";
+import Chat from "../Chat/Chat";
 
-export default function Channels({ team }) {
+export default function Channels({ team, onSelectChannel }) {
     const location = useLocation();
     const { userData } = useContext(AppContext);
     const [currentTeam, setCurrentTeam] = useState(team || location.state?.team);
@@ -60,6 +61,10 @@ export default function Channels({ team }) {
         setIsPopupOpen(false);
     };
 
+    const handleChannelClick = async (channel) => {
+        onSelectChannel(channel); 
+    };
+
     const handleDeleteChannel = async (channelId) => {
         if (window.confirm("Are you sure you want to delete this channel?")) {
             try {
@@ -89,7 +94,11 @@ export default function Channels({ team }) {
                 {channels.length > 0 &&
                     channels.map((ch) => (
                         <div key={ch.id} className="flex justify-between items-center w-full p-2 bg-gray-700 rounded-md hover:bg-gray-600">
-                            <span className="text-left"># {ch.name}</span>
+                            <button
+                                onClick={() => handleChannelClick(ch)}
+                                className="text-left">
+                                # {ch.name}
+                            </button>
                             {userData?.username === currentTeam?.owner && (
                                 <button
                                     onClick={() => handleDeleteChannel(ch.id)}
@@ -121,4 +130,5 @@ Channels.propTypes = {
         id: PropTypes.string,
         members: PropTypes.arrayOf(PropTypes.string),
     }),
+    onSelectChannel: PropTypes.func.isRequired,
 };
