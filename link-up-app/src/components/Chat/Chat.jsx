@@ -3,12 +3,41 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from '../../state/app.context';
 import { sendMessage, sentMessageSaveInChannels, setMsgStatusForEachUser } from '../../services/chat.service';
 import { getChannelsMembersByID } from '../../services/channels.service';
+import ChatView from '../../views/ChatView/ChatView';
 
 export default function Chat({ channel }) {
     const { userData } = useContext(AppContext);
     const [currentChat, setCurrentChat] = useState(channel || location.state?.channel);
     const [currentTeam, setCurrentTeam] = useState([]);
     const [message, setMessage] = useState({ message: '' });
+    const [currentMessages, setCurrentMessages ] = useState([]);
+
+    
+    useEffect(() => {
+        const savedChat = localStorage.getItem('selectedChat');
+
+        console.log(JSON.parse(savedChat));
+        console.log(userData);
+
+        if (savedChat) {
+            const loadMessages = async () => {
+                try {
+                    setCurrentChat(JSON.parse(savedChat));
+
+                    const messageIds = await getIdsOfMessages(currentChat.id);
+                    const detailedMessage = await getMessageInfo(messageIds);
+                    setCurrentMessages(detailedMessage)
+                    console.log(currentMessages);
+                    
+                } catch (error) {
+                    console.error("Failed to parse channel from localStorage", error);
+                }
+            }
+
+            loadMessages()
+        }
+    }, [userData, setCurrentChat]);
+
 
     useEffect(() => {
         const savedChat = localStorage.getItem('selectedChat');
@@ -71,6 +100,8 @@ export default function Chat({ channel }) {
             const messageInChannelId = await sentMessageSaveInChannels(currentChat.id, messageId);
             const members = await getChannelsMembersByID(currentChat.id);
             const messageStatus = await setMsgStatusForEachUser(members, messageId);
+            setCurrentMessages([...currentMessages, sentMessage]);
+
             setMessage({ message: '' });
 
         } catch (error) {
@@ -90,8 +121,9 @@ export default function Chat({ channel }) {
             </h1>
 
             {/* Chat messages container */}
-            {/* <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"> */}
-
+            <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"> 
+           <ChatView channel={currentChat}/>
+            </div>
             {/* Input area */}
             <form onSubmit={handleSendMessage} className="space-y-6 mt-4">
                 <div className="mt-4 flex items-center space-x-4">
@@ -109,7 +141,8 @@ export default function Chat({ channel }) {
                     </button>
                 </div>
             </form>
-        </div>
+            </div>
+       
     );
 
 }

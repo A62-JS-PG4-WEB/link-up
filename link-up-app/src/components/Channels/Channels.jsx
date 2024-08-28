@@ -17,6 +17,7 @@ export default function Channels({ team, onSelectChannel }) {
     useEffect(() => {
         if (!team) {
             const savedTeam = localStorage.getItem("selectedTeam");
+            
             if (savedTeam) {
                 try {
                     setCurrentTeam(JSON.parse(savedTeam));
@@ -35,11 +36,15 @@ export default function Channels({ team, onSelectChannel }) {
         const loadChannels = async () => {
             try {
                 if (userData && userData.username && currentTeam) {
+                   
+                    
                     const allChannels = await getUserChannels(userData.username);
-                   //  console.log("All channels:", allChannels); 
+                   // console.log("All channels:", allChannels); 
                     const listChannels = await getChannelsInfoById(allChannels);
-                    //console.log("List channels:", listChannels); 
-                    const relevantChannels = listChannels.filter((ch) => ch.team === currentTeam.id);
+                   // console.log("List channels:", listChannels); 
+                  const relevantChannels = listChannels.filter((ch) => ch.team === currentTeam.id);
+                    
+                    
                   //  console.log("relevant channels:", relevantChannels); 
                     setChannels(relevantChannels);
                 }

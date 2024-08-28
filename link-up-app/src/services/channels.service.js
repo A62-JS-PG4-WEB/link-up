@@ -50,9 +50,16 @@ export const deleteChannelById = async (channelId, teamID) => {
 };
 
 export const getChannelsInfoById = async (channels) => {
+   
+    // const snapshot = await get(ref(db, `channels/-O4ygojej9sUZgv7N7w6`));
+    // console.log(snapshot.val());
     try {
         const promises = channels.map(async (id) => {
+            console.log(id);
+            
             const snapshot = await get(ref(db, `channels/${id}`));
+            console.log(snapshot.val());
+            
             return snapshot.val();
         });
         const filteredChannels = await Promise.all(promises);

@@ -1,4 +1,4 @@
-import { push, ref, set, update } from "firebase/database";
+import { get, push, ref, set, update } from "firebase/database";
 import { db } from "../config/firebase-config";
 
 
@@ -32,4 +32,29 @@ export const setMsgStatusForEachUser = async (users, messageId, status = 'unread
         console.error("Error setting message status for members:", error);
         throw error;
     }
-}
+};
+
+export const getIdsOfMessages = async (channelId) => {
+    const channelMessagesSnapshot = await get(ref(db, `channels/${channelId}/messages`));
+    if (channelMessagesSnapshot.exists()) {
+        return Object.keys(channelMessagesSnapshot.val());
+    } else {
+        console.warn('No messages found for this channel.');
+        return [];
+    }
+};
+
+export const getMessageInfo = async (messageIds) => {
+    try {
+        const promises = messageIds.map(async (id) => {
+            const snapshot = await get(ref(db, `messages/${id}`));
+            return snapshot.val();
+        });
+        const filteredTeams = await Promise.all(promises);
+        return filteredTeams;
+    
+    } catch (error) {
+        console.error("Error getting message info", error);
+        throw error;
+    }
+};

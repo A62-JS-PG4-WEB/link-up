@@ -19,6 +19,7 @@ const navigatetoHome = (team) => {
 return (
     <div>
         <ul>
+            
             {teams?.map((t) => (
                 <li key={t.id} className="my-2 w-full hover:bg-gray-800" >
                     <button
