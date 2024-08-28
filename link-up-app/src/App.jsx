@@ -15,6 +15,7 @@ import Profile from './views/Profile/Profile.jsx';
 import Settings from './views/Settings/Settings.jsx';
 
 
+
 function App() {
   const [appState, setAppState] = useState({
     user: null,
@@ -22,28 +23,24 @@ function App() {
   });
   const [user, loading] = useAuthState(auth);
 
-  if (appState.user !== user) {
-    setAppState({ ...appState, user });
-  }
+  useEffect(() => {
+    if (user) {
+      const fetchUserData = async () => {
+        try {
+          const data = await getUserData(user.uid);
+          const userData = data[Object.keys(data)[0]];
+          setAppState(prevState => ({ ...prevState, user, userData }));
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
 
-
-    useEffect(() => {
-    if (!user) return;
-
-    const fetchUserData = async () => {
-      try {
-        const data = await getUserData(user.uid);
-        const userData = data[Object.keys(data)[0]];
-        console.log(userData);
-        
-        setAppState(prevState => ({ ...prevState, userData }));
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
-    fetchUserData();
+      fetchUserData();
+    } else {
+      setAppState(prevState => ({ ...prevState, user: null, userData: null }));
+    }
   }, [user]);
+
 
   if (loading) {
     return <div>Loading...</div>;

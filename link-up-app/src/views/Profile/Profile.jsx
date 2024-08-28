@@ -1,13 +1,11 @@
 import { useState, useContext, useEffect } from "react";
 import { AppContext } from "../../state/app.context";
-import { updateProfilePicture, updateUserEmail, updateUserPassword, updateUserPhoneNumber, } from "../../services/users.service";
+import { updateProfilePicture, updateUserEmail, updateUserPassword, updateUserPhoneNumber } from "../../services/users.service";
 import { auth } from "../../config/firebase-config";
 import { getDownloadURL, ref, uploadBytes, getStorage } from "firebase/storage";
-import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
-import { update } from 'firebase/database';
-import { db } from "../../config/firebase-config";
 
 const storage = getStorage();
+
 
 export default function Profile() {
   const { userData, user, setAppState } = useContext(AppContext);
@@ -30,7 +28,6 @@ export default function Profile() {
     }
   }, [user]);
 
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -39,7 +36,6 @@ export default function Profile() {
     }
   };
 
-
   const handleImageUpload = async () => {
     if (profileImage) {
       const storageRef = ref(storage, `profiles/${auth.currentUser.uid}`);
@@ -47,11 +43,11 @@ export default function Profile() {
         await uploadBytes(storageRef, profileImage);
         const photoURL = await getDownloadURL(storageRef);
 
-        await updateProfilePicture(userData.username, photoURL);
-console.log(userData.username)
+        await updateProfilePicture(user.username, photoURL);
+
         setAppState((prevState) => ({
           ...prevState,
-          userData: { ...userData.username, photoURL },
+          userData: { ...prevState.userData, photoURL },
         }));
         setMessage("Profile image updated successfully!");
       } catch (error) {
@@ -60,11 +56,12 @@ console.log(userData.username)
     }
   };
 
-  
   const handleSave = async () => {
     setLoading(true);
     setMessage("");
     try {
+      const user = auth.currentUser;
+  
       if (email && email !== user.email) {
         if (!oldPassword) {
           setMessage("Old password is required to update email.");
@@ -72,29 +69,26 @@ console.log(userData.username)
           return;
         }
   
-        const credential = EmailAuthProvider.credential(user.email, oldPassword);
-        await reauthenticateWithCredential(auth.currentUser, credential);
+        const successMessage = await updateUserEmail(email, oldPassword);
+        setMessage(successMessage);
   
-        await updateUserEmail(email, oldPassword);
-  
-        const userRef = ref(db, `users/${userData.username}`);
-        await update(userRef, { email });
+        setAppState((prevState) => ({
+          ...prevState,
+          userData: { ...prevState.userData, email },
+        }));
       }
   
       if (oldPassword && newPassword) {
-        await updateUserPassword(user, oldPassword, newPassword);
+        await updateUserPassword(oldPassword, newPassword);
       }
   
-
       if (phoneNumber && phoneNumber !== user.phoneNumber) {
         await updateUserPhoneNumber(userData, phoneNumber);
       }
-
-      
   
       setAppState((prevState) => ({
         ...prevState,
-        user: auth.currentUser,
+        user: { ...prevState.userData, email, phoneNumber },
       }));
   
       setMessage("Profile updated successfully!");
@@ -104,7 +98,6 @@ console.log(userData.username)
       setLoading(false);
     }
   };
-
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -167,7 +160,6 @@ console.log(userData.username)
               className="input input-bordered w-full"
             />
           </div>
-
 
           {/* Old Password */}
           <div className="form-control w-full">
