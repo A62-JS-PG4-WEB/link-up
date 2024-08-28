@@ -9,6 +9,7 @@ const navigatetoHome = (team) => {
     setSelectedTeam(team)
     try {
         localStorage.setItem('selectedTeam', JSON.stringify(team));
+        // localStorage.removeItem('selectedChat');  
     } catch (error) {
         console.error("Failed to save team to localStorage", error);
     }
