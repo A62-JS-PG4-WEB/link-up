@@ -4,6 +4,8 @@ import { updateProfilePicture, updateUserEmail, updateUserPassword, updateUserPh
 import { auth } from "../../config/firebase-config";
 import { getDownloadURL, ref, uploadBytes, getStorage } from "firebase/storage";
 import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
+import { update } from 'firebase/database';
+import { db } from "../../config/firebase-config";
 
 const storage = getStorage();
 
@@ -21,7 +23,7 @@ export default function Profile() {
 
   useEffect(() => {
     if (user) {
-      setUsername(user.displayName || "");
+      setUsername(user.username || "");
       setEmail(user.email || "");
       setPhoneNumber(user.phoneNumber || "");
       setImagePreview(user.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp");
@@ -63,10 +65,6 @@ console.log(userData.username)
     setLoading(true);
     setMessage("");
     try {
-      // if (username && username !== user.displayName) {
-      //   await updateUsername(user, username);
-      // }
-  
       if (email && email !== user.email) {
         if (!oldPassword) {
           setMessage("Old password is required to update email.");
@@ -74,17 +72,25 @@ console.log(userData.username)
           return;
         }
   
-        // Reauthenticate the user
         const credential = EmailAuthProvider.credential(user.email, oldPassword);
         await reauthenticateWithCredential(auth.currentUser, credential);
   
-        // Proceed with updating the email
-        await updateUserEmail(user, email);
+        await updateUserEmail(email, oldPassword);
+  
+        const userRef = ref(db, `users/${userData.username}`);
+        await update(userRef, { email });
       }
   
       if (oldPassword && newPassword) {
         await updateUserPassword(user, oldPassword, newPassword);
       }
+  
+
+      if (phoneNumber && phoneNumber !== user.phoneNumber) {
+        await updateUserPhoneNumber(userData, phoneNumber);
+      }
+
+      
   
       setAppState((prevState) => ({
         ...prevState,
@@ -107,7 +113,7 @@ console.log(userData.username)
 
         {/* Display Current Username */}
         <div className="mb-6">
-          <p className="text-lg font-semibold">Current Username: {user?.displayName || "User"}</p>
+          <p className="text-lg font-semibold">Current Username: {user?.username || "User"}</p>
         </div>
 
         {/* Profile Picture Upload */}
@@ -135,18 +141,6 @@ console.log(userData.username)
 
         {/* Profile Form */}
         <div className="flex flex-col space-y-4">
-          {/* Username */}
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Username</span>
-            </label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="input input-bordered w-full"
-            />
-          </div>
 
           {/* Email */}
           <div className="form-control w-full">
