@@ -63,3 +63,18 @@ export const getChannelsInfoById = async (channels) => {
         throw error;
     }
 };
+
+export const getChannelsMembersByID = async (channelId) => {
+    try {
+        const channelMembersSnapshot = await get(ref(db, `channels/${channelId}/members`));
+        if (channelMembersSnapshot.exists()) {
+            return Object.keys(channelMembersSnapshot.val());
+        } else {
+            console.warn('No members found for this channel.');
+            return [];
+        }
+    } catch (error) {
+        console.error("Error fetching channel members:", error);
+        throw error;
+    }
+};
