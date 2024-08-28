@@ -9,6 +9,7 @@ const navigatetoHome = (team) => {
     setSelectedTeam(team)
     try {
         localStorage.setItem('selectedTeam', JSON.stringify(team));
+        // localStorage.removeItem('selectedChat');  
     } catch (error) {
         console.error("Failed to save team to localStorage", error);
     }
@@ -18,6 +19,7 @@ const navigatetoHome = (team) => {
 return (
     <div>
         <ul>
+            
             {teams?.map((t) => (
                 <li key={t.id} className="my-2 w-full hover:bg-gray-800" >
                     <button

@@ -9,7 +9,7 @@ import { deleteChannelById } from "../../services/channels.service";
 export default function Channels({ team, onSelectChannel }) {
     const location = useLocation();
     const { userData } = useContext(AppContext);
-    const [currentTeam, setCurrentTeam] = useState(team || location.state?.team);
+   const [currentTeam, setCurrentTeam] = useState(team || location.state?.team);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [channels, setChannels] = useState([]);
     const [channelUpdated, setChannelUpdated] = useState(false);
@@ -17,6 +17,7 @@ export default function Channels({ team, onSelectChannel }) {
     useEffect(() => {
         if (!team) {
             const savedTeam = localStorage.getItem("selectedTeam");
+            
             if (savedTeam) {
                 try {
                     setCurrentTeam(JSON.parse(savedTeam));
@@ -30,12 +31,21 @@ export default function Channels({ team, onSelectChannel }) {
     }, [location.state, team]);
 
     useEffect(() => {
+        console.log("current team:", currentTeam); 
+
         const loadChannels = async () => {
             try {
                 if (userData && userData.username && currentTeam) {
+                   
+                    
                     const allChannels = await getUserChannels(userData.username);
+                   // console.log("All channels:", allChannels); 
                     const listChannels = await getChannelsInfoById(allChannels);
-                    const relevantChannels = listChannels.filter((ch) => ch.team === currentTeam.id);
+                   // console.log("List channels:", listChannels); 
+                  const relevantChannels = listChannels.filter((ch) => ch.team === currentTeam.id);
+                    
+                    
+                  //  console.log("relevant channels:", relevantChannels); 
                     setChannels(relevantChannels);
                 }
             } catch (e) {
@@ -58,7 +68,7 @@ export default function Channels({ team, onSelectChannel }) {
     };
 
     const handleChannelClick = async (channel) => {
-
+        console.log("chosen channel", channel); 
         try {
             localStorage.setItem('selectedChat', JSON.stringify(channel));
             onSelectChannel(channel);

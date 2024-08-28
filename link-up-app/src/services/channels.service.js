@@ -50,9 +50,16 @@ export const deleteChannelById = async (channelId, teamID) => {
 };
 
 export const getChannelsInfoById = async (channels) => {
+   
+    // const snapshot = await get(ref(db, `channels/-O4ygojej9sUZgv7N7w6`));
+    // console.log(snapshot.val());
     try {
         const promises = channels.map(async (id) => {
+            console.log(id);
+            
             const snapshot = await get(ref(db, `channels/${id}`));
+            console.log(snapshot.val());
+            
             return snapshot.val();
         });
         const filteredChannels = await Promise.all(promises);
@@ -60,6 +67,21 @@ export const getChannelsInfoById = async (channels) => {
 
     } catch (error) {
         console.error("Error fetching channels information:", error);
+        throw error;
+    }
+};
+
+export const getChannelsMembersByID = async (channelId) => {
+    try {
+        const channelMembersSnapshot = await get(ref(db, `channels/${channelId}/members`));
+        if (channelMembersSnapshot.exists()) {
+            return Object.keys(channelMembersSnapshot.val());
+        } else {
+            console.warn('No members found for this channel.');
+            return [];
+        }
+    } catch (error) {
+        console.error("Error fetching channel members:", error);
         throw error;
     }
 };
