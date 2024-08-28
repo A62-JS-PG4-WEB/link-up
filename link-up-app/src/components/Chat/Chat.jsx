@@ -4,12 +4,15 @@ import { useEffect, useState } from "react";
 export default function Chat({ channel }) {
     const [currentChat, setCurrentChat] = useState(channel || location.state?.channel);
     const [currentTeam, setCurrentTeam] = useState([]);
+    
     console.log(currentChat);
 
     useEffect(() => {
         const savedChat = localStorage.getItem('selectedChat');
         const savedTeam = localStorage.getItem('selectedTeam');
         setCurrentTeam(JSON.parse(savedTeam));
+        
+        console.log('CHAT team update LS', JSON.parse(savedTeam));
         
         if (savedChat) {
             try {
@@ -44,8 +47,7 @@ export default function Chat({ channel }) {
 
     return (
         <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 max-w-3xl h-[600px]">
-            {currentChat.team !== currentTeam.id ? (<h3>Select Channel</h3>)
-                : (<>
+    
                     <h1 className="text-2xl font-bold mb-4 text-white">
                         # {currentChat?.name || "Loading..."}
                     </h1>
@@ -221,8 +223,7 @@ export default function Chat({ channel }) {
                             Send
                         </button>
                     </div>
-                </>
-                )}
+              
         </div>
     );
 
