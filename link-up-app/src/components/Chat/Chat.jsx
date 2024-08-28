@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from '../../state/app.context';
-import { sendMessage, sentMessageSaveInChannels, setMsgStatusForEachUser } from '../../services/chat.service';
+import { getIdsOfMessages, getMessageInfo, sendMessage, sentMessageSaveInChannels, setMsgStatusForEachUser } from '../../services/chat.service';
 import { getChannelsMembersByID } from '../../services/channels.service';
-import ChatView from '../../views/ChatView/ChatView';
 
 export default function Chat({ channel }) {
     const { userData } = useContext(AppContext);
@@ -12,6 +11,30 @@ export default function Chat({ channel }) {
     const [message, setMessage] = useState({ message: '' });
     const [currentMessages, setCurrentMessages ] = useState([]);
 
+    useEffect(() => {
+        const savedChat = localStorage.getItem('selectedChat');
+
+        console.log(JSON.parse(savedChat));
+        console.log(userData);
+
+        if (savedChat) {
+            const loadMessages = async () => {
+                try {
+                    setCurrentChat(JSON.parse(savedChat));
+
+                    const messageIds = await getIdsOfMessages(currentChat.id);
+                    const detailedMessage = await getMessageInfo(messageIds);
+                    setCurrentMessages(detailedMessage)
+                    console.log(currentMessages);
+                    
+                } catch (error) {
+                    console.error("Failed to parse channel from localStorage", error);
+                }
+            }
+
+            loadMessages()
+        }
+    }, [userData, setCurrentChat]);
     
     useEffect(() => {
         const savedChat = localStorage.getItem('selectedChat');
@@ -122,7 +145,52 @@ export default function Chat({ channel }) {
 
             {/* Chat messages container */}
             <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"> 
-           <ChatView channel={currentChat}/>
+           {/* <ChatView channel={currentChat}/> */}
+           <div className="chat-container">
+            {currentMessages.map((m) => (
+                m.senderUsername === userData.username ? (
+                    <div key={m.id} className="chat chat-end mb-4">
+                        <div className="chat-image avatar">
+                            <div className="w-10 rounded-full">
+                                <img
+                                    alt="User avatar"
+                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                                />
+                            </div>
+                        </div>
+                        <div className="chat-header">
+                            {m.senderUsername}
+                            <time className="text-xs opacity-50">
+                                {new Date(m.createdOn).toLocaleString()}
+                            </time>
+                        </div>
+                        <div className="chat-bubble">{m.message}</div>
+                        {/* <div className="chat-footer opacity-50">Delivered</div> */}
+                    </div>
+                ) : (
+                    <div key={m.id} className="chat chat-start">
+                        <div className="chat-image avatar">
+                            <div className="w-10 rounded-full">
+                                <img
+                                    alt="User avatar"
+                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                                />
+                            </div>
+                        </div>
+                        <div className="chat-header">
+                            {m.senderUsername}
+                            <time className="text-xs opacity-50">
+                                {new Date(m.createdOn).toLocaleString()}
+                            </time>
+                        </div>
+                        <div className="chat-bubble">{m.message}</div>
+                        {/* <div className="chat-footer opacity-50">Delivered</div> */}
+
+                        
+                    </div>
+                )
+            ))}
+        </div>
             </div>
             {/* Input area */}
             <form onSubmit={handleSendMessage} className="space-y-6 mt-4">
@@ -152,6 +220,7 @@ Chat.propTypes = {
         name: PropTypes.string.isRequired,
     }).isRequired,
 };
+
 
 
 //   {/* Example received message */}
