@@ -4,7 +4,6 @@ import { AppContext } from "../../state/app.context";
 import { useNavigate } from "react-router-dom";
 import { createUserUsername, getUserByEmail, getUserByUsername } from "../../services/users.service";
 import { MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "../../common/constants";
-import { createUserUsername, getUserByUsername } from "../../services/users.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -39,7 +38,7 @@ export default function Register() {
 
         if (user.username.length < MIN_USERNAME_LENGTH || user.username.length > MAX_USERNAME_LENGTH) {
             return console.error('Invalid username length');
-
+        }
 
         try {
             const userEmail = await getUserByEmail(user.email.trim());
@@ -59,7 +58,7 @@ export default function Register() {
             navigate('/home');
             console.log('Successfully registered');
 
-            } catch (error) {
+        } catch (error) {
             console.error(error.message);
 
         }
