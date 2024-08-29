@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../state/app.context";
 import { useLocation } from "react-router-dom";
 import CreateChannel from "../../views/CreateChannel/CreateChannel";

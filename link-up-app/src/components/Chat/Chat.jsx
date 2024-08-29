@@ -133,6 +133,7 @@ export default function Chat({ channel }) {
     };
 
     // console.log('TEAM ID', currentTeam.id);
+    
     // console.log('CHANNEL TEAM ID', currentChat.team);
 
 
