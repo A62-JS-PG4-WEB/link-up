@@ -1,99 +1,50 @@
 import PropTypes from 'prop-types';
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from '../../state/app.context';
-import { getIdsOfMessages, getMessageInfo, sendMessage, sentMessageSaveInChannels, setMsgStatusForEachUser } from '../../services/chat.service';
+import { getMessageInfo, sendMessage, sentMessageSaveInChannels, setMsgStatusForEachUser } from '../../services/chat.service';
 import { getChannelsMembersByID } from '../../services/channels.service';
+import { db } from '../../config/firebase-config';
+import { onValue, ref } from 'firebase/database';
 
 export default function Chat({ channel }) {
     const { userData } = useContext(AppContext);
     const [currentChat, setCurrentChat] = useState(channel || location.state?.channel);
     const [currentTeam, setCurrentTeam] = useState([]);
     const [message, setMessage] = useState({ message: '' });
-    const [currentMessages, setCurrentMessages ] = useState([]);
+    const [currentMessages, setCurrentMessages] = useState([]);
 
     useEffect(() => {
-        const savedChat = localStorage.getItem('selectedChat');
-
-        console.log(JSON.parse(savedChat));
-        console.log(userData);
-
-        if (savedChat) {
-            const loadMessages = async () => {
-                try {
-                    setCurrentChat(JSON.parse(savedChat));
-
-                    const messageIds = await getIdsOfMessages(currentChat.id);
-                    const detailedMessage = await getMessageInfo(messageIds);
-                    setCurrentMessages(detailedMessage)
-                    console.log(currentMessages);
-                    
-                } catch (error) {
-                    console.error("Failed to parse channel from localStorage", error);
-                }
-            }
-
-            loadMessages()
+        if (channel) {
+            setCurrentChat(channel);
         }
-    }, [userData, setCurrentChat]);
-    
-    useEffect(() => {
-        const savedChat = localStorage.getItem('selectedChat');
-
-        console.log(JSON.parse(savedChat));
-        console.log(userData);
-
-        if (savedChat) {
-            const loadMessages = async () => {
-                try {
-                    setCurrentChat(JSON.parse(savedChat));
-
-                    const messageIds = await getIdsOfMessages(currentChat.id);
-                    const detailedMessage = await getMessageInfo(messageIds);
-                    setCurrentMessages(detailedMessage)
-                    console.log(currentMessages);
-                    
-                } catch (error) {
-                    console.error("Failed to parse channel from localStorage", error);
-                }
-            }
-
-            loadMessages()
-        }
-    }, [userData, setCurrentChat]);
-
+    }, [channel]);
 
     useEffect(() => {
-        const savedChat = localStorage.getItem('selectedChat');
         const savedTeam = localStorage.getItem('selectedTeam');
         setCurrentTeam(JSON.parse(savedTeam));
 
-        console.log('CHAT team update LS', JSON.parse(savedTeam));
+        if (currentChat) {
 
-        if (savedChat) {
-            try {
-                setCurrentChat(JSON.parse(savedChat));
-            } catch (error) {
-                console.error("Failed to parse channel from localStorage", error);
-            }
-        }
-    }, []);
+            const messagesRef = ref(db, `channels/${currentChat.id}/messages`);
 
-    useEffect(() => {
-        if (!channel) {
-            const savedChat = localStorage.getItem('selectedChat');
-            console.log(savedChat);
-
-            if (savedChat) {
-                try {
-                    setCurrentChat(JSON.parse(savedChat));
-                } catch (error) {
-                    console.error("Failed to parse channel from localStorage", error);
+            const unsubscribe = onValue(messagesRef, async (snapshot) => {
+                const messagesData = snapshot.val();
+                if (messagesData) {
+                    try {
+                        const messageIds = Object.keys(messagesData);
+                        const detailedMessages = await getMessageInfo(messageIds);
+                        setCurrentMessages(detailedMessages);
+                    } catch (error) {
+                        console.error("Failed to load messages", error);
+                    }
+                } else {
+                    setCurrentMessages([]);
                 }
-            }
-        } else {
-            setCurrentChat(channel || location.state?.channel);
+            });
+
+            return () => unsubscribe();
         }
-    }, [channel, currentTeam]);
+    }, [currentChat]);
 
     const createMessage = (key, value) => {
         if (message[key] !== value) {
@@ -120,23 +71,20 @@ export default function Chat({ channel }) {
             };
 
             const messageId = await sendMessage(sentMessage);
-            const messageInChannelId = await sentMessageSaveInChannels(currentChat.id, messageId);
+            await sentMessageSaveInChannels(currentChat.id, messageId);
             const members = await getChannelsMembersByID(currentChat.id);
-            const messageStatus = await setMsgStatusForEachUser(members, messageId);
-            setCurrentMessages([...currentMessages, sentMessage]);
+            await setMsgStatusForEachUser(members, messageId);
 
+            setCurrentMessages([...currentMessages, sentMessage]);
             setMessage({ message: '' });
 
         } catch (error) {
-            console.error(error.message);
+            console.error('Message not sent', error);
         }
     };
 
     // console.log('TEAM ID', currentTeam.id);
-    
     // console.log('CHANNEL TEAM ID', currentChat.team);
-
-
     return (
         <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 max-w-3xl h-[600px]">
 
@@ -145,53 +93,53 @@ export default function Chat({ channel }) {
             </h1>
 
             {/* Chat messages container */}
-            <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"> 
-           {/* <ChatView channel={currentChat}/> */}
-           <div className="chat-container">
-            {currentMessages.map((m) => (
-                m.senderUsername === userData.username ? (
-                    <div key={m.id} className="chat chat-end mb-4">
-                        <div className="chat-image avatar">
-                            <div className="w-10 rounded-full">
-                                <img
-                                    alt="User avatar"
-                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                                />
+            <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+                {/* <ChatView channel={currentChat}/> */}
+                <div className="chat-container">
+                    {currentMessages.map((m) => (
+                        m.senderUsername === userData.username ? (
+                            <div key={m.id} className="chat chat-end mb-4">
+                                <div className="chat-image avatar">
+                                    <div className="w-10 rounded-full">
+                                        <img
+                                            alt="User avatar"
+                                            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="chat-header">
+                                    {m.senderUsername}
+                                    <time className="text-xs opacity-50">
+                                        {new Date(m.createdOn).toLocaleString()}
+                                    </time>
+                                </div>
+                                <div className="chat-bubble">{m.message}</div>
+                                {/* <div className="chat-footer opacity-50">Delivered</div> */}
                             </div>
-                        </div>
-                        <div className="chat-header">
-                            {m.senderUsername}
-                            <time className="text-xs opacity-50">
-                                {new Date(m.createdOn).toLocaleString()}
-                            </time>
-                        </div>
-                        <div className="chat-bubble">{m.message}</div>
-                        {/* <div className="chat-footer opacity-50">Delivered</div> */}
-                    </div>
-                ) : (
-                    <div key={m.id} className="chat chat-start">
-                        <div className="chat-image avatar">
-                            <div className="w-10 rounded-full">
-                                <img
-                                    alt="User avatar"
-                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                                />
-                            </div>
-                        </div>
-                        <div className="chat-header">
-                            {m.senderUsername}
-                            <time className="text-xs opacity-50">
-                                {new Date(m.createdOn).toLocaleString()}
-                            </time>
-                        </div>
-                        <div className="chat-bubble">{m.message}</div>
-                        {/* <div className="chat-footer opacity-50">Delivered</div> */}
+                        ) : (
+                            <div key={m.id} className="chat chat-start">
+                                <div className="chat-image avatar">
+                                    <div className="w-10 rounded-full">
+                                        <img
+                                            alt="User avatar"
+                                            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="chat-header">
+                                    {m.senderUsername}
+                                    <time className="text-xs opacity-50">
+                                        {new Date(m.createdOn).toLocaleString()}
+                                    </time>
+                                </div>
+                                <div className="chat-bubble">{m.message}</div>
+                                {/* <div className="chat-footer opacity-50">Delivered</div> */}
 
-                        
-                    </div>
-                )
-            ))}
-        </div>
+
+                            </div>
+                        )
+                    ))}
+                </div>
             </div>
             {/* Input area */}
             <form onSubmit={handleSendMessage} className="space-y-6 mt-4">
@@ -210,8 +158,8 @@ export default function Chat({ channel }) {
                     </button>
                 </div>
             </form>
-            </div>
-       
+        </div>
+
     );
 
 }
