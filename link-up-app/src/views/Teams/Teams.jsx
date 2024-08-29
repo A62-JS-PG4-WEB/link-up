@@ -5,6 +5,8 @@ import CreateTeam from "../CreateTeam/CreateTeam";
 import AllTeams from "../AllTeams/AllTeams";
 import { useNavigate } from "react-router-dom";
 import './Teams.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Teams() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -22,7 +24,7 @@ export default function Teams() {
                     setTeams(listTeams);
                 }
             } catch (e) {
-                console.error("Error loading Teams", e);
+                toast.error("Error loading Teams", e);
             }
         };
 

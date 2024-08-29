@@ -4,7 +4,8 @@ import { AppContext } from "../../state/app.context";
 import { createTeam, getTeams } from "../../services/teams.service";
 import { MAX_TEAM_NAME_LENGTH, MIN_TEAM_NAME_LENGTH } from "../../common/constants";
 import { addUserTeam } from "../../services/users.service";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function CreateTeam({ onClose }) {
     const [team, setTeam] = useState({ name: '' });
@@ -37,14 +38,14 @@ export default function CreateTeam({ onClose }) {
         e.preventDefault();
 
         if (team.name.length < MIN_TEAM_NAME_LENGTH || team.name.length > MAX_TEAM_NAME_LENGTH) {
-            alert(`Team name must be between ${MIN_TEAM_NAME_LENGTH} and ${MAX_TEAM_NAME_LENGTH}`);
+            toast.error(`Team name must be between ${MIN_TEAM_NAME_LENGTH} and ${MAX_TEAM_NAME_LENGTH}`);
             return;
         }
 
         try {
             const existentTeam = await getTeams(team.name);
             if (existentTeam) {
-                alert(`Team ${team.name} already exists`);
+                toast.error(`Team ${team.name} already exists`);
                 return;
             }
 
@@ -52,8 +53,9 @@ export default function CreateTeam({ onClose }) {
             setTeam({ name: '' });
             await addUserTeam(teamId, userData.username);
             onClose();
+            toast.success(`Team ${team.name} created`)
         } catch (error) {
-            console.error(error.message);
+            toast.error(error.message);
         }
     };
 

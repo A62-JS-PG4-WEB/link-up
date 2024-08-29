@@ -1,5 +1,7 @@
 import { equalTo, get, orderByChild, orderByValue, push, query, ref, update } from "firebase/database";
 import { db } from "../config/firebase-config";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const createTeam = async (name, owner, member) => {
 
@@ -22,6 +24,8 @@ export const getTeams = async (name) => {
 
 export const getUserTeams = async (username) => {
     const snapshot = await get(ref(db, `users/${username}/teams`));
+
+    // console.log(snapshot.val());
     return Object.keys(snapshot.val());
 };
 
@@ -35,7 +39,7 @@ export const getTeamsInfoById = async (teams) => {
 
         return filteredTeams;
     } catch (error) {
-        console.error("Error fetching team information:", error);
+        toast.error("Error fetching team information:", error);
         throw error;
     }
 };

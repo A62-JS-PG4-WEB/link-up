@@ -4,6 +4,9 @@ import { AppContext } from "../../state/app.context";
 import { useNavigate } from "react-router-dom";
 import { createUserUsername, getUserByEmail, getUserByUsername } from "../../services/users.service";
 import { MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "../../common/constants";
+import { createUserUsername, getUserByUsername } from "../../services/users.service";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Register() {
     const [user, setUser] = useState({
@@ -27,16 +30,16 @@ export default function Register() {
         e.preventDefault();
 
         if (!user.email.trim() || !user.password) {
-            return console.error('No credentials provided!');
+            return toast.error('No credentials provided!');
         }
         if (user.password !== user.confirmPassword) {
-            console.info("Passwords do not match!");
+            toast.error("Passwords do not match!");
             return;
         }
 
         if (user.username.length < MIN_USERNAME_LENGTH || user.username.length > MAX_USERNAME_LENGTH) {
             return console.error('Invalid username length');
-        }
+
 
         try {
             const userEmail = await getUserByEmail(user.email.trim());
@@ -49,12 +52,16 @@ export default function Register() {
                 return alert(`User ${user.username} already exists!`);
             };
 
+
             const credential = await registerUser(user.email.trim(), user.password.trim());
             await createUserUsername(user.username, credential.user.uid, user.email, user.phone);
             setAppState({ user: credential.user, userData: null });
             navigate('/home');
+            console.log('Successfully registered');
+
             } catch (error) {
             console.error(error.message);
+
         }
     };
 
