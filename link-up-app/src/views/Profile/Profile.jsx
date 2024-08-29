@@ -6,7 +6,6 @@ import { getDownloadURL, ref, uploadBytes, getStorage } from "firebase/storage";
 
 const storage = getStorage();
 
-
 export default function Profile() {
   const { userData, user, setAppState } = useContext(AppContext);
   const [username, setUsername] = useState("");
@@ -26,7 +25,7 @@ export default function Profile() {
       setPhoneNumber(user.phoneNumber || "");
       setImagePreview(user.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp");
     }
-  }, [user]);
+  }, [user, userData]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -150,15 +149,14 @@ export default function Profile() {
           </div>
 
 
-   {/* Display Current PhoneNumber */}
-
-   <div className="form-control w-full">
+      {/* Phone Number */}
+      <div className="form-control w-full">
             <label className="label">
               <span className="label-text">Phone Number</span>
             </label>
             <input
               type="tel"
-              value={userData?.phone}
+              value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
               className="input input-bordered w-full"
             />
