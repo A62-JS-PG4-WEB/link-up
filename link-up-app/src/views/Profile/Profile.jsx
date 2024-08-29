@@ -106,7 +106,7 @@ export default function Profile() {
 
         {/* Display Current Username */}
         <div className="mb-6">
-          <p className="text-lg font-semibold">Current Username: {user?.username || "User"}</p>
+          <p className="text-lg font-semibold">Current Username: {userData?.username || "User"}</p>
         </div>
 
         {/* Profile Picture Upload */}
@@ -136,6 +136,7 @@ export default function Profile() {
         <div className="flex flex-col space-y-4">
 
           {/* Email */}
+
           <div className="form-control w-full">
             <label className="label">
               <span className="label-text">Email</span>
@@ -148,18 +149,21 @@ export default function Profile() {
             />
           </div>
 
-          {/* Phone Number */}
-          <div className="form-control w-full">
+
+   {/* Display Current PhoneNumber */}
+
+   <div className="form-control w-full">
             <label className="label">
               <span className="label-text">Phone Number</span>
             </label>
             <input
               type="tel"
-              value={phoneNumber}
+              value={userData?.phone}
               onChange={(e) => setPhoneNumber(e.target.value)}
               className="input input-bordered w-full"
             />
           </div>
+
 
           {/* Old Password */}
           <div className="form-control w-full">
