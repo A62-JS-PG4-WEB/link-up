@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../state/app.context";
-import { createTeam, getTeams } from "../../services/teams.service";
-import { MAX_TEAM_NAME_LENGTH, MIN_TEAM_NAME_LENGTH } from "../../common/constants";
-import { addUserTeam } from "../../services/users.service";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { MAX_CHANNEL_NAME_LENGTH, MIN_CHANNEL_NAME_LENGTH } from "../../common/constants";
+import { addUserChannel } from "../../services/users.service";
+import { createChannel } from "../../services/channels.service";
+import { addChannelToTeam } from "../../services/teams.service";
+import PropTypes from 'prop-types';
 
-export default function CreateTeam({ onClose }) {
-    const [team, setTeam] = useState({ name: '' });
+export default function CreateChannel({ team, onClose, onChannelCreated }) {
+    const [channel, setChannel] = useState({ name: '' });
     const { userData } = useContext(AppContext);
 
     useEffect(() => {
@@ -23,39 +23,38 @@ export default function CreateTeam({ onClose }) {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [onClose, team]);
+    }, [onClose, userData]);
 
-    const updateTeam = (key, value) => {
-        if (team[key] !== value) {
-            setTeam({
-                ...team,
+    const updateChannel = (key, value) => {
+        if (channel[key] !== value) {
+            setChannel({
+                ...channel,
                 [key]: value,
             });
         }
     };
 
-    const handleCreateTeam = async (e) => {
+    const handleCreateChannel = async (e) => {
         e.preventDefault();
 
-        if (team.name.length < MIN_TEAM_NAME_LENGTH || team.name.length > MAX_TEAM_NAME_LENGTH) {
-            toast.error(`Team name must be between ${MIN_TEAM_NAME_LENGTH} and ${MAX_TEAM_NAME_LENGTH}`);
+
+        if (channel.name.length < MIN_CHANNEL_NAME_LENGTH || channel.name.length > MAX_CHANNEL_NAME_LENGTH) {
+            alert(`Channel name must be between ${MIN_CHANNEL_NAME_LENGTH} and ${MAX_CHANNEL_NAME_LENGTH}`);
             return;
         }
 
         try {
-            const existentTeam = await getTeams(team.name);
-            if (existentTeam) {
-                toast.error(`Team ${team.name} already exists`);
-                return;
-            }
 
-            const teamId = await createTeam(team.name.trim(), userData.username, userData.username);
-            setTeam({ name: '' });
-            await addUserTeam(teamId, userData.username);
+            const channelId = await createChannel(channel.name.trim(), userData.username, userData.username, team.id);
+            // console.log(team);
+
+            setChannel({ name: '' });
+            await addUserChannel(channelId, userData.username);
+            await addChannelToTeam(team.id, channelId);
             onClose();
-            toast.success(`Team ${team.name} created`)
+            onChannelCreated();
         } catch (error) {
-            toast.error(error.message);
+            console.error(error.message);
         }
     };
 
@@ -68,8 +67,8 @@ export default function CreateTeam({ onClose }) {
                 >
                     &times;
                 </button>
-                <h2 className="text-lg font-semibold text-gray-900">Create New Team</h2>
-                <form onSubmit={handleCreateTeam} className="space-y-6 mt-4">
+                <h2 className="text-lg font-semibold text-gray-900">Create New Channel</h2>
+                <form onSubmit={handleCreateChannel} className="space-y-6 mt-4">
                     <div>
                         <div className="mt-2">
                             <input
@@ -78,9 +77,9 @@ export default function CreateTeam({ onClose }) {
                                 type="text"
                                 required
                                 autoComplete="name"
-                                placeholder="Name your Team"
-                                value={team.name}
-                                onChange={(e) => updateTeam('name', e.target.value)}
+                                placeholder="Name your Channel"
+                                value={channel.name}
+                                onChange={(e) => updateChannel('name', e.target.value)}
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm"
                             />
                         </div>
@@ -90,7 +89,7 @@ export default function CreateTeam({ onClose }) {
                             type="submit"
                             className="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-pink-600"
                         >
-                            Submit
+                            Create
                         </button>
                     </div>
                 </form>
@@ -98,3 +97,15 @@ export default function CreateTeam({ onClose }) {
         </div>
     );
 }
+
+CreateChannel.propTypes = {
+    team: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        owner: PropTypes.string,
+        createdOn: PropTypes.string,
+        id: PropTypes.string,
+        members: PropTypes.arrayOf(PropTypes.string),
+    }),
+    onClose: PropTypes.func.isRequired,
+    onChannelCreated: PropTypes.func.isRequired,
+};

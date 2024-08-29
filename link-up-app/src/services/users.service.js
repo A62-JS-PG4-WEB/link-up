@@ -6,8 +6,13 @@ export const getUserByUsername = async (username) => {
   return snapshot.val();
 };
 
+export const getUserByEmail = async (email) => {
+  const snapshot = await get(query(ref(db, 'users'), orderByChild('email'), equalTo(email)));
+  return snapshot.val();
+};
+
 export const createUserUsername = async (username, uid, email, phone) => {
-  const user = { username, uid, email, phone, createdOn: new Date().toString() };
+  const user = { username, uid, email, phone, createdOn: new Date().getTime() };
   await set(ref(db, `users/${username}`), user);
 };
 
@@ -17,9 +22,15 @@ export const getUserData = async (uid) => {
 };
 
 export const addUserTeam = async (teamId, username) => {
-  console.log(teamId, username);
 
   await update(ref(db), {
-    [`users/${username}/teams/${teamId}`]: true,
+    [`users/${username}/teams/${teamId}`]: new Date().getTime(),
   })
 };
+
+export const addUserChannel = async (channelId, username) => {
+    await update(ref(db), {
+    [`users/${username}/channels/${channelId}`]: new Date().getTime(),
+  })
+};
+

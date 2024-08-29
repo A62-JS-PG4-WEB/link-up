@@ -1,0 +1,9 @@
+.teamsList {
+    margin-top: 10px;
+    background-color: rgba(55 65 81);   
+    border-radius: 0.5rem;
+}
+
+.teams {
+    width: 100%;
+}

@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../../state/app.context";
 import { loginUser } from "../../services/auth.service";
+import { getUserData } from "../../services/users.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -29,11 +30,16 @@ export default function Login() {
         }
 
         try {
-            const credentials = await loginUser(user.email, user.password);
+            const userDB = await loginUser(user.email, user.password);        
+            const userData = await getUserData(userDB.user.uid);         
+
             setAppState({
-                user: credentials.user,
-                userData: null,
-            });
+                user: userDB.user,
+                userData: userData,
+            });     
+          
+            localStorage.setItem('loggedUserData', JSON.stringify(userData));
+           
             navigate('/home');
             toast.success('Succsessfully logged in!')
         } catch (error) {

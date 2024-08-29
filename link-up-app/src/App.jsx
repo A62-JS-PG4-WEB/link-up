@@ -13,8 +13,12 @@ import Teams from './views/CreateTeam/CreateTeam.jsx'
 import { getUserData } from './services/users.service.js'
 import Home from './views/Home/Home.jsx'
 import CreateTeam from './views/CreateTeam/CreateTeam.jsx'
+import SideNav from './components/SideNav/SideNav.jsx'
+import Test from './Test.jsx'
+import AllNotifications from './views/AllNotifications/AllNotifications.jsx'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 
 function App() {
@@ -23,11 +27,14 @@ function App() {
     userData: null,
   });
   const [user, loading] = useAuthState(auth);
+  const [invitations, setInvitations] = useState([]);
 
-  if (appState.user !== user) {
-    setAppState({ ...appState, user });
-  }
-
+  
+  useEffect(() => {
+    if (user) {
+      setAppState(prevState => ({ ...prevState, user }));
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;
@@ -53,24 +60,27 @@ function App() {
   return (
     <>
       <BrowserRouter>
+        <AppContext.Provider value={{ ...appState, setAppState, invitations, setInvitations }}>
+          {!user ? <Nav /> : <SideNav/>}
+
         {/* <ToastContainer stacked closeOnClick /> */}
-        <AppContext.Provider value={{ ...appState, setAppState }}>
-          <Nav />
+
           <Routes>
-            <Route path='/' element={!user && < Landing />} />
+            <Route path='/' element={!user && <Landing />} />
             <Route path='/login' element={!user && <Login />} />
             <Route path='/register' element={!user && <Register />} />
             <Route path='/home' element={user && <Home />} />
+            <Route path='/test' element={user && <Test />} />
+            <Route path='/notifications' element={user && <AllNotifications />} />
             <Route path='/create-team' element={user && <CreateTeam />} />
           </Routes>
-
-          <Footer />
-
+          {!user && <Footer />}
         </AppContext.Provider>
       </BrowserRouter>
     </>
+  );
 
-  )
+
 }
 
 export default App

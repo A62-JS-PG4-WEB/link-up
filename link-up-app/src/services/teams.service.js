@@ -24,8 +24,8 @@ export const getTeams = async (name) => {
 
 export const getUserTeams = async (username) => {
     const snapshot = await get(ref(db, `users/${username}/teams`));
-    // console.log(snapshot.val());
 
+    // console.log(snapshot.val());
     return Object.keys(snapshot.val());
 };
 
@@ -43,3 +43,20 @@ export const getTeamsInfoById = async (teams) => {
         throw error;
     }
 };
+
+export const addChannelToTeam = async (teamID, channelID) => {
+    try {
+        await update(ref(db, `teams/${teamID}/channels`), {
+          [channelID]: new Date().getTime()
+        });
+        
+      } catch (error) {
+        console.error("Error adding channel to team:", error);
+      }
+}
+
+export const addTeamMember = async (teamId, member) => {
+    await update(ref(db), {
+        [`teams/${teamId}/members/${member}`]: new Date().getTime(),
+    });
+}

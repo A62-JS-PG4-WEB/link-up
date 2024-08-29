@@ -2,6 +2,8 @@ import { createContext } from "react"
 
 export const AppContext = createContext({
     user: null,
-    usearData : null, 
+    userData : null, 
+    invitations: null,
     setAppState: () => {},
+    setInvitations: () => {},
 });

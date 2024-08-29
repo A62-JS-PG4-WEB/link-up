@@ -2,6 +2,8 @@ import { useContext, useState } from "react";
 import { registerUser } from "../../services/auth.service";
 import { AppContext } from "../../state/app.context";
 import { useNavigate } from "react-router-dom";
+import { createUserUsername, getUserByEmail, getUserByUsername } from "../../services/users.service";
+import { MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "../../common/constants";
 import { createUserUsername, getUserByUsername } from "../../services/users.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,7 +14,7 @@ export default function Register() {
         phone: '',
         email: '',
         password: '',
-        confirmPassword: '',
+        confirmPassword: ''
     });
     const { setAppState } = useContext(AppContext);
     const navigate = useNavigate();
@@ -35,23 +37,31 @@ export default function Register() {
             return;
         }
 
-        if (user.username.length < 5 || user.username.length > 35) {
-            return toast.error('Invalid username length');
-        }
+        if (user.username.length < MIN_USERNAME_LENGTH || user.username.length > MAX_USERNAME_LENGTH) {
+            return console.error('Invalid username length');
+
 
         try {
+            const userEmail = await getUserByEmail(user.email.trim());
+            if (userEmail) {
+                return alert(`User with email ${user.email} already exists!`);
+            };
+
             const userFromDB = await getUserByUsername(user.username);
             if (userFromDB) {
-                return toast.error(`User {${user.username}} already exists!`);
-            }
+                return alert(`User ${user.username} already exists!`);
+            };
+
 
             const credential = await registerUser(user.email.trim(), user.password.trim());
             await createUserUsername(user.username, credential.user.uid, user.email, user.phone);
             setAppState({ user: credential.user, userData: null });
             navigate('/home');
-            toast.succsess('Successfully registered');
-        } catch (error) {
-            toast.error(error.message);
+            console.log('Successfully registered');
+
+            } catch (error) {
+            console.error(error.message);
+
         }
     };
 

@@ -1,77 +1,66 @@
-import React from 'react';
-import SideNav from '../../components/SideNav/SideNav';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import Team from '../Team/Team';
+import TextChannelsSection from '../../components/TextChannelsSection/TextChannelsSection';
+import VoiceChannels from '../../components/VoiceChannels/VoiceChannels';
+import Chat from '../../components/Chat/Chat';
 
-export default function Home() {
+export default function Home({ team }) {
+    const [selectedChat, setSelectedChat] = useState(null);
+
+    useEffect(() => {
+        const savedChat = localStorage.getItem('selectedChat');
+        if (savedChat) {
+            try {
+                setSelectedChat(JSON.parse(savedChat));
+            } catch (error) {
+                console.error("Failed to parse chat from localStorage", error);
+            }
+        }
+    }, []);
+
+    const handleSelectChannel = (channel) => {
+        setSelectedChat(channel);
+        try {
+            localStorage.setItem('selectedChat', JSON.stringify(channel));
+        } catch (error) {
+            console.error("Failed to save chat to localStorage", error);
+        }
+    };
+
     return (
-        <div className="flex h-screen">
-            {/* Side Navigation */}
-            <SideNav />
+        <div className="flex h-screen content">
 
             {/* Main Content */}
             <div className="flex-1 flex p-8 bg-gray-900 text-white">
-                {/* Channels Section */}
                 <div className="w-1/4 space-y-6">
+                    <Team team={team} />
                     {/* Text Channels */}
-                    <div className="bg-gray-800 p-4 rounded-lg">
-                        <h3 className="text-lg font-semibold mb-2">Text Channels</h3>
-                        <div className="space-y-2">
-                            <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># general</button>
-                            <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># memes</button>
-                            <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600"># announcements</button>
-                        </div>
-                    </div>
-
+                    <TextChannelsSection team={team} onSelectChannel={handleSelectChannel} />
                     {/* Voice Channels */}
-                    <div className="bg-gray-800 p-4 rounded-lg">
-                        <h3 className="text-lg font-semibold mb-2">Voice Channels</h3>
-                        <div className="space-y-2">
-                            <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600">🔊 General</button>
-                            <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600">🔊 Gaming</button>
-                            <button className="w-full p-2 text-left bg-gray-700 rounded-md hover:bg-gray-600">🔊 Music</button>
-                        </div>
-                    </div>
+                    <VoiceChannels team={team} />
                 </div>
-
                 {/* Chat Section */}
-                <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6">
-                    {/* Chat Team Name */}
-                    <h1 className="text-2xl font-bold mb-4">Star Wars</h1>
-
-                    {/* Messages Container */}
-                    <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto">
-                        <div className="chat chat-start">
-                            <div className="chat-image avatar">
-                                <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Tailwind CSS chat bubble component"
-                                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                                </div>
-                            </div>
-                            <div className="chat-header">
-                                Obi-Wan Kenobi
-                                <time className="text-xs opacity-50">12:45</time>
-                            </div>
-                            <div className="chat-bubble">You were the Chosen One!</div>
-                            <div className="chat-footer opacity-50">Delivered</div>
-                        </div>
-                        <div className="chat chat-end">
-                            <div className="chat-image avatar">
-                                <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Tailwind CSS chat bubble component"
-                                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                                </div>
-                            </div>
-                            <div className="chat-header">
-                                Anakin
-                                <time className="text-xs opacity-50">12:46</time>
-                            </div>
-                            <div className="chat-bubble">I hate you!</div>
-                            <div className="chat-footer opacity-50">Seen at 12:46</div>
-                        </div>
-                    </div>
+                {/* Messages Container */}
+                <div className="flex-1">
+                    {selectedChat ? (
+                        <Chat channel={selectedChat} />
+                    ) : (
+                        <div className="text-white">Please select a channel to start chatting.</div>
+                    )}
                 </div>
             </div>
         </div>
+
     );
 }
+
+Home.propTypes = {
+    team: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        owner: PropTypes.string,
+        id: PropTypes.string,
+        createdOn: PropTypes.string,
+        members: PropTypes.arrayOf(PropTypes.string),
+    }),
+};
