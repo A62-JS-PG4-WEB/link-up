@@ -84,6 +84,7 @@ export default function Chat({ channel }) {
     };
 
     // console.log('TEAM ID', currentTeam.id);
+    
     // console.log('CHANNEL TEAM ID', currentChat.team);
     return (
         <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 max-w-3xl h-[600px]">

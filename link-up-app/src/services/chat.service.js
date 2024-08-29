@@ -42,6 +42,7 @@ export const setMsgStatusForEachUser = async (users, messageId, status = 'unread
 //         console.warn('No messages found for this channel.');
 //         return [];
 //     }
+
 // };
 
 export const getMessageInfo = async (messageIds) => {

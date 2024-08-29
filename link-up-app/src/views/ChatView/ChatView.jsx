@@ -54,6 +54,7 @@ export default function ChatView() {
                             </time>
                         </div>
                         <div className="chat-bubble">{m.message}</div>
+                      
                         {/* <div className="chat-footer opacity-50">Delivered</div> */}
                     </div>
                 ) : (
