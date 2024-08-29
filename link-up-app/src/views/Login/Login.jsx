@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../../state/app.context";
 import { loginUser } from "../../services/auth.service";
 import { getUserData } from "../../services/users.service";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login() {
     const [user, setUser] = useState({
@@ -24,7 +26,7 @@ export default function Login() {
         e.preventDefault();
 
         if (!user.email || !user.password) {
-            return console.error('No credentials provided!');
+            return toast.error('No credentials provided!');
         }
 
         try {
@@ -39,8 +41,9 @@ export default function Login() {
             localStorage.setItem('loggedUserData', JSON.stringify(userData));
            
             navigate('/home');
+            toast.success('Succsessfully logged in!')
         } catch (error) {
-            console.error('Login error:', error.message);
+            toast.error('Login error:', error.message);
         }
     };
 

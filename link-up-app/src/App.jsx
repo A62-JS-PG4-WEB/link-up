@@ -16,6 +16,9 @@ import CreateTeam from './views/CreateTeam/CreateTeam.jsx'
 import SideNav from './components/SideNav/SideNav.jsx'
 import Test from './Test.jsx'
 import AllNotifications from './views/AllNotifications/AllNotifications.jsx'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 function App() {
@@ -43,7 +46,7 @@ function App() {
 
         setAppState(prevState => ({ ...prevState, userData }));
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        toast.error('Error fetching user data:', error);
       }
     };
 
@@ -59,6 +62,8 @@ function App() {
       <BrowserRouter>
         <AppContext.Provider value={{ ...appState, setAppState, invitations, setInvitations }}>
           {!user ? <Nav /> : <SideNav/>}
+
+        {/* <ToastContainer stacked closeOnClick /> */}
 
           <Routes>
             <Route path='/' element={!user && <Landing />} />

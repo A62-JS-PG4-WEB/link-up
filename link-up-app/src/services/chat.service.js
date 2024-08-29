@@ -34,6 +34,7 @@ export const setMsgStatusForEachUser = async (users, messageId, status = 'unread
     }
 };
 
+
 // export const getIdsOfMessages = async (channelId) => {
 //     const channelMessagesSnapshot = await get(ref(db, `channels/${channelId}/messages`));
 //     if (channelMessagesSnapshot.exists()) {
@@ -44,6 +45,7 @@ export const setMsgStatusForEachUser = async (users, messageId, status = 'unread
 //     }
 
 // };
+
 
 export const getMessageInfo = async (messageIds) => {
     try {
