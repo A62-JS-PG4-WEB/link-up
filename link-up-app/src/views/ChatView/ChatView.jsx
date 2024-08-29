@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../state/app.context";
 import { getIdsOfMessages, getMessageInfo } from "../../services/chat.service";
 
-export default function ChatView({ currentMessages }) {
+export default function ChatView() {
     const { userData } = useContext(AppContext);
     const [currentChat, setCurrentChat] = useState(channel || location.state?.channel);
     const [currentMessages, setCurrentMessages ] = useState([]);
