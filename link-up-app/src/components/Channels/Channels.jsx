@@ -102,8 +102,8 @@ export default function Channels({ team, onSelectChannel }) {
 
                 )}
             </div>
-            <div className="space-y-2">
-                {channels.length > 0 &&
+            <div className="space-y-2">              
+                {channels.length > 0 ? (
                     channels.map((ch) => (
                         <div key={ch.id} className="flex justify-between items-center w-full p-2 bg-gray-700 rounded-md hover:bg-gray-600">
                             <button
@@ -118,10 +118,12 @@ export default function Channels({ team, onSelectChannel }) {
                                 >
                                     Delete
                                 </button>
-
                             )}
                         </div>
-                    ))}
+                    ))
+                ) : (
+                    <p className="text-gray-400">No text channels available</p>    
+                )}
             </div>
             {isPopupOpen && (
                 <CreateChannel
