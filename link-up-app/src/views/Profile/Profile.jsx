@@ -8,7 +8,7 @@ const storage = getStorage();
 
 export default function Profile() {
   const { userData, user, setAppState } = useContext(AppContext);
-  const [username, setUsername] = useState("");
+  const [username, setUsername,] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [oldPassword, setOldPassword] = useState("");
