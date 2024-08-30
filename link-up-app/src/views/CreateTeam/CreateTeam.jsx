@@ -7,7 +7,7 @@ import { addUserTeam } from "../../services/users.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function CreateTeam({ onClose }) {
+export default function CreateTeam({ onClose, onTeamCreated }) {
     const [team, setTeam] = useState({ name: '' });
     const { userData } = useContext(AppContext);
 
@@ -45,19 +45,25 @@ export default function CreateTeam({ onClose }) {
         try {
             const existentTeam = await getTeams(team.name);
             if (existentTeam) {
-                toast.error(`Team ${team.name} already exists`);
+                console.error(`Team ${team.name} already exists`);
                 return;
             }
 
-            const teamId = await createTeam(team.name.trim(), userData.username, userData.username);
-            setTeam({ name: '' });
+            const newTeam = { name: team.name.trim(), owner: userData.username, createdOn: new Date().toString() };
+            const teamId = await createTeam(newTeam, userData.username);
+            newTeam.id = teamId;
             await addUserTeam(teamId, userData.username);
-            onClose();
+
             toast.success(`Team ${team.name} created`)
+            onClose();
+            onTeamCreated(newTeam);
+            setTeam({ name: '' });
         } catch (error) {
-            toast.error(error.message);
+            console.error(error.message);
         }
     };
+
+
 
     return (
         <div className="popup-overlay fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-60 z-50">

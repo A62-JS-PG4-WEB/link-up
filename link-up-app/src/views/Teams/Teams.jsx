@@ -3,7 +3,6 @@ import { AppContext } from "../../state/app.context";
 import { getTeamsInfoById, getUserTeams } from "../../services/teams.service";
 import CreateTeam from "../CreateTeam/CreateTeam";
 import AllTeams from "../AllTeams/AllTeams";
-import { useNavigate } from "react-router-dom";
 import './Teams.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,8 +12,6 @@ export default function Teams() {
     const [isTeamsListVisible, setIsTeamsListVisible] = useState(false);
     const { userData } = useContext(AppContext);
     const [teams, setTeams] = useState([]);
-    const navigate = useNavigate()
-
     useEffect(() => {
         const loadTeams = async () => {
             try {
@@ -31,7 +28,7 @@ export default function Teams() {
         if (isTeamsListVisible) {
             loadTeams();
         }
-    }, [userData, isTeamsListVisible, teams]);
+    }, [userData, isTeamsListVisible]);
 
     const handleToggleTeamsList = () => {
         setIsTeamsListVisible(!isTeamsListVisible);
@@ -44,6 +41,10 @@ export default function Teams() {
 
     const handleClosePopup = () => {
         setIsPopupOpen(false);
+    };
+
+    const handleTeamCreated = (newTeam) => {
+        setTeams((prevTeams) => [...prevTeams, newTeam]);
     };
 
     return (
@@ -71,7 +72,9 @@ export default function Teams() {
                         ^
                     </button>
                 </div>
-                {isPopupOpen && <CreateTeam onClose={handleClosePopup} />}
+                {isPopupOpen && <CreateTeam 
+                onClose={handleClosePopup}
+                onTeamCreated={handleTeamCreated} />}
             </div>
 
             {isTeamsListVisible && (
