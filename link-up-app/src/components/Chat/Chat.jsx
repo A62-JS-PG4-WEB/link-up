@@ -103,7 +103,8 @@ export default function Chat({ channel }) {
                                     <div className="w-10 rounded-full">
                                         <img
                                             alt="User avatar"
-                                            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                                               src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                                            // src={userData.photoURL}
                                         />
                                     </div>
                                 </div>
