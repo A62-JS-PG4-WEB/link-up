@@ -46,6 +46,14 @@ export default function Chat({ channel }) {
         }
     }, [currentChat]);
 
+    useEffect(() => {
+
+        const chatContainer = document.querySelector('.chat-container');
+        if (chatContainer) {
+            chatContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+    }, [currentMessages]);
+
     const createMessage = (key, value) => {
         if (message[key] !== value) {
             setMessage({
