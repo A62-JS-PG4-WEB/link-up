@@ -3,28 +3,25 @@ import { AppContext } from "../../state/app.context";
 import { getTeamsInfoById, getUserTeams } from "../../services/teams.service";
 import CreateTeam from "../CreateTeam/CreateTeam";
 import AllTeams from "../AllTeams/AllTeams";
-import { useNavigate } from "react-router-dom";
 import './Teams.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Teams() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isTeamsListVisible, setIsTeamsListVisible] = useState(false);
     const { userData } = useContext(AppContext);
     const [teams, setTeams] = useState([]);
-    const navigate = useNavigate()
-
     useEffect(() => {
         const loadTeams = async () => {
             try {
                 if (userData && userData.username) {
                     const allTeams = await getUserTeams(userData.username);
                     const listTeams = await getTeamsInfoById(allTeams);
-                    console.log(listTeams);
-
                     setTeams(listTeams);
                 }
             } catch (e) {
-                console.error("Error loading Teams", e);
+                toast.error("Error loading Teams", e);
             }
         };
 
@@ -44,6 +41,10 @@ export default function Teams() {
 
     const handleClosePopup = () => {
         setIsPopupOpen(false);
+    };
+
+    const handleTeamCreated = (newTeam) => {
+        setTeams((prevTeams) => [...prevTeams, newTeam]);
     };
 
     return (
@@ -71,7 +72,9 @@ export default function Teams() {
                         ^
                     </button>
                 </div>
-                {isPopupOpen && <CreateTeam onClose={handleClosePopup} />}
+                {isPopupOpen && <CreateTeam 
+                onClose={handleClosePopup}
+                onTeamCreated={handleTeamCreated} />}
             </div>
 
             {isTeamsListVisible && (

@@ -15,6 +15,10 @@ import Home from './views/Home/Home.jsx'
 import CreateTeam from './views/CreateTeam/CreateTeam.jsx'
 import SideNav from './components/SideNav/SideNav.jsx'
 import Test from './Test.jsx'
+import AllNotifications from './views/AllNotifications/AllNotifications.jsx'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 function App() {
@@ -23,6 +27,7 @@ function App() {
     userData: null,
   });
   const [user, loading] = useAuthState(auth);
+  const [invitations, setInvitations] = useState([]);
 
   
   useEffect(() => {
@@ -38,11 +43,10 @@ function App() {
       try {
         const data = await getUserData(user.uid);
         const userData = data[Object.keys(data)[0]];
-        console.log(userData);
 
         setAppState(prevState => ({ ...prevState, userData }));
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        toast.error('Error fetching user data:', error);
       }
     };
 
@@ -56,8 +60,10 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <AppContext.Provider value={{ ...appState, setAppState }}>
+        <AppContext.Provider value={{ ...appState, setAppState, invitations, setInvitations }}>
           {!user ? <Nav /> : <SideNav/>}
+
+        {/* <ToastContainer stacked closeOnClick /> */}
 
           <Routes>
             <Route path='/' element={!user && <Landing />} />
@@ -65,6 +71,7 @@ function App() {
             <Route path='/register' element={!user && <Register />} />
             <Route path='/home' element={user && <Home />} />
             <Route path='/test' element={user && <Test />} />
+            <Route path='/notifications' element={user && <AllNotifications />} />
             <Route path='/create-team' element={user && <CreateTeam />} />
           </Routes>
           {!user && <Footer />}

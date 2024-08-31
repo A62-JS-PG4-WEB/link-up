@@ -1,14 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../state/app.context";
-import { createTeam, getTeams } from "../../services/teams.service";
-import { MAX_TEAM_NAME_LENGTH, MIN_TEAM_NAME_LENGTH } from "../../common/constants";
+import { createTeam } from "../../services/teams.service";
 import { addUserTeam } from "../../services/users.service";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { createInvitation } from "../../services/invitations.service";
 
-export default function CreateTeam({ onClose, onTeamCreated }) {
-    const [team, setTeam] = useState({ name: '' });
+
+export default function InviteTeamMember({ onClose, team }) {
+    const [emailInput, setEmailInput] = useState({ email: '' });
     const { userData } = useContext(AppContext);
 
     useEffect(() => {
@@ -23,47 +21,46 @@ export default function CreateTeam({ onClose, onTeamCreated }) {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [onClose, team]);
+    }, [onClose]);
 
-    const updateTeam = (key, value) => {
-        if (team[key] !== value) {
-            setTeam({
-                ...team,
+    const updateEmailInput = (key, value) => {
+        
+        if (emailInput[key] !== value) {
+            setEmailInput({
+                ...emailInput,
                 [key]: value,
             });
         }
     };
 
-    const handleCreateTeam = async (e) => {
-        e.preventDefault();
-
-        if (team.name.length < MIN_TEAM_NAME_LENGTH || team.name.length > MAX_TEAM_NAME_LENGTH) {
-            toast.error(`Team name must be between ${MIN_TEAM_NAME_LENGTH} and ${MAX_TEAM_NAME_LENGTH}`);
-            return;
-        }
+    const handleAddMembers = async (e) => {
+       
+         e.preventDefault();
 
         try {
-            const existentTeam = await getTeams(team.name);
-            if (existentTeam) {
-                console.error(`Team ${team.name} already exists`);
-                return;
-            }
 
-            const newTeam = { name: team.name.trim(), owner: userData.username, createdOn: new Date().toString() };
-            const teamId = await createTeam(newTeam, userData.username);
-            newTeam.id = teamId;
-            await addUserTeam(teamId, userData.username);
-
-            toast.success(`Team ${team.name} created`)
-            onClose();
-            onTeamCreated(newTeam);
-            setTeam({ name: '' });
+            const teamName = JSON.parse(localStorage.getItem('selectedTeam')).name;
+            const teamId = JSON.parse(localStorage.getItem('selectedTeam')).id;
+            
+            const invitation = {
+                type: "team",
+                status: "pending",
+                teamID: teamId,
+                teamName: teamName,
+                message: `You are invitated to team ${teamName}`,
+                email: emailInput.email,
+                senderUsername: userData.username,      
+                createdOn: new Date().getTime(),
+                updatedOn: new Date().getTime()
+            };
+        
+           await createInvitation(invitation);
+           setEmailInput({ email: '' });
+           onClose();
         } catch (error) {
             console.error(error.message);
         }
     };
-
-
 
     return (
         <div className="popup-overlay fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-60 z-50">
@@ -74,19 +71,19 @@ export default function CreateTeam({ onClose, onTeamCreated }) {
                 >
                     &times;
                 </button>
-                <h2 className="text-lg font-semibold text-gray-900">Create New Team</h2>
-                <form onSubmit={handleCreateTeam} className="space-y-6 mt-4">
+                <h2 className="text-lg font-semibold text-gray-900">Invite Team Member</h2>
+                <form onSubmit={handleAddMembers} className="space-y-6 mt-4">
                     <div>
                         <div className="mt-2">
                             <input
-                                id="name"
-                                name="name"
-                                type="text"
+                                id="email"
+                                name="email"
+                                type="email"
                                 required
-                                autoComplete="name"
-                                placeholder="Name your Team"
-                                value={team.name}
-                                onChange={(e) => updateTeam('name', e.target.value)}
+                                autoComplete="email"
+                                placeholder="email"
+                                value={emailInput.email}
+                                onChange={(e) => updateEmailInput('email', e.target.value)}
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm"
                             />
                         </div>

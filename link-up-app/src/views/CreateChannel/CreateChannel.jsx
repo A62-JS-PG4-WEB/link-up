@@ -5,9 +5,9 @@ import { MAX_CHANNEL_NAME_LENGTH, MIN_CHANNEL_NAME_LENGTH } from "../../common/c
 import { addUserChannel } from "../../services/users.service";
 import { createChannel } from "../../services/channels.service";
 import { addChannelToTeam } from "../../services/teams.service";
+import PropTypes from 'prop-types';
 
-
-export default function CreateChannel ({ team, onClose }) {
+export default function CreateChannel({ team, onClose, onChannelCreated }) {
     const [channel, setChannel] = useState({ name: '' });
     const { userData } = useContext(AppContext);
 
@@ -23,7 +23,7 @@ export default function CreateChannel ({ team, onClose }) {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [onClose]);
+    }, [onClose, userData]);
 
     const updateChannel = (key, value) => {
         if (channel[key] !== value) {
@@ -36,7 +36,7 @@ export default function CreateChannel ({ team, onClose }) {
 
     const handleCreateChannel = async (e) => {
         e.preventDefault();
-console.log(team);
+
 
         if (channel.name.length < MIN_CHANNEL_NAME_LENGTH || channel.name.length > MAX_CHANNEL_NAME_LENGTH) {
             alert(`Channel name must be between ${MIN_CHANNEL_NAME_LENGTH} and ${MAX_CHANNEL_NAME_LENGTH}`);
@@ -46,10 +46,13 @@ console.log(team);
         try {
 
             const channelId = await createChannel(channel.name.trim(), userData.username, userData.username, team.id);
+            // console.log(team);
+
             setChannel({ name: '' });
-            await addUserChannel(channelId, userData.username);          
+            await addUserChannel(channelId, userData.username);
             await addChannelToTeam(team.id, channelId);
             onClose();
+            onChannelCreated();
         } catch (error) {
             console.error(error.message);
         }
@@ -86,7 +89,7 @@ console.log(team);
                             type="submit"
                             className="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-pink-600"
                         >
-                            Submit
+                            Create
                         </button>
                     </div>
                 </form>
@@ -94,3 +97,15 @@ console.log(team);
         </div>
     );
 }
+
+CreateChannel.propTypes = {
+    team: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        owner: PropTypes.string,
+        createdOn: PropTypes.string,
+        id: PropTypes.string,
+        members: PropTypes.arrayOf(PropTypes.string),
+    }),
+    onClose: PropTypes.func.isRequired,
+    onChannelCreated: PropTypes.func.isRequired,
+};
