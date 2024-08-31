@@ -2,12 +2,9 @@ import { useContext, useState } from "react";
 import Teams from "../../views/Teams/Teams";
 import { logoutUser } from "../../services/auth.service";
 import { AppContext } from "../../state/app.context";
-<<<<<<< HEAD
 import { useNavigate } from "react-router-dom";
-=======
 import Invitations from "../../views/Invitations/Invitations";
 
->>>>>>> 97b01f62298bef2319fc365e45d6d06cc5989b12
 export default function SideNav() {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
