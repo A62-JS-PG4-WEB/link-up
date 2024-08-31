@@ -11,6 +11,7 @@ export default function SideNav() {
     const [justOpenedSidebar, setJustOpenedSidebar] = useState(false);
     const { user, setAppState, invitations } = useContext(AppContext);
     const navigate = useNavigate();
+    //test
 
     const logout = async () => {
         try {
