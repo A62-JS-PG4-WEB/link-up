@@ -5,6 +5,7 @@ import { getMessageInfo, sendMessage, sentMessageSaveInChannels, setMsgStatusFor
 import { getChannelsMembersByID } from '../../services/channels.service';
 import { db } from '../../config/firebase-config';
 import { get, onValue, ref } from 'firebase/database';
+import { ChannelInfo } from '../ChannelInfo/ChannelInfo';
 
 export default function Chat({ channel }) {
     const { userData } = useContext(AppContext);
@@ -13,6 +14,7 @@ export default function Chat({ channel }) {
     const [message, setMessage] = useState({ message: '' });
     const [currentMessages, setCurrentMessages] = useState([]);
     const [photoUrls, setPhotoUrls] = useState({});
+    const [isChannelInfoVisible, setIsChannelInfoVisible] = useState(false);
 
     useEffect(() => {
         if (channel) {
@@ -117,13 +119,26 @@ export default function Chat({ channel }) {
         fetchPhotoUrls();
     }, [currentMessages]);
 
+    const openPopUpChannelInfo = () => {
+        console.log('Channel Info Opened:', currentChat);
+        setIsChannelInfoVisible(true);
+    };
+
+    const closePopUpChannelInfo = () => {
+        setIsChannelInfoVisible(false);
+    };
+
+
     return (
         <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 max-w-3xl h-[600px]">
-
-            <h1 className="text-2xl font-bold mb-4 text-white">
-                # {currentChat?.name || "Loading..."}
-            </h1>
-
+            <div className="flex items-center justify-between mb-4">
+                <button className=" text-white py-2 px-4 rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    onClick={openPopUpChannelInfo}>
+                    <h1 className="text-2xl font-bold text-white">
+                        # {currentChat?.name || "Loading..."}
+                    </h1>
+                </button>
+            </div>
             {/* Chat messages container */}
             <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
                 {/* <ChatView channel={currentChat}/> */}
@@ -214,6 +229,9 @@ export default function Chat({ channel }) {
                     </button>
                 </div>
             </form>
+            {isChannelInfoVisible && (
+                <ChannelInfo onClose={closePopUpChannelInfo} chat={currentChat} />
+            )}
         </div>
 
     );
