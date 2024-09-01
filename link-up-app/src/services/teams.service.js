@@ -45,6 +45,11 @@ export const getTeamsInfoById = async (teams) => {
     }
 };
 
+export const getTeamInfoById = async (teamId) => {
+    const snapshot = await get(ref(db, `teams/${teamId}`));
+    return snapshot.val();
+}
+
 export const addChannelToTeam = async (teamID, channelID) => {
     try {
         await update(ref(db, `teams/${teamID}/channels`), {
