@@ -4,7 +4,7 @@ import { AppContext } from '../../state/app.context';
 import { getMessageInfo, sendMessage, sentMessageSaveInChannels, setMsgStatusForEachUser } from '../../services/chat.service';
 import { getChannelsMembersByID } from '../../services/channels.service';
 import { db } from '../../config/firebase-config';
-import { onValue, ref } from 'firebase/database';
+import { get, onValue, ref } from 'firebase/database';
 
 export default function Chat({ channel }) {
     const { userData } = useContext(AppContext);
@@ -12,6 +12,7 @@ export default function Chat({ channel }) {
     const [currentTeam, setCurrentTeam] = useState([]);
     const [message, setMessage] = useState({ message: '' });
     const [currentMessages, setCurrentMessages] = useState([]);
+    const [photoUrls, setPhotoUrls] = useState({});
 
     useEffect(() => {
         if (channel) {
@@ -91,8 +92,31 @@ export default function Chat({ channel }) {
         }
     };
 
-    // console.log('TEAM ID', currentTeam.id);
-    // console.log('CHANNEL TEAM ID', currentChat.team);
+    const takeSenderphoto = async (senderUsername) => {
+        try {
+            const snapshot = await get(ref(db, `users/${senderUsername}/photoURL`));
+            return snapshot.val() || null;
+        } catch (error) {
+            console.error('Error fetching user photo:', error);
+            return null;
+        }
+    }
+
+    useEffect(() => {
+        const fetchPhotoUrls = async () => {
+            const newPhotoUrls = {};
+            for (let message of currentMessages) {
+                if (!photoUrls[message.senderUsername]) {
+                    const url = await takeSenderphoto(message.senderUsername);
+                    newPhotoUrls[message.senderUsername] = url;
+                }
+            }
+            setPhotoUrls(prev => ({ ...prev, ...newPhotoUrls }));
+        };
+
+        fetchPhotoUrls();
+    }, [currentMessages]);
+
     return (
         <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 max-w-3xl h-[600px]">
 
@@ -104,50 +128,73 @@ export default function Chat({ channel }) {
             <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
                 {/* <ChatView channel={currentChat}/> */}
                 <div className="chat-container">
-                    {currentMessages.map((m) => (
-                        m.senderUsername === userData.username ? (
-                            <div key={m.id} className="chat chat-end mb-4">
-                                <div className="chat-image avatar">
-                                    <div className="w-10 rounded-full">
-                                        <img
-                                            alt="User avatar"
-                                               src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                                            // src={userData.photoURL}
-                                        />
+                    {currentMessages.map((m, index) => {
+                        const showDateSeparator =
+                            index === 0 ||
+                            new Date(currentMessages[index - 1].createdOn).toDateString() !== new Date(m.createdOn).toDateString();
+                        return (
+                            <div key={m.id}>
+                                {/* Date separator */}
+                                {showDateSeparator && (
+                                    <div className="date-separator text-center my-2 text-gray-500">
+                                        {new Date(m.createdOn).toLocaleDateString()}
                                     </div>
-                                </div>
-                                <div className="chat-header">
-                                    {m.senderUsername}
-                                    <time className="text-xs opacity-50">
-                                        {new Date(m.createdOn).toLocaleString()}
-                                    </time>
-                                </div>
-                                <div className="chat-bubble">{m.message}</div>
-                                {/* <div className="chat-footer opacity-50">Delivered</div> */}
-                            </div>
-                        ) : (
-                            <div key={m.id} className="chat chat-start">
-                                <div className="chat-image avatar">
-                                    <div className="w-10 rounded-full">
-                                        <img
-                                            alt="User avatar"
-                                            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                                        />
+                                )}
+                                {/* User message */}
+                                {m.senderUsername === userData.username ? (
+                                    <div className="chat chat-end mb-4">
+                                        <div className="chat-image avatar">
+                                            {/* <div className="w-10 rounded-full">
+                                                {userData.photoURL ? (
+                                                    <img
+                                                        alt="User avatar"
+                                                        src={userData.photoURL} />
+                                                ) : (
+                                                    <span className="flex items-center justify-center w-full h-full rounded-full bg-indigo-500">
+                                                        I
+                                                    </span>
+                                                )}
+                                            </div> */}
+                                        </div>
+                                        <div className="chat-header">
+                                            me
+                                            <time className="text-xs opacity-50 ml-1">
+                                                {new Date(m.createdOn).toLocaleTimeString()}
+                                            </time>
+                                        </div>
+                                        <div className="chat-bubble">{m.message}</div>
+                                        {/* <div className="chat-footer opacity-50">Delivered</div> */}
                                     </div>
-                                </div>
-                                <div className="chat-header">
-                                    {m.senderUsername}
-                                    <time className="text-xs opacity-50">
-                                        {new Date(m.createdOn).toLocaleString()}
-                                    </time>
-                                </div>
-                                <div className="chat-bubble">{m.message}</div>
-                                {/* <div className="chat-footer opacity-50">Delivered</div> */}
-
-
+                                ) : (
+                                    <div className="chat chat-start">
+                                        <div className="chat-image avatar">
+                                            <div className="w-10 rounded-full">
+                                                {photoUrls[m.senderUsername] ? (
+                                                    <img
+                                                        alt="User avatar"
+                                                        src={photoUrls[m.senderUsername]}
+                                                        className="w-full h-full rounded-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <span className="flex items-center justify-center w-full h-full rounded-full bg-indigo-500 text-white font-bold text-lg">
+                                                        {m.senderUsername.charAt(0).toUpperCase()}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className="chat-header">
+                                            {m.senderUsername}
+                                            <time className="text-xs opacity-50 ml-1">
+                                                {new Date(m.createdOn).toLocaleTimeString()}
+                                            </time>
+                                        </div>
+                                        <div className="chat-bubble">{m.message}</div>
+                                        {/* <div className="chat-footer opacity-50">Delivered</div> */}
+                                    </div>
+                                )}
                             </div>
-                        )
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
             {/* Input area */}
