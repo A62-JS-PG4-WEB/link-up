@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import Teams from "../../views/Teams/Teams";
 import { logoutUser } from "../../services/auth.service";
-import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../state/app.context";
+import { useNavigate } from "react-router-dom";
 import Invitations from "../../views/Invitations/Invitations";
 
 export default function SideNav() {
