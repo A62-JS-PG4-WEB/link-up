@@ -2,7 +2,28 @@ import { get, set, ref, query, equalTo, orderByChild, update } from 'firebase/da
 import { db } from '../config/firebase-config';
 import { auth } from '../config/firebase-config';
 import { updateProfile, updateEmail, updatePassword, sendEmailVerification, reauthenticateWithCredential, EmailAuthProvider  } from "firebase/auth";
+import { collection, where, getDocs } from 'firebase/firestore';
 
+export const searchUsers = async (searchTerm) => {
+  try {
+    const usersRef = collection(db, 'users'); 
+    const q = query(usersRef, where('username', '==', searchTerm)); 
+    const querySnapshot = await getDocs(q);
+
+    const users = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    if (users.length > 0) {
+      console.log('Users found:', users);
+    } else {
+      console.log('No users found');
+    }
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
 export const updateAccountInfoDB = async (username, newEmail) => {
   try {
       await update(ref(db, `users/${username}`), { email: newEmail });
