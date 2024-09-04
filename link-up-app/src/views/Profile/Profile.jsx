@@ -100,113 +100,104 @@ export default function Profile() {
     }
   };
 
+ 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="container mx-auto p-8 bg-white rounded-lg shadow-lg max-w-lg">
-        <h1 className="text-2xl font-bold mb-4">Profile</h1>
+    <div className="flex flex-col bg-gray-800 p-6 rounded-lg w-full h-full overflow-y-auto">
+      {/* <h1 className="text-2xl font-bold text-white mb-6">Profile</h1> */}
 
-        {/* Display Current Username */}
-        <div className="mb-6">
-          <p className="text-lg font-semibold">Current Username: {userData?.username || "User"}</p>
-        </div>
+      <div className="mb-6">
+        <p className="text-lg font-semibold text-white">Username: {userData?.username || "User"}</p>
+      </div>
 
-        {/* Profile Picture Upload */}
-        <div className="flex items-center justify-center mb-6">
-          <div className="avatar">
-            <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              <img src={imagePreview} alt="User avatar" />
-            </div>
+      <div className="flex items-center justify-center mb-6">
+        <div className="avatar">
+          <div className="w-32 rounded-full ring ring-gray-500 ring-offset-base-100 ring-offset-2">
+            <img src={imagePreview} alt="User avatar" />
           </div>
         </div>
-        <div className="flex flex-col items-center mb-6">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="file-input file-input-bordered file-input-primary w-full max-w-xs mb-4"
-          />
+      </div>
+
+      <div className="flex flex-col items-center mb-6">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="file-input file-input-bordered w-full max-w-xs mb-4 text-gray-800" 
+        />
+        {profileImage && (
           <button
             onClick={handleImageUpload}
-            className="btn btn-primary mt-2"
+            className="btn bg-gray-600 hover:bg-gray-700 text-white mt-2"
           >
             Upload Photo
           </button>
+        )}
+      </div>
+
+      <div className="flex flex-col space-y-4 text-white">
+
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text text-white">Email</span>
+          </label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="input input-bordered w-full bg-gray-700 border-gray-600 text-white"
+          />
         </div>
 
-        {/* Profile Form */}
-        <div className="flex flex-col space-y-4">
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text text-white">Phone Number</span>
+          </label>
+          <input
+            type="tel"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            className="input input-bordered w-full bg-gray-700 border-gray-600 text-white"
+          />
+        </div>
 
-          {/* Email */}
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text text-white">Old Password</span>
+          </label>
+          <input
+            type="password"
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+            className="input input-bordered w-full bg-gray-700 border-gray-600 text-white"
+          />
+        </div>
 
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Email</span>
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input input-bordered w-full"
-            />
-          </div>
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text text-white">New Password</span>
+          </label>
+          <input
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className="input input-bordered w-full bg-gray-700 border-gray-600 text-white"
+          />
+        </div>
 
-
-      {/* Phone Number */}
-      <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Phone Number</span>
-            </label>
-            <input
-              type="tel"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className="input input-bordered w-full"
-            />
-          </div>
-
-
-          {/* Old Password */}
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Old Password</span>
-            </label>
-            <input
-              type="password"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-              className="input input-bordered w-full"
-            />
-          </div>
-
-          {/* New Password */}
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">New Password</span>
-            </label>
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="input input-bordered w-full"
-            />
-          </div>
-
-          {/* Save Button */}
-          <div>
-            <button
-              onClick={handleSave}
-              className={`btn btn-primary mt-4 ${loading ? "loading" : ""}`}
-            >
-              {loading ? "Saving..." : "Save Changes"}
-            </button>
-            {message && (
-              <div className="mt-4 text-center">
-                <p className={`text-sm ${message.includes("Error") ? "text-red-500" : "text-green-500"}`}>
-                  {message}
-                </p>
-              </div>
-            )}
-          </div>
+        <div>
+          <button
+            onClick={handleSave}
+            className={`btn bg-gray-300 hover:bg-gray-400 text-gray-800 mt-4 ${loading ? "loading" : ""}`}
+          >
+            {loading ? "Saving..." : "Save Changes"}
+          </button>
+          {message && (
+            <div className="mt-4 text-center">
+              <p className={`text-sm ${message.includes("Error") ? "text-red-500" : "text-green-500"}`}>
+                {message}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

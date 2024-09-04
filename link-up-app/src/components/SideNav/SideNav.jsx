@@ -3,11 +3,11 @@ import Teams from "../../views/Teams/Teams";
 import { logoutUser } from "../../services/auth.service";
 import { AppContext } from "../../state/app.context";
 import { useNavigate, useLocation } from "react-router-dom";
-
+import Profile from "../../views/Profile/Profile";
 export default function SideNav() {
-
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [justOpenedSidebar, setJustOpenedSidebar] = useState(false);
+    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // State to control modal visibility
     const { user, setAppState, userData } = useContext(AppContext);
     const [isProfilePage, setIsProfilePage] = useState(false);
     const navigate = useNavigate();
@@ -41,11 +41,7 @@ export default function SideNav() {
     };
 
     const handleProfileClick = () => {
-        if (isProfilePage) {
-            navigate(-1);
-        } else {
-            navigate('/profile');
-        }
+        setIsProfileModalOpen(true); // Open the modal
     };
 
     useEffect(() => {
@@ -113,29 +109,41 @@ export default function SideNav() {
                 <div className="mt-auto flex items-center p-4 bg-gray-900">
                     <div className={`avatar ${user?.status === 'online' ? 'online' : 'offline'} mr-4`}>
                         <div className="w-12 rounded-full cursor-pointer" onClick={handleProfileClick}>
-                            <img src={user?.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"} alt="User Avatar" />
+                            <img src={user?.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"} alt="User" />
                         </div>
                     </div>
-                    <div className="flex flex-col">
-                        {isSidebarOpen && (
-                            <>
-                                <span className="text-white font-bold">{userData?.username}</span>
-                                <span className="text-gray-400 text-sm">{userData?.email}</span>
-                            </>
-                        )}
-                    </div>
-                    <button
-                        onClick={logout}
-                        className="ml-auto text-white hover:bg-gray-700 rounded-full p-2 flex items-center"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-box-arrow-right" viewBox="0 0 16 16">
-                            <path fillRule="evenodd" d="M10 3.5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 15 4.5v7a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5z" />
-                            <path fillRule="evenodd" d="M7.854 11.354a.5.5 0 0 1 0-.708L9.647 9H1.5a.5.5 0 0 1 0-1h8.147L7.854 5.354a.5.5 0 1 1 .707-.708l2.5 2.5a.5.5 0 0 1 0 .708l-2.5 2.5a.5.5 0 0 1-.707 0z" />
-                        </svg>
-                        {isSidebarOpen && <span className="ml-2">Logout</span>}
+                    {isSidebarOpen && (
+                        <div className="text-white">
+                            <div className="font-bold">{userData?.name}</div>
+                            <div className="text-sm">{userData?.email}</div>
+                        </div>
+                    )}
+                    <button onClick={logout} className="ml-auto text-white hover:text-gray-400">
+                        Logout
                     </button>
                 </div>
             </div>
+
+            {isProfileModalOpen && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
+        <div className="bg-gray-800 text-white p-6 rounded-lg flex flex-col w-full max-w-3xl h-[600px] relative mx-auto my-10">
+            <div className="flex items-center justify-between mb-4">
+                <h1 className="text-2xl font-bold text-white">
+                    Profile Information
+                </h1>
+                <button
+                    className="text-red-600 hover:text-red-800 text-4xl focus:outline-none"
+                    onClick={() => setIsProfileModalOpen(false)}
+                >
+                    &times;
+                </button>
+            </div>
+            <div className="flex-1 overflow-y-auto">
+                <Profile /> {/* Display the Profile component inside the modal */}
+            </div>
+        </div>
+    </div>
+)}
         </div>
     );
 }
