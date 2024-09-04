@@ -42,7 +42,7 @@ export default function Profile() {
         await uploadBytes(storageRef, profileImage);
         const photoURL = await getDownloadURL(storageRef);
 
-        await updateProfilePicture(user.username, photoURL);
+        await updateProfilePicture(userData.username, photoURL);
 
         setAppState((prevState) => ({
           ...prevState,
