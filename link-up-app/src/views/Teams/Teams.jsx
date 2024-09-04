@@ -12,6 +12,7 @@ export default function Teams() {
     const [isTeamsListVisible, setIsTeamsListVisible] = useState(false);
     const { userData } = useContext(AppContext);
     const [teams, setTeams] = useState([]);
+    
     useEffect(() => {
         const loadTeams = async () => {
             try {

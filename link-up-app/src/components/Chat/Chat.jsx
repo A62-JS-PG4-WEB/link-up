@@ -7,7 +7,7 @@ import { db } from '../../config/firebase-config';
 import { get, onValue, ref } from 'firebase/database';
 import { ChannelInfo } from '../ChannelInfo/ChannelInfo';
 
-export default function Chat({ channel }) {
+export default function Chat({ channel, onClose }) {
     const { userData } = useContext(AppContext);
     const [currentChat, setCurrentChat] = useState(channel || location.state?.channel);
     const [currentTeam, setCurrentTeam] = useState([]);
@@ -128,6 +128,13 @@ export default function Chat({ channel }) {
         setIsChannelInfoVisible(false);
     };
 
+    const handleCloseChat = () => {
+        sessionStorage.removeItem('selectedChat');
+        if (typeof onClose === 'function') {
+            onClose();
+        }
+    }
+
 
     return (
         <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 max-w-3xl h-[600px]">
@@ -135,9 +142,19 @@ export default function Chat({ channel }) {
                 <button className=" text-white py-2 px-4 rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     onClick={openPopUpChannelInfo}>
                     <h1 className="text-2xl font-bold text-white">
-                        # {currentChat?.name || "Loading..."}
+                        # {currentChat?.name || "Loading..."} ^
                     </h1>
                 </button>
+                <div className="flex justify-between items-center">            
+                    <div>
+                        <button
+                        onClick={handleCloseChat}
+                            className="p-2 text-white rounded"
+                        >
+                           x
+                        </button>
+                    </div>
+            </div>
             </div>
             {/* Chat messages container */}
             <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
@@ -242,6 +259,7 @@ Chat.propTypes = {
     channel: PropTypes.shape({
         name: PropTypes.string.isRequired,
     }).isRequired,
+    onClose: PropTypes.func.isRequired,
 };
 
 
