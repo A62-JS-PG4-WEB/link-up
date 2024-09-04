@@ -70,7 +70,7 @@ export default function Channels({ team, onSelectChannel }) {
     const handleChannelClick = async (channel) => {
         console.log("chosen channel", channel); 
         try {
-            localStorage.setItem('selectedChat', JSON.stringify(channel));
+            sessionStorage.setItem('selectedChat', JSON.stringify(channel));
             onSelectChannel(channel);
         } catch (error) {
             console.error("Failed to save Chat to localStorage", error);

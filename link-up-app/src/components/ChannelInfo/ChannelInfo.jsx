@@ -12,7 +12,7 @@ export function ChannelInfo({ channel, onClose }) {
 
     useEffect(() => {
         if (!channel) {
-            const savedChat = localStorage.getItem('selectedChat');
+            const savedChat = sessionStorage.getItem('selectedChat');
             if (savedChat) {
                 try {
                     setCurrentChat(JSON.parse(savedChat));
