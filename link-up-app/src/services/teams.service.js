@@ -3,12 +3,6 @@ import { db } from "../config/firebase-config";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const getTeamMembersNames = async(teamId) => {
-    const snapshot = await get(ref(db, `teams/${teamId}/members`));
-    
-    return snapshot.val();
-}
-
 export const createTeam = async (team, member) => {
     //  const team = { name, owner, createdOn: new Date().toString() };
     const result = await push(ref(db, 'teams'), team);
