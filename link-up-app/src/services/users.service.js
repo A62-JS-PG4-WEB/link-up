@@ -124,8 +124,20 @@ export const getUserByUsername = async (username) => {
 };
 
 export const getUserByEmail = async (email) => {
-  const snapshot = await get(query(ref(db, 'users'), orderByChild('email'), equalTo(email)));
-  return snapshot.val();
+  try {
+    // Make sure the email field is correctly indexed in Firebase Realtime Database.
+    const snapshot = await get(query(ref(db, 'users'), orderByChild('email'), equalTo(email)));
+    
+    if (snapshot.exists()) {
+      return snapshot.val();
+    } else {
+      console.log('No user found with that email.');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching user by email:', error);
+    throw new Error(error.message);
+  }
 };
 
 export const createUserUsername = async (username, uid, email, phone) => {
