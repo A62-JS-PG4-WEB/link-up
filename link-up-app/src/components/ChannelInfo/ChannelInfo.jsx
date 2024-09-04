@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import { getTeamInfoById } from "../../services/teams.service";
 import { getChannelsMembersByID } from "../../services/channels.service";
+import AddChannelMembers from "../../views/AddChannelMembers/AddChannelMembers";
 
 export function ChannelInfo({ channel, onClose }) {
     const [currentChat, setCurrentChat] = useState(channel || location.state?.channel);
     const [chatInTeam, setChatInTeam] = useState(null);
     const [members, setMembers] = useState([]);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     useEffect(() => {
         if (!channel) {
@@ -65,7 +67,16 @@ export function ChannelInfo({ channel, onClose }) {
 
     const addMembersInChat = () => {
 
+
     }
+
+    const handleAddClick = () => {
+        setIsPopupOpen(true);
+    };
+
+    const handleClosePopup = () => {
+        setIsPopupOpen(false);
+    };
 
     return (<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <div
@@ -75,9 +86,12 @@ export function ChannelInfo({ channel, onClose }) {
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold mt-3 mb-5">Channel Information</h2> <br />
                     <button className="mr-8 bg-indigo-500 text-white py-0.5 px-2 rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 transition-all"
-                        onClick={addMembersInChat}>
+                        onClick={handleAddClick}>
                         Add Members
                     </button>
+                    {isPopupOpen && (
+                            <AddChannelMembers onClose={handleClosePopup} team={currentChat} />
+                        )}
                 </div>
                 <p>Chat Name: <strong>{currentChat?.name}</strong></p><br />
                 <p>Team: <strong>{chatInTeam}</strong></p><br />
