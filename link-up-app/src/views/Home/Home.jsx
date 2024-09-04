@@ -44,7 +44,7 @@ export default function Home({ team }) {
                 {/* Messages Container */}
                 <div className="flex-1">
                     {selectedChat ? (
-                        <Chat channel={selectedChat} />
+                        <Chat channel={selectedChat} onClose={() => setSelectedChat(null)} />
                     ) : (
                         <div className="text-white">Please select a channel to start chatting.</div>
                     )}
