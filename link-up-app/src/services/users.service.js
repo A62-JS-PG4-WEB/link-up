@@ -97,6 +97,11 @@ export const getUserByUsername = async (username) => {
   return snapshot.val();
 };
 
+export const getUserByEmail = async (email) => {
+  const snapshot = await get(query(ref(db, 'users'), orderByChild('email'), equalTo(email)));
+  return snapshot.val();
+};
+
 export const createUserUsername = async (username, uid, email, phone) => {
   const user = { username, uid, email, phone, createdOn: new Date().toString() };
   await set(ref(db, `users/${username}`), user);
