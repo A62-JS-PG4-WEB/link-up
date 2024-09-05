@@ -4,7 +4,7 @@ import { Review } from "../../components/Review/Review";
 export function Landing() {
 
     return (
-        <div data-theme="light dark" class>
+        <div data-theme="light dark">
 
             <div
                 className="hero min-h-screen"

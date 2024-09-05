@@ -63,7 +63,7 @@ function App() {
     <>
       <BrowserRouter>
         <AppContext.Provider value={{ ...appState, setAppState, invitations, setInvitations }}>
-          {!user ? <Nav /> : <SideNav />}
+          {!user && <Nav />}
 
           {/* <ToastContainer stacked closeOnClick /> */}
 
@@ -73,9 +73,12 @@ function App() {
             <Route path='/register' element={<Register />} />
             <Route path='/home' element={<Authenticated><Home /></Authenticated>} />
             <Route path='/notifications' element={<Authenticated><AllNotifications /></Authenticated>} />
-            <Route path='/create-team' element={<Authenticated><CreateTeam /></Authenticated>} />
-            <Route path='/profile' element={<Authenticated><Profile /></Authenticated>} />
-            <Route path='/search-user' element={<Authenticated><SearchUser /></Authenticated>} />
+            {/* {does not exist} */}
+            {/* <Route path='/create-team' element={<Authenticated><CreateTeam /></Authenticated>} /> */}
+            {/* {does not exist} */}
+            {/* <Route path='/profile' element={<Authenticated><Profile /></Authenticated>} /> */}
+            {/* {does not exist} */}
+            {/* <Route path='/search-user' element={<Authenticated><SearchUser /></Authenticated>} /> */}
             {/* {create 404} */}
             <Route path='*' element={<Test />} />
           </Routes>

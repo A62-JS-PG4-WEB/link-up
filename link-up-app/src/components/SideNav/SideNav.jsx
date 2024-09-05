@@ -52,7 +52,7 @@ export default function SideNav() {
     }, [location.pathname]);
 
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen sidenav">
             <div
                 className={`${isSidebarOpen ? 'w-64' : 'w-14'} bg-gray-800 h-full flex flex-col transition-all duration-300 ease-in-out`}
             >
