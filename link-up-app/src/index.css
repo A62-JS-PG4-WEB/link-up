@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.main {
+/* .main {
     display: flex;
     flex-flow: row;
     align-items: start;
@@ -16,4 +16,4 @@
 
 .content{
     width: 100%;
-}
+} */
