@@ -50,16 +50,16 @@ export const deleteChannelById = async (channelId, teamID) => {
 };
 
 export const getChannelsInfoById = async (channels) => {
-   
+
     // const snapshot = await get(ref(db, `channels/-O4ygojej9sUZgv7N7w6`));
     // console.log(snapshot.val());
     try {
         const promises = channels.map(async (id) => {
             console.log(id);
-            
+
             const snapshot = await get(ref(db, `channels/${id}`));
             console.log(snapshot.val());
-            
+
             return snapshot.val();
         });
         const filteredChannels = await Promise.all(promises);
@@ -82,6 +82,22 @@ export const getChannelsMembersByID = async (channelId) => {
         }
     } catch (error) {
         console.error("Error fetching channel members:", error);
+        throw error;
+    }
+};
+
+export const leaveChannel = async (username, channelId) => {
+
+    try {
+
+        const channelMemberRef = ref(db, `channels/${channelId}/members/${username}`);
+        await remove(channelMemberRef);
+
+        const userChannelRef = ref(db, `users/${username}/channels/${channelId}`);
+        await remove(userChannelRef);
+        console.log(`User ${username} has left the channel ${channelId}`);
+    } catch (error) {
+        console.error(`Failed to leave the channel ${channelId}:`, error);
         throw error;
     }
 };

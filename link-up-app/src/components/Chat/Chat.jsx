@@ -149,9 +149,9 @@ export default function Chat({ channel, onClose }) {
                     <div>
                         <button
                         onClick={handleCloseChat}
-                            className="p-2 text-white rounded"
+                           className="text-white hover:text-red-800 text-4xl focus:outline-none"
                         >
-                           x
+                     &times;
                         </button>
                     </div>
             </div>
