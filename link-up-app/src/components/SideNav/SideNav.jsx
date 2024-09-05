@@ -6,37 +6,29 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Profile from "../../views/Profile/Profile";
 import Invitations from "../../views/Invitations/Invitations";
 
+
 export default function SideNav() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [justOpenedSidebar, setJustOpenedSidebar] = useState(false);
-    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // State to control modal visibility
+    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); 
     const { user, setAppState, userData, invitations } = useContext(AppContext);
     const [isProfilePage, setIsProfilePage] = useState(false);
     const navigate = useNavigate();
     const location = useLocation(); 
 
     const logout = async () => {
+        const confirmLogout = window.confirm("Are you sure you want to logout?");
+        localStorage.clear();
+        sessionStorage.clear();
 
-        try {
-            localStorage.clear();
-            sessionStorage.clear();
-
-            await logoutUser();
-            setAppState({ user: null, userData: null });
-            navigate('/login');
-        } catch (error) {
-            console.error("Logout failed", error);
-// =======
-//         const confirmLogout = window.confirm("Are you sure you want to logout?");
-//         if (confirmLogout) {
-//             try {
-//                 await logoutUser(); 
-//                 setAppState({ user: null, userData: null });
-//                 navigate('/login'); 
-//             } catch (error) {
-//                 console.error("Logout failed", error); 
-//             }
-// >>>>>>> sideNavNew
+        if (confirmLogout) {
+            try {
+                await logoutUser(); 
+                setAppState({ user: null, userData: null });
+                navigate('/login'); 
+            } catch (error) {
+                console.error("Logout failed", error); 
+            }
         }
     };
 
@@ -55,7 +47,7 @@ export default function SideNav() {
     };
 
     const handleProfileClick = () => {
-        setIsProfileModalOpen(true); // Open the modal
+        setIsProfileModalOpen(true); 
     };
 
     useEffect(() => {
@@ -162,7 +154,7 @@ export default function SideNav() {
                 </button>
             </div>
             <div className="flex-1 overflow-y-auto">
-                <Profile /> {/* Display the Profile component inside the modal */}
+                <Profile /> 
             </div>
         </div>
     </div>
