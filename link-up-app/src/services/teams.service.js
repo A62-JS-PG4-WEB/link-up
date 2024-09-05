@@ -8,7 +8,6 @@ export const getTeamMembersNames = async(teamId) => {
     
     return snapshot.val();
 }
-
 export const createTeam = async (team, member) => {
     //  const team = { name, owner, createdOn: new Date().toString() };
     const result = await push(ref(db, 'teams'), team);

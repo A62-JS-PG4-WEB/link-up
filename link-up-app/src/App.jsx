@@ -18,9 +18,8 @@ import Test from './Test.jsx'
 import AllNotifications from './views/AllNotifications/AllNotifications.jsx'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Profile from './views/Profile/Profile.jsx'
-import SearchUser from './components/SearchUsers/SearchUsers.jsx'
-
+import Profile from './views/Profile/Profile.jsx';
+import SearchUser from './components/SearchUser/SearchUser.jsx';
 
 
 function App() {
