@@ -6,6 +6,7 @@ import { getChannelsMembersByID } from '../../services/channels.service';
 import { db } from '../../config/firebase-config';
 import { get, onValue, ref } from 'firebase/database';
 import { ChannelInfo } from '../ChannelInfo/ChannelInfo';
+import GifSelector from '../GifSelector/GifSelector';
 
 export default function Chat({ channel, onClose }) {
     const { userData } = useContext(AppContext);
@@ -15,6 +16,7 @@ export default function Chat({ channel, onClose }) {
     const [currentMessages, setCurrentMessages] = useState([]);
     const [photoUrls, setPhotoUrls] = useState({});
     const [isChannelInfoVisible, setIsChannelInfoVisible] = useState(false);
+    const [isGifSelectorVisible, setIsGifSelectorVisible] = useState(false);
 
     useEffect(() => {
         if (channel) {
@@ -135,6 +137,19 @@ export default function Chat({ channel, onClose }) {
         }
     }
 
+    const handleSelectGif = (gifUrl) => {
+        setMessage({
+            ...message,
+            message: gifUrl,
+        });
+        setIsGifSelectorVisible(false);
+    };
+
+    const toggleGifSelector = () => {
+        setIsGifSelectorVisible(!isGifSelectorVisible);
+    };
+
+
 
     return (
         <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 max-w-3xl h-[600px]">
@@ -145,16 +160,16 @@ export default function Chat({ channel, onClose }) {
                         # {currentChat?.name || "Loading..."} ^
                     </h1>
                 </button>
-                <div className="flex justify-between items-center">            
+                <div className="flex justify-between items-center">
                     <div>
                         <button
-                        onClick={handleCloseChat}
-                           className="text-white hover:text-red-800 text-4xl focus:outline-none"
+                            onClick={handleCloseChat}
+                            className="text-white hover:text-red-800 text-4xl focus:outline-none"
                         >
-                     &times;
+                            &times;
                         </button>
                     </div>
-            </div>
+                </div>
             </div>
             {/* Chat messages container */}
             <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
@@ -244,8 +259,20 @@ export default function Chat({ channel, onClose }) {
                     >
                         Send
                     </button>
+                    <button
+                        type="button"
+                        onClick={toggleGifSelector}
+                        className="p-4 bg-yellow-600 text-white rounded-lg hover:bg-yellow-500 focus:ring-2 focus:ring-yellow-500 transition-all ease-in-out"
+                    >
+                        GIF
+                    </button>
                 </div>
             </form>
+
+            {isGifSelectorVisible && (
+                <GifSelector onSelect={handleSelectGif} />
+            )}
+
             {isChannelInfoVisible && (
                 <ChannelInfo onClose={closePopUpChannelInfo} chat={currentChat} />
             )}
