@@ -4,11 +4,13 @@ import { logoutUser } from "../../services/auth.service";
 import { AppContext } from "../../state/app.context";
 import { useNavigate, useLocation } from "react-router-dom";
 import Profile from "../../views/Profile/Profile";
+import Invitations from "../../views/Invitations/Invitations";
+
 export default function SideNav() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [justOpenedSidebar, setJustOpenedSidebar] = useState(false);
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // State to control modal visibility
-    const { user, setAppState, userData } = useContext(AppContext);
+    const { user, setAppState, userData, invitations } = useContext(AppContext);
     const [isProfilePage, setIsProfilePage] = useState(false);
     const navigate = useNavigate();
     const location = useLocation(); 
@@ -89,7 +91,7 @@ export default function SideNav() {
                         </svg>
                         {isSidebarOpen && <Teams />}
                     </a>
-
+                
                     {/* Search */}
                     <div className="flex items-center p-4 text-white hover:bg-gray-700">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
@@ -110,10 +112,20 @@ export default function SideNav() {
                         className="flex items-center p-4 text-white hover:bg-gray-700"
                         onClick={handleNavClick}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-bell" viewBox="0 0 16 16">
-                            <path d="M8 16a2 2 0 0 0 1.985-1.75h-3.97A2 2 0 0 0 8 16zm.104-14.247a.5.5 0 0 1 .633.057A5.022 5.022 0 0 1 13 6c0 .628.134 1.197.359 1.75.228.561.539 1.098.875 1.591.18.27.366.545.535.841.172.301.327.623.45.987.124.366.18.768.18 1.248H0c0-.48.056-.882.18-1.248.123-.364.278-.686.45-.987.169-.296.355-.571.535-.84.336-.494.647-1.03.875-1.592A5.978 5.978 0 0 0 3 6c0-1.512.572-2.904 1.614-3.966a.5.5 0 0 1 .633-.057c.682.483 1.55.773 2.527.773s1.845-.29 2.527-.773z" />
-                        </svg>
-                        {isSidebarOpen && <span className="ml-4">Notifications</span>}
+
+                        <div className="relative inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                className={`bi bi-bell  ${invitations?.length > 0 ? 'text-red-500' : 'text-white'}`} viewBox="0 0 16 16">
+                                <path d="M8 16a2 2 0 0 0 1.985-1.75h-3.97A2 2 0 0 0 8 16zm.104-14.247a.5.5 0 0 1 .633.057A5.022 5.022 0 0 1 13 6c0 .628.134 1.197.359 1.75.228.561.539 1.098.875 1.591.18.27.366.545.535.841.172.301.327.623.45.987.124.366.18.768.18 1.248H0c0-.48.056-.882.18-1.248.123-.364.278-.686.45-.987.169-.296.355-.571.535-.84.336-.494.647-1.03.875-1.592A5.978 5.978 0 0 0 3 6c0-1.512.572-2.904 1.614-3.966a.5.5 0 0 1 .633-.057c.682.483 1.55.773 2.527.773s1.845-.29 2.527-.773z" />
+                            </svg>
+                            {invitations?.length > 0 && (
+                                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2">
+                                    {invitations.length}
+                                </span>
+                            )}
+                        </div>
+
+                        {isSidebarOpen && <Invitations />}
                     </a>
                 </nav>
 

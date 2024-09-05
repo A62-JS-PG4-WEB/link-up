@@ -8,7 +8,7 @@ export const invitationsQuery = (email) => {
 
 };
 
-export const createInvitation = async (invitation) => { 
+export const createInvitation = async (invitation) => {
     const result = push(invitationsRef, invitation);
     const id = result.key;
     await update(ref(db), {
@@ -21,32 +21,28 @@ export const createInvitation = async (invitation) => {
 export const getInvitations = async (email) => {
     const snapshot = await get(invitationsQuery(email))
     const data = snapshot.val();
-console.log(data);
+    console.log(data);
 
     return data ? Object.values(data) : [];
 };
 
 export const acceptInvitation = async (id, receiverUsername) => {
 
-await update(ref(db), {
+    await update(ref(db), {
         [`invitations/${id}/status`]: 'accepted',
         [`invitations/${id}/receiverUsername`]: receiverUsername,
         [`invitations/${id}/updatedOn`]: new Date().toDateString(),
     });
     const snapshot = await get(ref(db, `invitations/${id}`))
-               return snapshot.val().teamID;
+    return snapshot.val().teamID;
 }
 
 
 export const rejectInvitation = async (id, receiverUsername) => {
 
     await update(ref(db), {
-            [`invitations/${id}/status`]: 'rejected',
-            [`invitations/${id}/receiverUsername`]: receiverUsername,
-            [`invitations/${id}/updatedOn`]: new Date().toDateString(),
-        });
-
-       
-        
-         
-    }
+        [`invitations/${id}/status`]: 'rejected',
+        [`invitations/${id}/receiverUsername`]: receiverUsername,
+        [`invitations/${id}/updatedOn`]: new Date().toDateString(),
+    });
+};
