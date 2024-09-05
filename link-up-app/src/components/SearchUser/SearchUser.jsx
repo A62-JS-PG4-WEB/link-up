@@ -19,12 +19,12 @@ const SearchUser = () => {
 
         try {
             let userFromDB;
-    
+
             if (searchType === "username") {
                 userFromDB = await getUserByUsername(query);
             } else if (searchType === "email") {
                 const emailObj = await getUserByEmail(query);
-    
+
                 if (emailObj) {
                     // Since `emailObj` can return multiple users if the query matches multiple records, you need to handle it accordingly.
                     // Assuming emailObj is an object where the key is the user ID and the value is the user data.
@@ -61,7 +61,7 @@ const SearchUser = () => {
                     <option value="email">Email</option>
                     <option value="team">Team</option>
                 </select>
-                <input type="text" placeholder={searchType === "team" ? "Team Name" : "Search"} name="query" />
+                <input className="p-1.5" type="text" placeholder={searchType === "team" ? "Team Name" : "Search"} name="query" />
                 <button type="submit">Search</button>
             </form>
 

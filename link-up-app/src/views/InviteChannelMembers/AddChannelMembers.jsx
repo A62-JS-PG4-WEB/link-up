@@ -24,7 +24,7 @@ export default function AddChannelMembers({ onClose, channel }) {
     }, [onClose]);
 
     const updateEmailInput = (key, value) => {
-        
+
         if (emailInput[key] !== value) {
             setEmailInput({
                 ...emailInput,
@@ -34,14 +34,14 @@ export default function AddChannelMembers({ onClose, channel }) {
     };
 
     const handleAddMembers = async (e) => {
-       
-         e.preventDefault();
+
+        e.preventDefault();
 
         try {
 
             // const channelName = JSON.parse(localStorage.getItem('selectedChat')).name;
             // const channelId = JSON.parse(localStorage.getItem('selectedChat')).id;
-            
+
             // const notification = {
             //     type: "channel",
             //     channelId: channelId,
@@ -54,7 +54,7 @@ export default function AddChannelMembers({ onClose, channel }) {
             // };
             const teamName = JSON.parse(localStorage.getItem('selectedTeam')).name;
             const teamId = JSON.parse(localStorage.getItem('selectedTeam')).id;
-            
+
             const invitation = {
                 type: "team",
                 status: "pending",
@@ -62,16 +62,16 @@ export default function AddChannelMembers({ onClose, channel }) {
                 teamName: teamName,
                 message: `You are invitated to team ${teamName}`,
                 email: emailInput.email,
-                senderUsername: userData.username,      
+                senderUsername: userData.username,
                 createdOn: new Date().getTime(),
                 updatedOn: new Date().getTime()
             };
-        
-           await createInvitation(invitation);
-           await createInvitation(notification);
 
-           setEmailInput({ email: '' });
-           onClose();
+            await createInvitation(invitation);
+            await createInvitation(notification);
+
+            setEmailInput({ email: '' });
+            onClose();
         } catch (error) {
             console.error(error.message);
         }
@@ -87,7 +87,7 @@ export default function AddChannelMembers({ onClose, channel }) {
                     &times;
                 </button>
                 <div>
-                <div className="space-y-6 mt-4">
+                    <div className="space-y-6 mt-4">
                         <button
                             className="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-pink-600"
                         >
@@ -99,7 +99,7 @@ export default function AddChannelMembers({ onClose, channel }) {
                             Add Team Members
                         </button>
                     </div>
-                    </div>
+                </div>
             </div>
         </div>
     );
@@ -117,7 +117,7 @@ export default function AddChannelMembers({ onClose, channel }) {
                                 placeholder="email"
                                 value={emailInput.email}
                                 onChange={(e) => updateEmailInput('email', e.target.value)}
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm"
+                                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm"
                             />
                         </div>
                     </div>
