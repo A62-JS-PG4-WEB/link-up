@@ -1,40 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getUserByUsername, getUserByEmail, getUserData } from "../../services/users.service";
 import { getTeamMembersNames, getTeams, getUserTeams } from "../../services/teams.service";
+import './SearchUser.css';
 
 
 const SearchUser = () => {
-
     const [searchedUser, setSearchedUser] = useState(null);
-
     const [searchType, setSearchType] = useState("username");
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
 
     const handleSearch = async (e) => {
-
         e.preventDefault();
-
         const formData = new FormData(e.target);
-
         const query = formData.get("query");
 
         try {
             let userFromDB;
-    
+
             if (searchType === "username") {
                 userFromDB = await getUserByUsername(query);
             } else if (searchType === "email") {
                 const emailObj = await getUserByEmail(query);
-    
+
                 if (emailObj) {
-                    // Since `emailObj` can return multiple users if the query matches multiple records, you need to handle it accordingly.
-                    // Assuming emailObj is an object where the key is the user ID and the value is the user data.
-                    const userId = Object.keys(emailObj)[0]; // Get the first user ID
-                    userFromDB = emailObj[userId]; // Get the user data by ID
+                    const userId = Object.keys(emailObj)[0];
+                    userFromDB = emailObj[userId];
                 } else {
                     userFromDB = null;
                 }
             } else if (searchType === "team") {
-                const teamObj = await getTeams(query); // team object
+                const teamObj = await getTeams(query);
                 if (teamObj) {
                     const teamId = Object.keys(teamObj)[0];
                     const teamMembersNames = await getTeamMembersNames(teamId);
@@ -48,10 +44,24 @@ const SearchUser = () => {
                 }
             }
             setSearchedUser(userFromDB || null);
+            setIsDropdownOpen(true);
         } catch (error) {
             console.error('Search failed:', error);
         }
     };
+
+    const handleClickOutside = (e) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+            setIsDropdownOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <div className="searchUser">
@@ -65,37 +75,35 @@ const SearchUser = () => {
                 <button type="submit">Search</button>
             </form>
 
-            {searchType === "team" && Array.isArray(searchedUser) ? (
-                <div className="team">
-
-                    {searchedUser.map(user => (
-                        <div key={user.id} className="user">
-                            <div className="detail">
-                                <img src={user.photoURL} alt="User Avatar" />
-                                <span>{user.username}</span>
+            {isDropdownOpen && (
+                <div ref={dropdownRef} className="dropdown-menu">
+                    {searchType === "team" && Array.isArray(searchedUser) ? (
+                        <div className="team">
+                            {searchedUser.map(user => (
+                                <div key={user.id} className="dropdown-item">
+                                    <div className="dropdown-content">
+                                        <img src={user.photoURL} alt="User Avatar" className="user-avatar" />
+                                        <span>{user.username}</span>
+                                    </div>
+                                    <button className="add-button">Start a chat</button>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        searchedUser && (
+                            <div className="dropdown-item">
+                                <div className="dropdown-content">
+                                    <img src={searchedUser.photoURL} alt="User Avatar" className="user-avatar" />
+                                    <span>{searchedUser.username || searchedUser.email}</span>
+                                </div>
+                                <button className="add-button">Add user</button>
                             </div>
-                            <>Add user</>
-                        </div>
-
-                    ))}
+                        )
+                    )}
                 </div>
-
-            ) : (
-
-                searchedUser && (
-                    <div className="user">
-                        <div className="detail">
-                            <img src={searchedUser.photoURL} alt="User Avatar" />
-                            <span>{searchedUser.username || searchedUser.email}</span>
-                            <button>Add user</button>
-                        </div>
-                    </div>
-                )
             )}
         </div>
-
     );
-
 };
 
 export default SearchUser;
