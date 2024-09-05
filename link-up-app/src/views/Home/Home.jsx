@@ -9,7 +9,7 @@ export default function Home({ team }) {
     const [selectedChat, setSelectedChat] = useState(null);
 
     useEffect(() => {
-        const savedChat = localStorage.getItem('selectedChat');
+        const savedChat = sessionStorage.getItem('selectedChat');
         if (savedChat) {
             try {
                 setSelectedChat(JSON.parse(savedChat));
@@ -22,7 +22,7 @@ export default function Home({ team }) {
     const handleSelectChannel = (channel) => {
         setSelectedChat(channel);
         try {
-            localStorage.setItem('selectedChat', JSON.stringify(channel));
+            sessionStorage.setItem('selectedChat', JSON.stringify(channel));
         } catch (error) {
             console.error("Failed to save chat to localStorage", error);
         }

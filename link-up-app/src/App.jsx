@@ -18,7 +18,8 @@ import Test from './Test.jsx'
 import AllNotifications from './views/AllNotifications/AllNotifications.jsx'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import Profile from './views/Profile/Profile.jsx';
+import SearchUser from './components/SearchUser/SearchUser.jsx';
 
 
 function App() {
@@ -73,6 +74,8 @@ function App() {
             <Route path='/test' element={user && <Test />} />
             <Route path='/notifications' element={user && <AllNotifications />} />
             <Route path='/create-team' element={user && <CreateTeam />} />
+            <Route path='/profile' element={user && <Profile />} />
+            <Route path='search-user' element={user && <SearchUser />} />
           </Routes>
           {!user && <Footer />}
         </AppContext.Provider>

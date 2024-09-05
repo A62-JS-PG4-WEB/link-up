@@ -129,7 +129,7 @@ export default function Chat({ channel, onClose }) {
     };
 
     const handleCloseChat = () => {
-        localStorage.removeItem('selectedChat');
+        sessionStorage.removeItem('selectedChat');
         if (typeof onClose === 'function') {
             onClose();
         }
