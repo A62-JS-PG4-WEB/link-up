@@ -128,7 +128,7 @@ export default function Chat({ channel, onClose }) {
         setIsChannelInfoVisible(false);
     };
 
-    const handleCloseChat = () => {
+   const handleCloseChat = () => {
         sessionStorage.removeItem('selectedChat');
         if (typeof onClose === 'function') {
             onClose();

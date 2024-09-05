@@ -137,7 +137,7 @@ export default function SideNav() {
                     </div>
                     {isSidebarOpen && (
                         <div className="text-white">
-                            <div className="font-bold">{userData?.name}</div>
+                            <div className="font-bold">{userData?.username}</div>
                             <div className="text-sm">{userData?.email}</div>
                         </div>
                     )}

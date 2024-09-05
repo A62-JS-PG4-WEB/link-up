@@ -15,7 +15,7 @@ export default function AllTeams({ teams }) {
             // localStorage.removeItem('selectedChat');  
         } catch (error) {
             console.error("Failed to save team to localStorage", error);
-        }
+        }         
         navigate("/home", { state: { selectedTeam } });
     }
 
