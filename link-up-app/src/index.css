@@ -2,11 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    background-color: #111827;
+}
+
 .home {
     display: flex;
     flex-flow: row;
     align-items: start;
     justify-content: start;
+
 }
 
 .content {
