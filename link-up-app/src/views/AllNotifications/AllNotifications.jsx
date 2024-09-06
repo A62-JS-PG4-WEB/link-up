@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from "../../state/app.context";
 import { acceptInvitation, getInvitations, rejectInvitation } from "../../services/invitations.service";
 import { addUserTeam } from '../../services/users.service';
-import { addTeamMember } from '../../services/teams.service';
+import { addTeamMember, getTeamChannels } from '../../services/teams.service';
 import SideNav from '../../components/SideNav/SideNav';
+import { addUserToTeamChannels } from '../../services/channels.service';
 
 export default function AllNotifications() {
     const { userData } = useContext(AppContext);
@@ -43,6 +44,8 @@ export default function AllNotifications() {
             console.log(teamId);
 
             await addUserTeam(teamId, userData.username);
+            const channelsT = await getTeamChannels(teamId);
+            await addUserToTeamChannels(channelsT, userData.username);
             await addTeamMember(teamId, userData.username);
 
             setNotifications(prevNotifications =>

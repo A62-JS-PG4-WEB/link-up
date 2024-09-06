@@ -70,7 +70,7 @@ export default function CreateTeam({ onClose, onTeamCreated }) {
             <div className="bg-gray-400 p-6 rounded shadow-lg relative">
                 <button
                     onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-700 hover:text-gray-900 bg-gray-400 p-2 rounded"
+                    className="absolute top-2 right-2 text-gray-700 hover:text-red-800 p-2 rounded"
                 >
                     &times;
                 </button>

@@ -18,14 +18,14 @@ export default function SideNav() {
 
     const logout = async () => {
         const confirmLogout = window.confirm("Are you sure you want to logout?");
+        
         if (confirmLogout) {
             try {
-
                 localStorage.clear();
                 sessionStorage.clear();
                 await logoutUser(); 
                 setAppState({ user: null, userData: null });
-                navigate('/login');
+                navigate('/');
             } catch (error) {
                 console.error("Logout failed", error);
             }
