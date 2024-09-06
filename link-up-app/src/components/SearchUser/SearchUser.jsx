@@ -64,46 +64,76 @@ const SearchUser = () => {
     }, []);
 
     return (
-        <div className="searchUser">
-            <form onSubmit={handleSearch} className="text-black" >
-                <select onChange={(e) => setSearchType(e.target.value)} defaultValue="username" className="search-select" >
-                    <option value="username" className="text-black">Username</option>
+        <>
+            <form onSubmit={handleSearch} className="flex flex-col p-1 space-y-1">
+                <select
+                    onChange={(e) => setSearchType(e.target.value)}
+                    defaultValue="username"
+                    className="bg-gray-600 text-white p-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-200 text-sm"
+                >
+                    <option value="username" className="text-black">User</option>
                     <option value="email" className="text-black">Email</option>
                     <option value="team" className="text-black">Team</option>
                 </select>
-                <input type="text" placeholder={searchType === "team" ? "Team Name" : "Search"} name="query" className="search-input" />
-                {/* <button type="submit">Search</button> */}
+                <input
+                    type="text"
+                    placeholder={
+                        searchType === "team"
+                            ? "Search users by team..."
+                            : searchType === "username"
+                                ? "Search by user..."
+                                : searchType === "email"
+                                    ? "Search by email..."
+                                    : "Search"
+                    } name="query"
+                    className="flex-grow p-1.5 rounded-lg bg-gray-600 text-white focus:outline-none focus:ring-1 focus:ring-gray-200 text-sm"
+                />
             </form>
 
             {isDropdownOpen && (
-                <div ref={dropdownRef} className="dropdown-menu">
+                <div
+                    ref={dropdownRef}
+                    className=" bg-gray-900 mt-1 rounded-md shadow-md p-1 max-h-48 overflow-y-auto transition-all duration-200 ease-in-out absolute w-200"
+                    style={{ left: '0' }}
+                >
                     {searchType === "team" && Array.isArray(searchedUser) ? (
-                        <div className="team">
-                            {searchedUser.map(user => (
-                                <div key={user.id} className="dropdown-item">
-                                    <div className="dropdown-content">
-                                        <img src={user.photoURL} alt="User Avatar" className="user-avatar" />
-                                        <span className="dropdown-username text-black">{user.username}</span>
+                        <div className=" flex flex-col space-y-1">
+                            {searchedUser.map((user) => (
+                                <div
+                                    key={user.id}
+                                    className="flex items-center p-4 bg-gray-800 hover:bg-gray-700 rounded-md transition-colors cursor-pointer"
+                                >
+                                    <div className="flex items-center space-x-2 w-full">
+                                        <img
+                                            src={user.photoURL}
+                                            alt="User Avatar"
+                                            className=" w-10 h-10 rounded-full border border-white"
+                                        />
+                                        <span className=" text-white font-medium text-base">{user.username}</span>
                                     </div>
-                                    <button className="add-button">Start a chat</button>
                                 </div>
                             ))}
                         </div>
                     ) : (
                         searchedUser && (
-                            <div className="dropdown-item">
-                                <div className="dropdown-content">
-                                    <img src={searchedUser.photoURL} alt="User Avatar" className="user-avatar" />
-                                    <span className="dropdown-username text-black">{searchedUser.username || searchedUser.email}</span>
+                            <div className="flex flex-col items-start p-1 bg-gray-800 hover:bg-gray-700 rounded-md transition-colors cursor-pointer">
+                                <div className=" flex items-center space-x-2 w-full">
+                                    <img
+                                        src={searchedUser.photoURL}
+                                        alt="User Avatar"
+                                        className=" w-10 h-10 rounded-full border border-white"
+                                    />
+                                    <span className=" text-white font-medium text-base">{searchedUser.username || searchedUser.email}</span>
                                 </div>
-                                <button className="add-button">Start a chat</button>
                             </div>
                         )
                     )}
                 </div>
             )}
-        </div>
+        </>
     );
-};
+}
+
+
 
 export default SearchUser;
