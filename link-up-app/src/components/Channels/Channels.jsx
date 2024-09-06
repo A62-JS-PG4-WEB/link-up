@@ -70,7 +70,7 @@ export default function Channels({ team, onSelectChannel }) {
     const handleChannelClick = async (channel) => {
         console.log("chosen channel", channel); 
         try {
-            sessionStorage.setItem('selectedChat', JSON.stringify(channel));
+            localStorage.setItem('selectedChat', JSON.stringify(channel));
             onSelectChannel(channel);
         } catch (error) {
             console.error("Failed to save Chat to localStorage", error);
@@ -92,14 +92,15 @@ export default function Channels({ team, onSelectChannel }) {
         <div className="channels">
             <div className="flex items-center justify-between mb-2">
                 <h3 className="text-lg font-semibold">Text Channels</h3>
-                {/* {userData?.username === currentTeam?.owner && ( */}
+                {userData?.username === currentTeam?.owner && (
                     <button
                         onClick={handleCreateChannelClick}
                         className="px-1 py-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white text-sm font-medium rounded-md shadow-sm hover:from-gray-700 hover:to-gray-800 transition duration-300 ease-in-out transform hover:scale-105"
                     >
                         Create Channel
                     </button>
-                {/* )} */}
+
+                )}
             </div>
             <div className="space-y-2">              
                 {channels.length > 0 ? (

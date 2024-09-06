@@ -21,7 +21,10 @@ export const createInvitation = async (invitation) => {
 export const getInvitations = async (email) => {
     const snapshot = await get(invitationsQuery(email))
     const data = snapshot.val();
+<<<<<<< HEAD
     console.log(data);
+=======
+>>>>>>> parent of f4d3249 (Merge pull request #46 from A62-JS-PG4-WEB/master)
 
     return data ? Object.values(data) : [];
 };
