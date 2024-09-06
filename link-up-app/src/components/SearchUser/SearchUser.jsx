@@ -65,14 +65,14 @@ const SearchUser = () => {
 
     return (
         <div className="searchUser">
-            <form onSubmit={handleSearch}>
-                <select onChange={(e) => setSearchType(e.target.value)} defaultValue="username">
-                    <option value="username">Username</option>
-                    <option value="email">Email</option>
-                    <option value="team">Team</option>
+            <form onSubmit={handleSearch} className="text-black" >
+                <select onChange={(e) => setSearchType(e.target.value)} defaultValue="username" className="search-select" >
+                    <option value="username" className="text-black">Username</option>
+                    <option value="email" className="text-black">Email</option>
+                    <option value="team" className="text-black">Team</option>
                 </select>
-                <input type="text" placeholder={searchType === "team" ? "Team Name" : "Search"} name="query" />
-                <button type="submit">Search</button>
+                <input type="text" placeholder={searchType === "team" ? "Team Name" : "Search"} name="query" className="search-input" />
+                {/* <button type="submit">Search</button> */}
             </form>
 
             {isDropdownOpen && (
@@ -83,7 +83,7 @@ const SearchUser = () => {
                                 <div key={user.id} className="dropdown-item">
                                     <div className="dropdown-content">
                                         <img src={user.photoURL} alt="User Avatar" className="user-avatar" />
-                                        <span>{user.username}</span>
+                                        <span className="dropdown-username text-black">{user.username}</span>
                                     </div>
                                     <button className="add-button">Start a chat</button>
                                 </div>
@@ -94,9 +94,9 @@ const SearchUser = () => {
                             <div className="dropdown-item">
                                 <div className="dropdown-content">
                                     <img src={searchedUser.photoURL} alt="User Avatar" className="user-avatar" />
-                                    <span>{searchedUser.username || searchedUser.email}</span>
+                                    <span className="dropdown-username text-black">{searchedUser.username || searchedUser.email}</span>
                                 </div>
-                                <button className="add-button">Add user</button>
+                                <button className="add-button">Start a chat</button>
                             </div>
                         )
                     )}
