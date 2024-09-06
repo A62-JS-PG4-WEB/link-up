@@ -31,7 +31,7 @@ export default function CreateVoiceChannelPopup({ team, onClose, onVoiceChannelC
                             type="text"
                             value={channelName}
                             onChange={(e) => setChannelName(e.target.value)}
-                            className="w-full p-2 bg-gray-700 text-white rounded-md border border-gray-600"
+                            className="w-full p-1.5 bg-gray-700 text-white rounded-md border border-gray-600"
                             required
                         />
                     </div>
