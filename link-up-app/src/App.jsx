@@ -21,6 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Profile from './views/Profile/Profile.jsx';
 import SearchUser from './components/SearchUser/SearchUser.jsx';
 import Authenticated from './hoc/Authenticated.jsx'
+import Error from './views/404/Error.jsx'
 
 
 function App() {
@@ -80,7 +81,7 @@ function App() {
             {/* {does not exist} */}
             {/* <Route path='/search-user' element={<Authenticated><SearchUser /></Authenticated>} /> */}
             {/* {create 404} */}
-            <Route path='*' element={<Test />} />
+            <Route path='*' element={<Error />} />
           </Routes>
           {!user && <Footer />}
         </AppContext.Provider>
