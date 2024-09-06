@@ -92,10 +92,16 @@ export default function SideNav() {
     };
 
     return (
+<<<<<<< HEAD
         <div className="flex h-screen nav">
             <div
                 className={`${isSidebarOpen ? 'w-64' : 'w-16'
                     } bg-gray-800 h-full transition-all duration-300 ease-in-out`}
+=======
+        <div className="flex h-screen sidenav">
+            <div
+                className={`${isSidebarOpen ? 'w-64' : 'w-14'} bg-gray-800 h-full flex flex-col transition-all duration-300 ease-in-out`}
+>>>>>>> 2f914eac98d12a4cfca89a4fae8bc1282706de8f
             >
                 <div className="flex items-center justify-between p-4 bg-gray-900">
                     <h1 className={`${isSidebarOpen ? 'text-lg' : 'hidden'} text-white font-bold`}>
@@ -112,12 +118,16 @@ export default function SideNav() {
                 <nav className="flex flex-col mt-4 space-y-4 rounded-lg">
                     <a
                         href="#"
-                        className="flex items-center p-4 text-white"
+                        className="flex items-center p-4 text-white hover:bg-gray-700 rounded-lg"
                         onClick={handleNavClick}
                     >
-                        {isSidebarOpen ? (<Teams />) : (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-people" viewBox="0 0 16 16">
-                            <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
-                        </svg>)}
+                        {isSidebarOpen ? (
+                            <Teams />
+                        ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-people" viewBox="0 0 16 16">
+                                <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
+                            </svg>
+                        )}
                     </a>
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -141,12 +151,14 @@ export default function SideNav() {
 =======
 >>>>>>> c2b56b6e0d220124938eec10153426c4b4d9c7d5
 
+
+
                     {/* Notifications */}
 =======
 >>>>>>> parent of b1fb26e (Merge branch 'sideNavNew' into master)
                     <a
                         href="#"
-                        className="flex items-center p-4 text-white hover:bg-gray-700"
+                        className="flex items-center p-4 text-white hover:bg-gray-700 rounded-lg"
                         onClick={handleNavClick}
                     >
 
@@ -165,7 +177,6 @@ export default function SideNav() {
                         {isSidebarOpen && <Invitations />}
 <<<<<<< HEAD
                     </a>
-
                     {/* Search */}
                     <div className="flex flex-col p-4 text-white hover:bg-gray-700">
                         <div className="flex items-center">
@@ -187,25 +198,34 @@ export default function SideNav() {
 
                 </nav>
 
-
-
-
                 {/* Profile and Logout */}
-                <div className="mt-auto flex items-center p-4 bg-gray-900">
-                    <div className={`avatar ${user?.status === 'online' ? 'online' : 'offline'} mr-4`}>
-                        <div className="w-12 rounded-full cursor-pointer" onClick={handleProfileClick}>
-                            <img src={user?.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"} alt="User" />
+                <hr className="border-gray-600 w-1/2 mx-auto pb-4" />
+                <div className="mt-auto flex items-center pl-2 pb-6 bg-gray-800 h-20">
+                    <div className={`avatar ${user?.status === 'online' ? 'online' : 'offline'} mr-3`}>
+                        <div
+                            className="w-10 rounded-full cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105"
+                            onClick={handleProfileClick}
+                        >
+                            <img
+                                src={user?.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"}
+                                alt="User"
+                                className="w-full h-full rounded-full object-cover"
+                            />
                         </div>
                     </div>
                     {isSidebarOpen && (
                         <div className="text-white">
                             <div className="font-bold">{userData?.username}</div>
-                            <div className="text-sm">{userData?.email}</div>
+                            <div className="text-sm ml-auto">{userData?.email}</div>
+                            <button onClick={logout} className="flex items-center text-white hover:text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-box-arrow-right mr-2" viewBox="0 0 16 16">
+                                    <path fillRule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
+                                    <path fillRule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+                                </svg>
+                                Logout
+                            </button>
                         </div>
                     )}
-                    <button onClick={logout} className="ml-auto text-white hover:text-gray-400">
-                        Logout
-                    </button>
                 </div>
             </div>
 
@@ -272,10 +292,10 @@ export default function SideNav() {
                     <div className="bg-gray-800 text-white p-6 rounded-lg flex flex-col w-full max-w-3xl h-[600px] relative mx-auto my-10">
                         <div className="flex items-center justify-between mb-4">
                             <h1 className="text-2xl font-bold text-white">
-                                Profile Information
+                                Change Profile Information
                             </h1>
                             <button
-                                className="text-red-600 hover:text-red-800 text-4xl focus:outline-none"
+                                className="text-white hover:text-red-800 text-4xl focus:outline-none"
                                 onClick={() => setIsProfileModalOpen(false)}
                             >
                                 &times;
