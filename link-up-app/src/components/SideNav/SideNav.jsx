@@ -20,7 +20,10 @@ export default function SideNav() {
         const confirmLogout = window.confirm("Are you sure you want to logout?");
         if (confirmLogout) {
             try {
-                await logoutUser();
+
+                localStorage.clear();
+                sessionStorage.clear();
+                await logoutUser(); 
                 setAppState({ user: null, userData: null });
                 navigate('/login');
             } catch (error) {
