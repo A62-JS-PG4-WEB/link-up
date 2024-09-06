@@ -67,10 +67,18 @@ export const addChannelToTeam = async (teamID, channelID) => {
     } catch (error) {
         console.error("Error adding channel to team:", error);
     }
-}
+};
 
 export const addTeamMember = async (teamId, member) => {
     await update(ref(db), {
         [`teams/${teamId}/members/${member}`]: new Date().getTime(),
     });
-}
+};
+
+export const getTeamChannels = async (teamId) => {
+    console.log(teamId);
+    
+    const snapshot = await get(ref(db, `teams/${teamId}/channels`));
+    return Object.keys(snapshot.val());
+};
+

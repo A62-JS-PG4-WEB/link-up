@@ -6,6 +6,7 @@ import { getChannelsMembersByID } from '../../services/channels.service';
 import { db } from '../../config/firebase-config';
 import { get, onValue, ref } from 'firebase/database';
 import { ChannelInfo } from '../ChannelInfo/ChannelInfo';
+import GifSelector from '../GifSelector/GifSelector';
 
 export default function Chat({ channel }) {
     const { userData } = useContext(AppContext);
@@ -15,6 +16,7 @@ export default function Chat({ channel }) {
     const [currentMessages, setCurrentMessages] = useState([]);
     const [photoUrls, setPhotoUrls] = useState({});
     const [isChannelInfoVisible, setIsChannelInfoVisible] = useState(false);
+    const [isGifSelectorVisible, setIsGifSelectorVisible] = useState(false);
 
     useEffect(() => {
         if (channel) {
@@ -72,6 +74,9 @@ export default function Chat({ channel }) {
 
         try {
 
+            if (!message.message) {
+               return alert("Message can not be empty!")
+            }
             console.log(message);
             const sentMessage = {
                 ...message,
@@ -128,6 +133,29 @@ export default function Chat({ channel }) {
         setIsChannelInfoVisible(false);
     };
 
+<<<<<<< HEAD
+=======
+    const handleCloseChat = () => {
+        sessionStorage.removeItem('selectedChat');
+        if (typeof onClose === 'function') {
+            onClose();
+        }
+    }
+
+    const handleSelectGif = (gifUrl) => {
+        setMessage({
+            ...message,
+            message: gifUrl,
+        });
+        setIsGifSelectorVisible(false);
+    };
+
+    const toggleGifSelector = () => {
+        setIsGifSelectorVisible(!isGifSelectorVisible);
+    };
+
+
+>>>>>>> c2b56b6e0d220124938eec10153426c4b4d9c7d5
 
     return (
         <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 max-w-3xl h-[600px]">
@@ -138,6 +166,19 @@ export default function Chat({ channel }) {
                         # {currentChat?.name || "Loading..."}
                     </h1>
                 </button>
+<<<<<<< HEAD
+=======
+                <div className="flex justify-between items-center">
+                    <div>
+                        <button
+                            onClick={handleCloseChat}
+                            className="text-white hover:text-red-800 text-4xl focus:outline-none"
+                        >
+                            &times;
+                        </button>
+                    </div>
+                </div>
+>>>>>>> c2b56b6e0d220124938eec10153426c4b4d9c7d5
             </div>
             {/* Chat messages container */}
             <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
@@ -223,12 +264,24 @@ export default function Chat({ channel }) {
                         onChange={(e) => createMessage('message', e.target.value)}
                     />
                     <button
-                        className="p-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-500 transition-all ease-in-out"
+                        className="p-4 bg-indigo-500 text-white rounded-lg hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-500 transition-all ease-in-out"
                     >
                         Send
                     </button>
+                    <button
+                        type="button"
+                        onClick={toggleGifSelector}
+                        className="p-4 bg-yellow-600 text-white rounded-lg hover:bg-yellow-500 focus:ring-2 focus:ring-yellow-500 transition-all ease-in-out"
+                    >
+                        GIF
+                    </button>
                 </div>
             </form>
+
+            {isGifSelectorVisible && (
+                <GifSelector onSelect={handleSelectGif} />
+            )}
+
             {isChannelInfoVisible && (
                 <ChannelInfo onClose={closePopUpChannelInfo} chat={currentChat} />
             )}

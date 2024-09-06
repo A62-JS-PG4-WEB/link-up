@@ -18,24 +18,32 @@ export default function SideNav() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [justOpenedSidebar, setJustOpenedSidebar] = useState(false);
 <<<<<<< HEAD
+<<<<<<< HEAD
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); 
+=======
+    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+>>>>>>> c2b56b6e0d220124938eec10153426c4b4d9c7d5
     const { user, setAppState, userData, invitations } = useContext(AppContext);
     const [isProfilePage, setIsProfilePage] = useState(false);
 =======
     const { user, setAppState, invitations } = useContext(AppContext);
 >>>>>>> parent of b1fb26e (Merge branch 'sideNavNew' into master)
     const navigate = useNavigate();
+<<<<<<< HEAD
+=======
+    const location = useLocation();
+>>>>>>> c2b56b6e0d220124938eec10153426c4b4d9c7d5
 
     const logout = async () => {
 <<<<<<< HEAD
         const confirmLogout = window.confirm("Are you sure you want to logout?");
         if (confirmLogout) {
             try {
-                await logoutUser(); 
+                await logoutUser();
                 setAppState({ user: null, userData: null });
-                navigate('/login'); 
+                navigate('/login');
             } catch (error) {
-                console.error("Logout failed", error); 
+                console.error("Logout failed", error);
             }
 =======
         try {
@@ -68,7 +76,7 @@ export default function SideNav() {
 
 <<<<<<< HEAD
     const handleProfileClick = () => {
-        setIsProfileModalOpen(true); 
+        setIsProfileModalOpen(true);
     };
 
     useEffect(() => {
@@ -107,10 +115,11 @@ export default function SideNav() {
                         className="flex items-center p-4 text-white"
                         onClick={handleNavClick}
                     >
-                        {isSidebarOpen ? (<Teams />) :(<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-people" viewBox="0 0 16 16">
+                        {isSidebarOpen ? (<Teams />) : (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-people" viewBox="0 0 16 16">
                             <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
-                        </svg>) }
+                        </svg>)}
                     </a>
+<<<<<<< HEAD
 <<<<<<< HEAD
                 
                     {/* Search */}
@@ -129,6 +138,8 @@ export default function SideNav() {
         )}
     </div>
 </div>
+=======
+>>>>>>> c2b56b6e0d220124938eec10153426c4b4d9c7d5
 
                     {/* Notifications */}
 =======
@@ -154,7 +165,30 @@ export default function SideNav() {
                         {isSidebarOpen && <Invitations />}
 <<<<<<< HEAD
                     </a>
+
+                    {/* Search */}
+                    <div className="flex flex-col p-4 text-white hover:bg-gray-700">
+                        <div className="flex items-center">
+                            <div className="flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                </svg>
+                            </div>
+
+                            {isSidebarOpen && (
+                                <div className="ml-4 flex-grow">
+                                    <SearchUser />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+
+
                 </nav>
+
+
+
 
                 {/* Profile and Logout */}
                 <div className="mt-auto flex items-center p-4 bg-gray-900">
@@ -176,6 +210,7 @@ export default function SideNav() {
             </div>
 
             {isProfileModalOpen && (
+<<<<<<< HEAD
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
         <div className="bg-gray-800 text-white p-6 rounded-lg flex flex-col w-full max-w-3xl h-[600px] relative mx-auto my-10">
             <div className="flex items-center justify-between mb-4">
@@ -232,4 +267,27 @@ export default function SideNav() {
             </div>
         </div>
     )
+=======
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
+                    <div className="bg-gray-800 text-white p-6 rounded-lg flex flex-col w-full max-w-3xl h-[600px] relative mx-auto my-10">
+                        <div className="flex items-center justify-between mb-4">
+                            <h1 className="text-2xl font-bold text-white">
+                                Profile Information
+                            </h1>
+                            <button
+                                className="text-red-600 hover:text-red-800 text-4xl focus:outline-none"
+                                onClick={() => setIsProfileModalOpen(false)}
+                            >
+                                &times;
+                            </button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto">
+                            <Profile />
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+>>>>>>> c2b56b6e0d220124938eec10153426c4b4d9c7d5
 }

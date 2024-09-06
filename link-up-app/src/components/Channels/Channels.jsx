@@ -42,9 +42,7 @@ export default function Channels({ team, onSelectChannel }) {
                    // console.log("All channels:", allChannels); 
                     const listChannels = await getChannelsInfoById(allChannels);
                    // console.log("List channels:", listChannels); 
-                  const relevantChannels = listChannels.filter((ch) => ch.team === currentTeam.id);
-                    
-                    
+                  const relevantChannels = listChannels.filter((ch) => ch?.team === currentTeam.id);
                   //  console.log("relevant channels:", relevantChannels); 
                     setChannels(relevantChannels);
                 }

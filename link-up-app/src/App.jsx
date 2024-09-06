@@ -21,9 +21,14 @@ import 'react-toastify/dist/ReactToastify.css';
 <<<<<<< HEAD
 import Profile from './views/Profile/Profile.jsx';
 import SearchUser from './components/SearchUser/SearchUser.jsx';
+<<<<<<< HEAD
 =======
 
 >>>>>>> parent of b1fb26e (Merge branch 'sideNavNew' into master)
+=======
+import Authenticated from './hoc/Authenticated.jsx'
+import Error from './views/404/Error.jsx'
+>>>>>>> c2b56b6e0d220124938eec10153426c4b4d9c7d5
 
 
 function App() {
@@ -34,7 +39,7 @@ function App() {
   const [user, loading] = useAuthState(auth);
   const [invitations, setInvitations] = useState([]);
 
-  
+
   useEffect(() => {
     if (user) {
       setAppState(prevState => ({ ...prevState, user }));
@@ -66,11 +71,12 @@ function App() {
     <>
       <BrowserRouter>
         <AppContext.Provider value={{ ...appState, setAppState, invitations, setInvitations }}>
-          {!user ? <Nav /> : <SideNav/>}
+          {!user && <Nav />}
 
-        {/* <ToastContainer stacked closeOnClick /> */}
+          {/* <ToastContainer stacked closeOnClick /> */}
 
           <Routes>
+<<<<<<< HEAD
             <Route path='/' element={!user && <Landing />} />
             <Route path='/login' element={!user && <Login />} />
             <Route path='/register' element={!user && <Register />} />
@@ -78,6 +84,21 @@ function App() {
             <Route path='/test' element={user && <Test />} />
             <Route path='/notifications' element={user && <AllNotifications />} />
             <Route path='/create-team' element={user && <CreateTeam />} />
+=======
+            <Route path='/' element={<Landing />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/home' element={<Authenticated><Home /></Authenticated>} />
+            <Route path='/notifications' element={<Authenticated><AllNotifications /></Authenticated>} />
+            {/* {does not exist} */}
+            {/* <Route path='/create-team' element={<Authenticated><CreateTeam /></Authenticated>} /> */}
+            {/* {does not exist} */}
+            {/* <Route path='/profile' element={<Authenticated><Profile /></Authenticated>} /> */}
+            {/* {does not exist} */}
+            {/* <Route path='/search-user' element={<Authenticated><SearchUser /></Authenticated>} /> */}
+            {/* {create 404} */}
+            <Route path='*' element={<Error />} />
+>>>>>>> c2b56b6e0d220124938eec10153426c4b4d9c7d5
           </Routes>
           {!user && <Footer />}
         </AppContext.Provider>

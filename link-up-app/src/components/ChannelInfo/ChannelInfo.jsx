@@ -1,12 +1,24 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import { getTeamInfoById } from "../../services/teams.service";
+<<<<<<< HEAD
 import { getChannelsMembersByID } from "../../services/channels.service";
+=======
+import { getChannelsMembersByID, leaveChannel } from "../../services/channels.service";
+import AddChannelMembers from "../../views/AddChannelMembers/AddChannelMembers";
+import { AppContext } from "../../state/app.context";
+>>>>>>> c2b56b6e0d220124938eec10153426c4b4d9c7d5
 
 export function ChannelInfo({ channel, onClose }) {
+    const { userData } = useContext(AppContext);
     const [currentChat, setCurrentChat] = useState(channel || location.state?.channel);
     const [chatInTeam, setChatInTeam] = useState(null);
     const [members, setMembers] = useState([]);
+<<<<<<< HEAD
+=======
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    
+>>>>>>> c2b56b6e0d220124938eec10153426c4b4d9c7d5
 
     useEffect(() => {
         if (!channel) {
@@ -65,8 +77,30 @@ export function ChannelInfo({ channel, onClose }) {
 
     const addMembersInChat = () => {
 
+<<<<<<< HEAD
     }
 
+=======
+
+    };
+
+    const handleAddClick = () => {
+        setIsPopupOpen(true);
+    };
+
+    const handleLeaveChannel = async () => {
+
+        const confirmation = window.confirm('are you sure you wanna leave chat');
+        if (confirmation){
+            await leaveChannel(userData.username, currentChat.id)
+        }
+    };
+
+    const handleClosePopup = () => {
+        setIsPopupOpen(false);
+    };
+
+>>>>>>> c2b56b6e0d220124938eec10153426c4b4d9c7d5
     return (<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <div
             className="flex flex-col bg-gray-800 p-6 rounded-lg max-w-3xl w-full h-[600px] relative flex-grow"
@@ -78,10 +112,21 @@ export function ChannelInfo({ channel, onClose }) {
                         onClick={addMembersInChat}>
                         Add Members
                     </button>
+<<<<<<< HEAD
+=======
+                    {isPopupOpen && (
+                        <AddChannelMembers onClose={handleClosePopup} team={currentChat} />
+                    )}
+                    <button
+                        className="text-white hover:text-red-800 text-4xl focus:outline-none"
+                        onClick={onClose}
+                    >
+                        &times;
+                    </button>
+>>>>>>> c2b56b6e0d220124938eec10153426c4b4d9c7d5
                 </div>
                 <p>Chat Name: <strong>{currentChat?.name}</strong></p><br />
                 <p>Team: <strong>{chatInTeam}</strong></p><br />
-
                 <p className="text-lg font-bold text-white">Members:</p>
 
                 <ul className="list-disc pl-6">
@@ -95,12 +140,13 @@ export function ChannelInfo({ channel, onClose }) {
                 </ul><br />
 
             </div>
-            <div className="flex justify-center mt-4">
-                <button
-                    onClick={onClose}
-                    className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-red-500"
-                >
-                    Close
+            <div className="flex justify-center mt-4"
+            onClick={handleLeaveChannel}>
+                <button className="ml-auto text-white hover:text-red-800 "> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                    <path fillRule="evenodd" d="M10 3.5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 15 4.5v7a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5z" />
+                    <path fillRule="evenodd" d="M4.854 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .707.707L6.207 7.5H13.5a.5.5 0 0 1 0 1H6.207l2.354 2.354a.5.5 0 1 1-.707.707l-3-3z" />
+                </svg>
+                    Leave
                 </button>
             </div>
         </div>

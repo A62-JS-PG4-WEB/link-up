@@ -1,5 +1,6 @@
 import { get, push, ref, update, remove } from "firebase/database";
 import { db } from "../config/firebase-config";
+import { addUserChannel } from "./users.service";
 
 export const createChannel = async (name, owner, member, teamID) => {
 
@@ -19,7 +20,21 @@ export const getUserChannels = async (username) => {
     const snapshot = await get(ref(db, `users/${username}/channels`));
     return Object.keys(snapshot.val());
 }
-// const ch = await getUserChannels('vankata')
+
+export const addUserToTeamChannels = async (channelsT, username) => {
+    
+    try {
+        channelsT.map(async(ch) => {
+        await addUserChannel(ch, username);
+        await update(ref(db), {
+            [`channels/${ch}/members/${username}`]: new Date().getTime(),
+          })
+    })
+} catch (error) {
+    console.error("Error deleting channel:", error);
+    throw error;
+}
+}
 
 export const deleteChannelById = async (channelId, teamID) => {
     try {
@@ -50,16 +65,14 @@ export const deleteChannelById = async (channelId, teamID) => {
 };
 
 export const getChannelsInfoById = async (channels) => {
-   
-    // const snapshot = await get(ref(db, `channels/-O4ygojej9sUZgv7N7w6`));
-    // console.log(snapshot.val());
+
     try {
         const promises = channels.map(async (id) => {
             console.log(id);
-            
+
             const snapshot = await get(ref(db, `channels/${id}`));
             console.log(snapshot.val());
-            
+
             return snapshot.val();
         });
         const filteredChannels = await Promise.all(promises);
@@ -82,6 +95,22 @@ export const getChannelsMembersByID = async (channelId) => {
         }
     } catch (error) {
         console.error("Error fetching channel members:", error);
+        throw error;
+    }
+};
+
+export const leaveChannel = async (username, channelId) => {
+
+    try {
+
+        const channelMemberRef = ref(db, `channels/${channelId}/members/${username}`);
+        await remove(channelMemberRef);
+
+        const userChannelRef = ref(db, `users/${username}/channels/${channelId}`);
+        await remove(userChannelRef);
+        console.log(`User ${username} has left the channel ${channelId}`);
+    } catch (error) {
+        console.error(`Failed to leave the channel ${channelId}:`, error);
         throw error;
     }
 };

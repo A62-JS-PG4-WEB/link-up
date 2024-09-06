@@ -4,6 +4,7 @@ import Team from '../Team/Team';
 import TextChannelsSection from '../../components/TextChannelsSection/TextChannelsSection';
 import VoiceChannels from '../../components/VoiceChannels/VoiceChannels';
 import Chat from '../../components/Chat/Chat';
+import SideNav from '../../components/SideNav/SideNav';
 
 export default function Home({ team }) {
     const [selectedChat, setSelectedChat] = useState(null);
@@ -29,6 +30,7 @@ export default function Home({ team }) {
     };
 
     return (
+<<<<<<< HEAD
         <div className="flex h-screen content">
 
             {/* Main Content */}
@@ -48,9 +50,33 @@ export default function Home({ team }) {
                     ) : (
                         <div className="text-white">Please select a channel to start chatting.</div>
                     )}
+=======
+        <div className="home">
+            <SideNav />
+            <div className="flex h-screen content">
+                {/* Main Content */}
+                <div className="flex-1 flex p-8 text-white">
+                    <div className="w-1/4 space-y-6">
+                        <Team team={team} />
+                        {/* Text Channels */}
+                        <TextChannelsSection team={team} onSelectChannel={handleSelectChannel} />
+                        {/* Voice Channels */}
+                        <VoiceChannels team={team} />
+                    </div>
+                    {/* Chat Section */}
+                    {/* Messages Container */}
+                    <div className="flex-1">
+                        {selectedChat ? (
+                            <Chat channel={selectedChat} onClose={() => setSelectedChat(null)} />
+                        ) : (
+                            <div className="text-white">Please select a channel to start chatting.</div>
+                        )}
+                    </div>
+>>>>>>> c2b56b6e0d220124938eec10153426c4b4d9c7d5
                 </div>
             </div>
         </div>
+
 
     );
 }
