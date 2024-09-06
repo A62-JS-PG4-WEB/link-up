@@ -2,18 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-.main {
+:root {
+    background-color: #111827;
+}
+
+.home {
     display: flex;
     flex-flow: row;
     align-items: start;
     justify-content: start;
+
 }
 
-
-.h-screen {
-    height: 100vh;
-}
-
-.content{
+.content {
     width: 100%;
+}
+
+
+.sidenav {
+    height: 100vh;
 }

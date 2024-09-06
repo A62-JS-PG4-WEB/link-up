@@ -88,6 +88,7 @@ const SearchUser = () => {
                     } name="query"
                     className="flex-grow p-1.5 rounded-lg bg-gray-600 text-white focus:outline-none focus:ring-1 focus:ring-gray-200 text-sm"
                 />
+
             </form>
 
             {isDropdownOpen && (
