@@ -45,8 +45,7 @@ export default function CreateChannel({ team, onClose, onChannelCreated }) {
 
         try {
 
-            const channelId = await createChannel(channel.name.trim(), userData.username, userData.username, team.id);
-            // console.log(team);
+            const channelId = await createChannel(channel.name.trim(), userData.username, userData.username, team.id);            setChannel({ name: '' });
 
             setChannel({ name: '' });
             await addUserChannel(channelId, userData.username);
@@ -63,7 +62,7 @@ export default function CreateChannel({ team, onClose, onChannelCreated }) {
             <div className="bg-gray-400 p-6 rounded shadow-lg relative">
                 <button
                     onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-700 hover:text-gray-900 bg-gray-400 p-2 rounded"
+                    className="absolute top-2 right-2 text-gray-700 hover:text-red-800 p-2 rounded"
                 >
                     &times;
                 </button>

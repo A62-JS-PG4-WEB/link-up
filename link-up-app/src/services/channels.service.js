@@ -1,5 +1,6 @@
 import { get, push, ref, update, remove } from "firebase/database";
 import { db } from "../config/firebase-config";
+import { addUserChannel } from "./users.service";
 
 export const createChannel = async (name, owner, member, teamID) => {
 
@@ -19,7 +20,21 @@ export const getUserChannels = async (username) => {
     const snapshot = await get(ref(db, `users/${username}/channels`));
     return Object.keys(snapshot.val());
 }
-// const ch = await getUserChannels('vankata')
+
+export const addUserToTeamChannels = async (channelsT, username) => {
+    
+    try {
+        channelsT.map(async(ch) => {
+        await addUserChannel(ch, username);
+        await update(ref(db), {
+            [`channels/${ch}/members/${username}`]: new Date().getTime(),
+          })
+    })
+} catch (error) {
+    console.error("Error deleting channel:", error);
+    throw error;
+}
+}
 
 export const deleteChannelById = async (channelId, teamID) => {
     try {
@@ -51,8 +66,6 @@ export const deleteChannelById = async (channelId, teamID) => {
 
 export const getChannelsInfoById = async (channels) => {
 
-    // const snapshot = await get(ref(db, `channels/-O4ygojej9sUZgv7N7w6`));
-    // console.log(snapshot.val());
     try {
         const promises = channels.map(async (id) => {
             console.log(id);
