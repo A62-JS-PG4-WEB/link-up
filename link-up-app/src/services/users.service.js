@@ -1,4 +1,5 @@
 import { get, set, ref, query, equalTo, orderByChild, update } from 'firebase/database';
+<<<<<<< HEAD
 import { auth, db } from '../config/firebase-config';
 import { updateProfile, updateEmail, updatePassword, sendEmailVerification, reauthenticateWithCredential, EmailAuthProvider  } from "firebase/auth";
 // import { toast } from 'react-toastify';
@@ -93,6 +94,10 @@ export const updateUserPassword = async (oldPassword, newPassword) => {
 };
 
 
+=======
+import { db } from '../config/firebase-config';
+
+>>>>>>> parent of b1fb26e (Merge branch 'sideNavNew' into master)
 export const getUserByUsername = async (username) => {
   const snapshot = await get(ref(db, `users/${username}`));
   return snapshot.val();
