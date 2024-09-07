@@ -6,6 +6,8 @@ import { addUserChannel } from "../../services/users.service";
 import { createChannel } from "../../services/channels.service";
 import { addChannelToTeam } from "../../services/teams.service";
 import PropTypes from 'prop-types';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function CreateChannel({ team, onClose, onChannelCreated }) {
     const [channel, setChannel] = useState({ name: '' });
@@ -39,13 +41,13 @@ export default function CreateChannel({ team, onClose, onChannelCreated }) {
 
 
         if (channel.name.length < MIN_CHANNEL_NAME_LENGTH || channel.name.length > MAX_CHANNEL_NAME_LENGTH) {
-            alert(`Channel name must be between ${MIN_CHANNEL_NAME_LENGTH} and ${MAX_CHANNEL_NAME_LENGTH}`);
+            toast.warn(`Channel name must be between ${MIN_CHANNEL_NAME_LENGTH} and ${MAX_CHANNEL_NAME_LENGTH}`);
             return;
         }
 
         try {
 
-            const channelId = await createChannel(channel.name.trim(), userData.username, userData.username, team.id);            setChannel({ name: '' });
+            const channelId = await createChannel(channel.name.trim(), userData.username, userData.username, team.id); setChannel({ name: '' });
 
             setChannel({ name: '' });
             await addUserChannel(channelId, userData.username);
@@ -53,7 +55,7 @@ export default function CreateChannel({ team, onClose, onChannelCreated }) {
             onClose();
             onChannelCreated();
         } catch (error) {
-            console.error(error.message);
+            toast.error(error.message);
         }
     };
 

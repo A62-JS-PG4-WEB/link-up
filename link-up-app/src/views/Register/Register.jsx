@@ -37,18 +37,18 @@ export default function Register() {
         }
 
         if (user.username.length < MIN_USERNAME_LENGTH || user.username.length > MAX_USERNAME_LENGTH) {
-            return console.error('Invalid username length');
+            return toast.error('Invalid username length');
         }
 
         try {
             const userEmail = await getUserByEmail(user.email.trim());
             if (userEmail) {
-                return alert(`User with email ${user.email} already exists!`);
+                return toast.warn(`User with email ${user.email} already exists!`);
             };
 
             const userFromDB = await getUserByUsername(user.username);
             if (userFromDB) {
-                return alert(`User ${user.username} already exists!`);
+                return toast.warn(`User ${user.username} already exists!`);
             };
 
 
@@ -56,10 +56,10 @@ export default function Register() {
             await createUserUsername(user.username, credential.user.uid, user.email, user.phone);
             setAppState({ user: credential.user, userData: null });
             navigate('/home');
-            console.log('Successfully registered');
+            toast.success('Successfully registered');
 
         } catch (error) {
-            console.error(error.message);
+            toast.error(error.message);
 
         }
     };

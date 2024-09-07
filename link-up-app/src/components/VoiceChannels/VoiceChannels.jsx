@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { getVoiceChannelsInfoById, getUserVoiceChannels, createVoiceChannel } from "../../services/voice.service.js";
 import CreateVoiceChannelPopup from "../../views/CreateVoiceChannel/CreateVoiceChannel.jsx";
 import PropTypes from 'prop-types';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function VoiceChannels({ team }) {
     const [voiceChannels, setVoiceChannels] = useState([]);
@@ -17,7 +18,7 @@ export default function VoiceChannels({ team }) {
                 setVoiceChannels(relevantVoiceChannels);
             }
         } catch (e) {
-            console.error("Error loading voice channels", e);
+            toast.error("Error loading voice channels", e);
         }
     };
 
@@ -74,9 +75,13 @@ export default function VoiceChannels({ team }) {
     );
 }
 
-// VoiceChannels.propTypes = {
-//     team: PropTypes.shape({
-//         id: PropTypes.string.isRequired,
-//         owner: PropTypes.string.isRequired,
-//     }).isRequired,
-// };
+
+VoiceChannels.propTypes = {
+    team: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        owner: PropTypes.string,
+        id: PropTypes.string,
+        createdOn: PropTypes.string,
+        members: PropTypes.arrayOf(PropTypes.string),
+    }),
+};

@@ -6,6 +6,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Profile from "../../views/Profile/Profile";
 import Invitations from "../../views/Invitations/Invitations";
 import SearchUser from "../SearchUser/SearchUser";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function SideNav() {
@@ -28,7 +30,7 @@ export default function SideNav() {
                 setAppState({ user: null, userData: null });
                 navigate('/login');
             } catch (error) {
-                console.error("Logout failed", error);
+                toast.error("Logout failed", error);
             }
         }
     };
@@ -56,9 +58,7 @@ export default function SideNav() {
     }, [location.pathname]);
 
     const handleSearchKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            console.log('Search criteria:', searchCriteria, 'Search query:', searchQuery);
-        }
+
     };
 
     return (

@@ -43,7 +43,7 @@ export default function Login() {
             navigate('/home');
             toast.success('Succsessfully logged in!')
         } catch (error) {
-            toast.error('Login error:', error.message);
+            toast.error(`${error.message}`);
         }
     };
 

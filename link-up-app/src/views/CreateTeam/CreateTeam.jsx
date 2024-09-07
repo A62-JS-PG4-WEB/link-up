@@ -45,7 +45,7 @@ export default function CreateTeam({ onClose, onTeamCreated }) {
         try {
             const existentTeam = await getTeams(team.name);
             if (existentTeam) {
-                console.error(`Team ${team.name} already exists`);
+                toast.error(`Team ${team.name} already exists`);
                 return;
             }
 
@@ -59,7 +59,7 @@ export default function CreateTeam({ onClose, onTeamCreated }) {
             onTeamCreated(newTeam);
             setTeam({ name: '' });
         } catch (error) {
-            console.error(error.message);
+            toast.error(error.message);
         }
     };
 

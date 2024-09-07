@@ -3,9 +3,9 @@ import { db } from "../config/firebase-config";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const getTeamMembersNames = async(teamId) => {
+export const getTeamMembersNames = async (teamId) => {
     const snapshot = await get(ref(db, `teams/${teamId}/members`));
-    
+
     return snapshot.val();
 }
 
@@ -32,7 +32,6 @@ export const getTeams = async (name) => {
 export const getUserTeams = async (username) => {
     const snapshot = await get(ref(db, `users/${username}/teams`));
 
-    // console.log(snapshot.val());
     return Object.keys(snapshot.val());
 };
 
@@ -46,7 +45,7 @@ export const getTeamsInfoById = async (teams) => {
 
         return filteredTeams;
     } catch (error) {
-        console.error("Error fetching team information:", error);
+        toast.error("Error fetching team information:", error);
         throw error;
     }
 };
@@ -63,7 +62,7 @@ export const addChannelToTeam = async (teamID, channelID) => {
         });
 
     } catch (error) {
-        console.error("Error adding channel to team:", error);
+        toast.error("Error adding channel to team:", error);
     }
 };
 
@@ -74,8 +73,7 @@ export const addTeamMember = async (teamId, member) => {
 };
 
 export const getTeamChannels = async (teamId) => {
-    console.log(teamId);
-    
+
     const snapshot = await get(ref(db, `teams/${teamId}/channels`));
     return Object.keys(snapshot.val());
 };

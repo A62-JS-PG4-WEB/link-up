@@ -1,6 +1,7 @@
 import { get, push, ref, set, update } from "firebase/database";
 import { db } from "../config/firebase-config";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const sendMessage = async (message) => {
 
@@ -29,7 +30,7 @@ export const setMsgStatusForEachUser = async (users, messageId, status = 'unread
         await Promise.all(promises);
 
     } catch (error) {
-        console.error("Error setting message status for members:", error);
+        toast.error("Error setting message status for members:", error);
         throw error;
     }
 };
@@ -40,7 +41,7 @@ export const setMsgStatusForEachUser = async (users, messageId, status = 'unread
 //     if (channelMessagesSnapshot.exists()) {
 //         return Object.keys(channelMessagesSnapshot.val());
 //     } else {
-//         console.warn('No messages found for this channel.');
+//         toast.warn('No messages found for this channel.');
 //         return [];
 //     }
 
@@ -55,9 +56,9 @@ export const getMessageInfo = async (messageIds) => {
         });
         const filteredTeams = await Promise.all(promises);
         return filteredTeams;
-    
+
     } catch (error) {
-        console.error("Error getting message info", error);
+        toast.error("Error getting message info", error);
         throw error;
     }
 };
