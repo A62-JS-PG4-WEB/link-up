@@ -4,6 +4,8 @@ import { AppContext } from "../../state/app.context";
 import { useNavigate } from "react-router-dom";
 import { createUserUsername, getUserByEmail, getUserByUsername } from "../../services/users.service";
 import { MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "../../common/constants";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Register() {
     const [user, setUser] = useState({
@@ -27,39 +29,43 @@ export default function Register() {
         e.preventDefault();
 
         if (!user.email.trim() || !user.password) {
-            return console.error('No credentials provided!');
+            return toast.error('No credentials provided!');
         }
         if (user.password !== user.confirmPassword) {
-            console.info("Passwords do not match!");
+            toast.error("Passwords do not match!");
             return;
         }
 
         if (user.username.length < MIN_USERNAME_LENGTH || user.username.length > MAX_USERNAME_LENGTH) {
-            return console.error('Invalid username length');
+            return toast.error('Invalid username length');
         }
 
         try {
             const userEmail = await getUserByEmail(user.email.trim());
             if (userEmail) {
-                return alert(`User with email ${user.email} already exists!`);
+                return toast.warn(`User with email ${user.email} already exists!`);
             };
 
             const userFromDB = await getUserByUsername(user.username);
             if (userFromDB) {
-                return alert(`User ${user.username} already exists!`);
+                return toast.warn(`User ${user.username} already exists!`);
             };
+
 
             const credential = await registerUser(user.email.trim(), user.password.trim());
             await createUserUsername(user.username, credential.user.uid, user.email, user.phone);
             setAppState({ user: credential.user, userData: null });
             navigate('/home');
-            } catch (error) {
-            console.error(error.message);
+            toast.success('Successfully registered');
+
+        } catch (error) {
+            toast.error(error.message);
+
         }
     };
 
     return (
-        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-base-200">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <img
                     alt="Your Company"
@@ -87,7 +93,7 @@ export default function Register() {
                                 placeholder='Type your email...'
                                 value={user.email}
                                 autoComplete="email"
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 onChange={updateUser('email')}
                             />
                         </div>
@@ -106,7 +112,7 @@ export default function Register() {
                                 autoComplete="username"
                                 placeholder='Your username...'
                                 value={user.username}
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 onChange={updateUser('username')}
                             />
                         </div>
@@ -125,7 +131,7 @@ export default function Register() {
                                 placeholder='Phone number...'
                                 value={user.phone}
                                 autoComplete="phone"
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 onChange={updateUser('phone')}
                             />
                         </div>
@@ -144,7 +150,7 @@ export default function Register() {
                                 autoComplete="current-password"
                                 value={user.password}
                                 onChange={updateUser('password')}
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
                         </div>
                     </div>
@@ -161,7 +167,7 @@ export default function Register() {
                                 required
                                 autoComplete="current-password"
                                 value={user.confirmPassword}
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 onChange={updateUser('confirmPassword')}
                             />
                         </div>
@@ -170,7 +176,7 @@ export default function Register() {
                     <div>
                         <button
                             type="submit"
-                            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 p-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         >
                             Sign up
                         </button>

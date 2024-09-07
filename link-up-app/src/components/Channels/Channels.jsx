@@ -1,15 +1,14 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../state/app.context";
-import { getTeamsInfoById, getUserTeams } from "../../services/teams.service";
-import CreateTeam from "../../views/CreateTeam/CreateTeam";
-import AllTeams from "../../views/AllTeams/AllTeams";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import CreateChannel from "../../views/CreateChannel/CreateChannel";
 import { getChannelsInfoById, getUserChannels } from "../../services/channels.service";
 import PropTypes from 'prop-types';
 import { deleteChannelById } from "../../services/channels.service";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export default function Channels({ team }) {
+export default function Channels({ team, onSelectChannel }) {
     const location = useLocation();
     const { userData } = useContext(AppContext);
     const [currentTeam, setCurrentTeam] = useState(team || location.state?.team);
@@ -20,11 +19,12 @@ export default function Channels({ team }) {
     useEffect(() => {
         if (!team) {
             const savedTeam = localStorage.getItem("selectedTeam");
+
             if (savedTeam) {
                 try {
                     setCurrentTeam(JSON.parse(savedTeam));
                 } catch (error) {
-                    console.error("Failed to parse team from localStorage", error);
+                    toast.error("Failed to parse team from localStorage", error);
                 }
             }
         } else {
@@ -33,16 +33,19 @@ export default function Channels({ team }) {
     }, [location.state, team]);
 
     useEffect(() => {
+
         const loadChannels = async () => {
             try {
                 if (userData && userData.username && currentTeam) {
+
+
                     const allChannels = await getUserChannels(userData.username);
                     const listChannels = await getChannelsInfoById(allChannels);
-                    const relevantChannels = listChannels.filter((ch) => ch.team === currentTeam.id);
+                    const relevantChannels = listChannels.filter((ch) => ch?.team === currentTeam.id);
                     setChannels(relevantChannels);
                 }
             } catch (e) {
-                console.error("Error loading Channels", e);
+                toast.error("Error loading Channels", e);
             }
         };
         loadChannels();
@@ -60,13 +63,22 @@ export default function Channels({ team }) {
         setIsPopupOpen(false);
     };
 
+    const handleChannelClick = async (channel) => {
+        try {
+            sessionStorage.setItem('selectedChat', JSON.stringify(channel));
+            onSelectChannel(channel);
+        } catch (error) {
+            toast.error("Failed to save Chat to localStorage", error);
+        }
+    };
+
     const handleDeleteChannel = async (channelId) => {
         if (window.confirm("Are you sure you want to delete this channel?")) {
             try {
                 await deleteChannelById(channelId, currentTeam.id);
                 setChannelUpdated((prev) => !prev);
             } catch (error) {
-                console.error("Failed to delete channel", error);
+                toast.error("Failed to delete channel", error);
             }
         }
     };
@@ -74,22 +86,25 @@ export default function Channels({ team }) {
     return (
         <div className="channels">
             <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-semibold">Text Channels</h3>
-                {userData?.username === currentTeam?.owner && (
-                    <button
-                        onClick={handleCreateChannelClick}
-                        className="px-1 py-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white text-sm font-medium rounded-md shadow-sm hover:from-gray-700 hover:to-gray-800 transition duration-300 ease-in-out transform hover:scale-105"
-                    >
-                        Create Channel
-                    </button>
-
-                )}
+                <h3 className="text-lg font-semibold">Channels</h3>
+                {/* {userData?.username === currentTeam?.owner && ( */}
+                <button
+                    onClick={handleCreateChannelClick}
+                    className="px-1 py-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white text-sm font-medium rounded-md shadow-sm hover:from-gray-700 hover:to-gray-800 transition duration-300 ease-in-out transform hover:scale-105"
+                >
+                    +
+                </button>
+                {/* )} */}
             </div>
             <div className="space-y-2">
-                {channels.length > 0 &&
+                {channels.length > 0 ? (
                     channels.map((ch) => (
                         <div key={ch.id} className="flex justify-between items-center w-full p-2 bg-gray-700 rounded-md hover:bg-gray-600">
-                            <span className="text-left"># {ch.name}</span>
+                            <button
+                                onClick={() => handleChannelClick(ch)}
+                                className="text-left">
+                                # {ch.name}
+                            </button>
                             {userData?.username === currentTeam?.owner && (
                                 <button
                                     onClick={() => handleDeleteChannel(ch.id)}
@@ -97,10 +112,12 @@ export default function Channels({ team }) {
                                 >
                                     Delete
                                 </button>
-
                             )}
                         </div>
-                    ))}
+                    ))
+                ) : (
+                    <p className="text-gray-400">No text channels available</p>
+                )}
             </div>
             {isPopupOpen && (
                 <CreateChannel
@@ -121,4 +138,5 @@ Channels.propTypes = {
         id: PropTypes.string,
         members: PropTypes.arrayOf(PropTypes.string),
     }),
+    onSelectChannel: PropTypes.func.isRequired,
 };
