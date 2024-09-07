@@ -26,7 +26,7 @@ export default function SideNav() {
             try {
                 await logoutUser();
                 setAppState({ user: null, userData: null });
-                navigate('/login');
+                navigate('/');
             } catch (error) {
                 console.error("Logout failed", error);
             }
