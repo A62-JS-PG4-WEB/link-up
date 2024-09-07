@@ -3,6 +3,8 @@ import { onValue } from 'firebase/database';
 import { AppContext } from '../../state/app.context';
 import { invitationsQuery } from '../../services/invitations.service';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Invitations() {
     // const [invitations, setInvitations] = useState([]);
@@ -42,7 +44,7 @@ export default function Invitations() {
 
     const notifyUser = (invite) => {
 
-        alert(`You have a new invite from ${invite.senderUsername}.`);
+        toast.info(`You have a new invite from ${invite.senderUsername}.`);
     };
 
     return (

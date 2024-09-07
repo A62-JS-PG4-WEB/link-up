@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { getUserByUsername, getUserByEmail, getUserData } from "../../services/users.service";
 import { getTeamMembersNames, getTeams, getUserTeams } from "../../services/teams.service";
 import './SearchUser.css';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SearchUser = () => {
     const [searchedUser, setSearchedUser] = useState(null);
@@ -46,7 +47,7 @@ const SearchUser = () => {
             setSearchedUser(userFromDB || null);
             setIsDropdownOpen(true);
         } catch (error) {
-            console.error('Search failed:', error);
+            toast.error('Search failed:', error);
         }
     };
 

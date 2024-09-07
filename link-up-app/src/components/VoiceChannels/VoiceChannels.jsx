@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { getVoiceChannelsInfoById, getUserVoiceChannels, createVoiceChannel } from "../../services/voice.service.js";
 import CreateVoiceChannelPopup from "../../views/CreateVoiceChannel/CreateVoiceChannel.jsx";
 import PropTypes from 'prop-types';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function VoiceChannels({ team }) {
     const [voiceChannels, setVoiceChannels] = useState([]);
@@ -17,7 +18,7 @@ export default function VoiceChannels({ team }) {
                 setVoiceChannels(relevantVoiceChannels);
             }
         } catch (e) {
-            console.error("Error loading voice channels", e);
+            toast.error("Error loading voice channels", e);
         }
     };
 
