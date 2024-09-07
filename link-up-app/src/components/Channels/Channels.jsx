@@ -31,8 +31,7 @@ export default function Channels({ team, onSelectChannel }) {
     }, [location.state, team]);
 
     useEffect(() => {
-        console.log("current team:", currentTeam); 
-
+    
         const loadChannels = async () => {
             try {
                 if (userData && userData.username && currentTeam) {

@@ -61,27 +61,28 @@ export default function Teams() {
                 </span>
                 <div className="teamButtons flex justify-end space-x-2 w-full">
                     <button
-                        onClick={handleCreateTeamClick}
-                        className="p-2 bg-gray-600 text-white rounded-lg transition-colors duration-300 ease-in-out hover:bg-gray-500"
-                    >
-                        +
-                    </button>
-                    <button
                         onClick={handleToggleTeamsList}
                         className="p-2 bg-gray-600 text-white rounded-lg transition-colors duration-300 ease-in-out hover:bg-gray-500"
                     >
                         ^
                     </button>
                 </div>
-                {isPopupOpen && <CreateTeam
-                    onClose={handleClosePopup}
-                    onTeamCreated={handleTeamCreated} />}
             </div>
 
             {isTeamsListVisible && (
                 <div className="teamsList rounded-lg">
+<button
+                        onClick={handleCreateTeamClick}
+                        className="p-2 bg-gray-600 text-white rounded-lg transition-colors duration-300 ease-in-out hover:bg-gray-500"
+                    >
+                        Add New Team +
+                    </button>
+                    {isPopupOpen && <CreateTeam
+                    onClose={handleClosePopup}
+                    onTeamCreated={handleTeamCreated} />}
                     <AllTeams teams={teams} />
                 </div>
+                
             )}
         </div>
     );

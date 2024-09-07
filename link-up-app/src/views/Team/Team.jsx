@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import AddMembers from "../InviteTeamMember/InviteTeamMember";
 import { AppContext } from "../../state/app.context";
 
-export default function Team({ team }) {
+export default function Team({ team, onClose }) {
 
     const location = useLocation();
     const [currentTeam, setCurrentTeam] = useState(team || location.state?.team);
@@ -15,6 +15,7 @@ export default function Team({ team }) {
 
         if (!team) {
             const savedTeam = localStorage.getItem('selectedTeam');
+            onClose()
             if (savedTeam) {
                 try {
                     setCurrentTeam(JSON.parse(savedTeam));
