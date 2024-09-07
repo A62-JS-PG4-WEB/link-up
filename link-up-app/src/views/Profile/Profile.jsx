@@ -60,7 +60,7 @@ export default function Profile() {
     setMessage("");
     try {
       const user = auth.currentUser;
-  
+
       if (email && email !== user.email) {
         if (!oldPassword) {
           setMessage("Old password is required to update email.");
@@ -72,26 +72,26 @@ export default function Profile() {
 
         const successMessage = await updateUserEmail(email, oldPassword);
         setMessage(successMessage);
-  
+
         setAppState((prevState) => ({
           ...prevState,
           userData: { ...prevState.userData, email },
         }));
       }
-  
+
       if (oldPassword && newPassword) {
         await updateUserPassword(oldPassword, newPassword);
       }
-  
+
       if (phoneNumber && phoneNumber !== user.phoneNumber) {
         await updateUserPhoneNumber(userData, phoneNumber);
       }
-  
+
       setAppState((prevState) => ({
         ...prevState,
         user: { ...prevState.userData, email, phoneNumber },
       }));
-  
+
       setMessage("Profile updated successfully!");
     } catch (error) {
       setMessage(`Error: ${error.message}`);
@@ -105,7 +105,6 @@ export default function Profile() {
       <div className="container mx-auto p-8 bg-white rounded-lg shadow-lg max-w-lg">
         <h1 className="text-2xl font-bold mb-4">Profile</h1>
 
-        {/* Display Current Username */}
         <div className="mb-6">
           <p className="text-lg font-semibold">Current Username: {userData?.username || "User"}</p>
         </div>

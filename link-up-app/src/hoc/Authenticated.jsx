@@ -7,6 +7,10 @@ export default function Authenticated({ children }) {
   const { user } = useContext(AppContext);
   const location = useLocation();
 
+  if (user === null) {
+    return <div>Loading...</div>;
+  }
+  
   if (!user) {
     return <Navigate replace to="/login" state={{ from: location }} />
   }

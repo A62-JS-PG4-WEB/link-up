@@ -27,45 +27,14 @@ export function Nav() {
             <div className="flex-1 flex justify-center items-center">
                 <Counter />
             </div>
-
-            <div className="flex items-center gap-2">
-                <div className="form-control">
-                    <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
-                </div>
-
-                <input type="checkbox" value="synthwave" className="toggle theme-controller" />
-                {user ? (
-                    <div className="dropdown dropdown-end">
-                        <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                            <div className="w-10 rounded-full">
-                                <img
-                                    alt="User avatar"
-                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                                />
-                            </div>
-                        </div>
-                        <ul
-                            tabIndex={0}
-                            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                            <li>
-                                <NavLink to="/profile" className="justify-between">
-                                    Profile
-                                    <span className="badge">New</span>
-                                </NavLink>
-                            </li>
-                            <li><NavLink to="/settings">Settings</NavLink></li>
-                            <button onClick={logout} className="btn btn-ghost">Logout</button>
-                        </ul>
-                    </div>
-                ) : (
-                    <>
-                        <NavLink to="/login">Log in</NavLink>
-                        <button className="btn btn-active btn-ghost"> <NavLink to="/register">Sign up</NavLink></button>
-
-                    </>
-                )}
-
-            </div>
+            <NavLink to="/login" className="pr-5 hover:scale-115 transition duration-300 ease-in-out">
+                Log in
+            </NavLink>
+            <button className="btn btn-active btn-ghost hover:bg-gray-200 hover:scale-105 transition duration-300 ease-in-out">
+                <NavLink to="/register" className="transition duration-300 ease-in-out">
+                    Sign up
+                </NavLink>
+            </button>
         </div>
     );
 }
