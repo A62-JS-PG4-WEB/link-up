@@ -8,7 +8,7 @@ import Invitations from "../../views/Invitations/Invitations";
 import SearchUser from "../SearchUser/SearchUser";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { defaultPhotoUrl } from '../../common/constants.js'
 
 export default function SideNav() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -147,7 +147,7 @@ export default function SideNav() {
                             onClick={handleProfileClick}
                         >
                             <img
-                                src={user?.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"}
+                                src={user?.photoURL || defaultPhotoUrl}
                                 alt="User"
                                 className="w-full h-full rounded-full object-cover"
                             />
