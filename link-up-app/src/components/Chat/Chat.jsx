@@ -75,7 +75,7 @@ export default function Chat({ channel, onClose }) {
         try {
 
             if (!message.message) {
-               return alert("Message can not be empty!")
+                return alert("Message can not be empty!")
             }
             console.log(message);
             const sentMessage = {
@@ -133,7 +133,7 @@ export default function Chat({ channel, onClose }) {
         setIsChannelInfoVisible(false);
     };
 
-   const handleCloseChat = () => {
+    const handleCloseChat = () => {
         sessionStorage.removeItem('selectedChat');
         if (typeof onClose === 'function') {
             onClose();
@@ -155,7 +155,7 @@ export default function Chat({ channel, onClose }) {
 
 
     return (
-        <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 max-w-3xl h-[600px]">
+        <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 h-full min-h-[600px]">
             <div className="flex items-center justify-between mb-4">
                 <button className=" text-white py-2 px-4 rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     onClick={openPopUpChannelInfo}>
