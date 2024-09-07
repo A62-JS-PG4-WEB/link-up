@@ -46,7 +46,7 @@ export default function VoiceChannels({ team }) {
                     onClick={handleCreateVoiceChannelClick}
                     className="px-1 py-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white text-sm font-medium rounded-md shadow-sm hover:from-gray-700 hover:to-gray-800 transition duration-300 ease-in-out transform hover:scale-105"
                 >
-                    Create Channel
+                    +
                 </button>
             </div>
             <div className="space-y-2">
