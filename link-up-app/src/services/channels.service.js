@@ -1,4 +1,4 @@
-import { get, push, ref, update, remove } from "firebase/database";
+import { get, push, ref, update, remove, query, orderByChild, equalTo } from "firebase/database";
 import { db } from "../config/firebase-config";
 import { addUserChannel } from "./users.service";
 import { ToastContainer, toast } from 'react-toastify';
@@ -23,20 +23,18 @@ export const getUserChannels = async (username) => {
     return Object.keys(snapshot.val());
 }
 
-export const addUserToTeamChannels = async (channelsT, username) => {
+export const addUserToChannel = async (channelId, username) => {
 
     try {
-        channelsT.map(async (ch) => {
-            await addUserChannel(ch, username);
+            await addUserChannel(channelId, username);
             await update(ref(db), {
-                [`channels/${ch}/members/${username}`]: new Date().getTime(),
+                [`channels/${channelId}/members/${username}`]: new Date().getTime(),
             })
-        })
     } catch (error) {
         toast.error("Error deleting channel:", error);
         throw error;
     }
-}
+};
 
 export const deleteChannelById = async (channelId, teamID) => {
     try {
@@ -98,7 +96,7 @@ export const getChannelsMembersByID = async (channelId) => {
     }
 };
 
-export const leaveChannel = async (username, channelId) => {
+export const leaveChannel = async (username, channelId, channelName) => {
 
     try {
 
@@ -107,9 +105,33 @@ export const leaveChannel = async (username, channelId) => {
 
         const userChannelRef = ref(db, `users/${username}/channels/${channelId}`);
         await remove(userChannelRef);
-        toast.warn(`User ${username} has left the channel ${channelId}`);
+        toast.warn(`You left the channel #${channelName}`);
     } catch (error) {
-        toast.error(`Failed to leave the channel ${channelId}:`, error);
+        toast.error(`Failed to leave the channel ${channelName}:`, error);
         throw error;
     }
 };
+
+
+export const getChannelByName = async (channelName) => {
+    console.log(channelName);
+    
+    try {
+        const snapshot = await get(query(ref(db, 'channels'), orderByChild('name'), equalTo(channelName)));
+      
+
+        if (snapshot.exists()) {
+            const channels = [];
+            snapshot.forEach(childSnapshot => {
+                const channel = childSnapshot.val(); // Get the data of each channel
+                channels.push(channel); // Add it to the array
+            });
+            return Object.values(snapshot.val());
+        } else {
+            return []; // Return an empty array if no data found
+        }
+    } catch (error) {
+        console.error("Error searching channels by name:", error);
+        throw error;
+    }
+}
