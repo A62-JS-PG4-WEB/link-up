@@ -5,6 +5,7 @@ import { AppContext } from "../../state/app.context";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { removeUserFromTeam } from "../../services/teams.service";
+import InviteTeamMember from "../InviteTeamMember/InviteTeamMember";
 
 export default function Team({ team, onClose }) {
 
@@ -116,7 +117,7 @@ export default function Team({ team, onClose }) {
                                         Invite +
                                     </button>
                                     {isPopupOpen && (
-                                        <AddMembers
+                                        <InviteTeamMember
                                             onClose={handleClosePopup}
                                             team={currentTeam}
                                         />
