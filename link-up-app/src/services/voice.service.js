@@ -30,7 +30,7 @@ export const getVoiceChannelsInfoById = async (channelIds) => {
         const channels = await Promise.all(promises);
         return channels;
     } catch (error) {
-        toast.error("Error fetching voice channels information:", error);
+        toast.error(`Error fetching voice channels information: ${error}`);
         throw error;
     }
 };
@@ -39,7 +39,7 @@ export const deleteVoiceChannelById = async (channelId) => {
     try {
         await remove(ref(db, `voiceChannels/${channelId}`));
     } catch (error) {
-        toast.error("Error deleting voice channel:", error);
+        toast.error(`Error deleting voice channel: ${error}`);
         throw error;
     }
 };

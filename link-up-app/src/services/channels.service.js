@@ -33,7 +33,7 @@ export const addUserToTeamChannels = async (channelsT, username) => {
             })
         })
     } catch (error) {
-        toast.error("Error deleting channel:", error);
+        toast.error(`Error deleting channel: ${error}`);
         throw error;
     }
 }
@@ -60,7 +60,7 @@ export const deleteChannelById = async (channelId, teamID) => {
         await update(ref(db), updates);
 
     } catch (error) {
-        toast.error("Error deleting channel:", error);
+        toast.error(`Error deleting channel: ${error}`);
         throw error;
     }
 };
@@ -78,7 +78,7 @@ export const getChannelsInfoById = async (channels) => {
         return filteredChannels;
 
     } catch (error) {
-        toast.error("Error fetching channels information:", error);
+        toast.error(`Error fetching channels information: ${error}`);
         throw error;
     }
 };
@@ -93,7 +93,7 @@ export const getChannelsMembersByID = async (channelId) => {
             return [];
         }
     } catch (error) {
-        toast.error("Error fetching channel members:", error);
+        toast.error(`Error fetching channel members: ${error}`);
         throw error;
     }
 };

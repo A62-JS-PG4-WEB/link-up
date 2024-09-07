@@ -14,7 +14,7 @@ export default function CreateVoiceChannelPopup({ team, onClose, onVoiceChannelC
                 await createVoiceChannel(channelName, team.owner, team.id);
                 onVoiceChannelCreated(); // Notify parent component to reload voice channels
             } catch (error) {
-                toast.error("Failed to create voice channel", error);
+                toast.error(`Failed to create voice channel: ${error}`);
             }
         }
     };
@@ -22,7 +22,7 @@ export default function CreateVoiceChannelPopup({ team, onClose, onVoiceChannelC
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75">
             <div className="bg-gray-800 p-6 rounded-lg w-1/3">
-            <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-4">
                     <h4 className="text-lg font-semibold">DM message</h4>
                     <button
                         onClick={onClose}
@@ -48,11 +48,11 @@ export default function CreateVoiceChannelPopup({ team, onClose, onVoiceChannelC
                         />
                     </div>
                     <div className="flex justify-center mt-4">
-                       
+
                         <button
                             type="submit"
                             className="px-3 py-1 bg-indigo-500 text-white rounded-lg hover:bg-indigo-400 focus:ring-2 focus:ring-indigo-400 "
-                            >
+                        >
                             Create
                         </button>
                     </div>

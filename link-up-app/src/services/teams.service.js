@@ -45,7 +45,7 @@ export const getTeamsInfoById = async (teams) => {
 
         return filteredTeams;
     } catch (error) {
-        toast.error("Error fetching team information:", error);
+        toast.error(`Error fetching team information: ${error}`);
         throw error;
     }
 };
@@ -62,22 +62,22 @@ export const addChannelToTeam = async (teamID, channelID) => {
         });
 
     } catch (error) {
-        toast.error("Error adding channel to team:", error);
+        toast.error(`Error adding channel to team: ${error}`);
     }
 };
 
 export const addTeamMember = async (teamId, member) => {
     await update(ref(db), {
-        [`teams/${teamId}/members/${member}`]: new Date().getTime(),
+        [`teams / ${teamId} / members / ${member}`]: new Date().getTime(),
     });
 };
 
 export const getTeamChannels = async (teamId) => {
 
-    const snapshot = await get(ref(db, `teams/${teamId}/channels`));
+    const snapshot = await get(ref(db, `teams / ${teamId} / channels`));
     return Object.keys(snapshot.val());
 };
 
-export const removeUserFromTeam = async (username, teamId) => {    
-    await remove(ref(db, `teams/${teamId}/members/${username}`));
+export const removeUserFromTeam = async (username, teamId) => {
+    await remove(ref(db, `teams / ${teamId} / members / ${username}`));
 }

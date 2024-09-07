@@ -30,7 +30,7 @@ export default function SideNav() {
                 setAppState({ user: null, userData: null });
                 navigate('/');
             } catch (error) {
-                toast.error("Logout failed", error);
+                toast.error(`Logout failed ${error}`);
             }
         }
     };

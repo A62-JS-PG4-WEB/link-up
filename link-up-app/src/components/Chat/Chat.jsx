@@ -14,7 +14,7 @@ export default function Chat({ channel, onClose }) {
     const { userData } = useContext(AppContext);
     const [currentChat, setCurrentChat] = useState(channel || location.state?.channel);
     const [currentTeam, setCurrentTeam] = useState([]);
-    const [message, setMessage] = useState({ message: '' });
+    const [message, setMessage] = useState({ message: '', gif: '' });
     const [currentMessages, setCurrentMessages] = useState([]);
     const [photoUrls, setPhotoUrls] = useState({});
     const [isChannelInfoVisible, setIsChannelInfoVisible] = useState(false);
@@ -42,7 +42,7 @@ export default function Chat({ channel, onClose }) {
                         const detailedMessages = await getMessageInfo(messageIds);
                         setCurrentMessages(detailedMessages);
                     } catch (error) {
-                        toast.error("Failed to load messages", error);
+                        toast.error(`Failed to load messages: ${error}`);
                     }
                 } else {
                     setCurrentMessages([]);
@@ -54,21 +54,19 @@ export default function Chat({ channel, onClose }) {
     }, [currentChat]);
 
     useEffect(() => {
-
         const chatContainer = document.querySelector('.chat-container');
         if (chatContainer) {
             chatContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
     }, [currentMessages]);
 
-    const createMessage = (key, value) => {
-
-        if (message[key] !== value) {
-            setMessage({
-                ...message,
-                [key]: value,
-
-            });
+    const handleMessageChange = (key, value) => {
+        setMessage({
+            ...message,
+            [key]: value,
+        });
+        if (key === 'gif') {
+            setIsGifSelectorVisible(false);
         }
     };
 
@@ -97,16 +95,16 @@ export default function Chat({ channel, onClose }) {
             setMessage({ message: '' });
 
         } catch (error) {
-            toast.error('Message not sent', error);
+            toast.error(`Message not sent: ${error}`);
         }
     };
 
-    const takeSenderphoto = async (senderUsername) => {
+    const takeSenderPhoto = async (senderUsername) => {
         try {
             const snapshot = await get(ref(db, `users/${senderUsername}/photoURL`));
             return snapshot.val() || null;
         } catch (error) {
-            toast.error('Error fetching user photo:', error);
+            toast.error(`Error fetching user photo: ${error}`);
             return null;
         }
     }
@@ -116,7 +114,7 @@ export default function Chat({ channel, onClose }) {
             const newPhotoUrls = {};
             for (let message of currentMessages) {
                 if (!photoUrls[message.senderUsername]) {
-                    const url = await takeSenderphoto(message.senderUsername);
+                    const url = await takeSenderPhoto(message.senderUsername);
                     newPhotoUrls[message.senderUsername] = url;
                 }
             }
@@ -140,14 +138,6 @@ export default function Chat({ channel, onClose }) {
             onClose();
         }
     }
-
-    const handleSelectGif = (gifUrl) => {
-        setMessage({
-            ...message,
-            message: gifUrl,
-        });
-        setIsGifSelectorVisible(false);
-    };
 
     const toggleGifSelector = () => {
         setIsGifSelectorVisible(!isGifSelectorVisible);
@@ -256,7 +246,7 @@ export default function Chat({ channel, onClose }) {
                         placeholder="Type a message..."
                         className="flex-1 p-4 rounded-lg bg-gray-600 text-white outline-none focus:ring-2 focus:ring-indigo-500"
                         value={message.message}
-                        onChange={(e) => createMessage('message', e.target.value)}
+                        onChange={(e) => handleMessageChange('message', e.target.value)}
                     />
                     <button
                         className="p-4 bg-indigo-500 text-white rounded-lg hover:bg-indigo-400 focus:ring-2 focus:ring-indigo-500 transition-all ease-in-out"
@@ -274,7 +264,7 @@ export default function Chat({ channel, onClose }) {
             </form>
 
             {isGifSelectorVisible && (
-                <GifSelector onSelect={handleSelectGif} />
+                <GifSelector onSelect={(url) => handleMessageChange('gif', url)} />
             )}
 
             {isChannelInfoVisible && (

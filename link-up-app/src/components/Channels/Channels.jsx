@@ -24,7 +24,7 @@ export default function Channels({ team, onSelectChannel }) {
                 try {
                     setCurrentTeam(JSON.parse(savedTeam));
                 } catch (error) {
-                    toast.error("Failed to parse team from localStorage", error);
+                    console.error(`Failed to parse team from localStorage: ${error}`);
                 }
             }
         } else {
@@ -45,7 +45,7 @@ export default function Channels({ team, onSelectChannel }) {
                     setChannels(relevantChannels);
                 }
             } catch (e) {
-                toast.error("Error loading Channels", e);
+                toast.error(`Error loading Channels: ${e}`);
             }
         };
         loadChannels();
@@ -68,7 +68,7 @@ export default function Channels({ team, onSelectChannel }) {
             sessionStorage.setItem('selectedChat', JSON.stringify(channel));
             onSelectChannel(channel);
         } catch (error) {
-            toast.error("Failed to save Chat to localStorage", error);
+            toast.error(`Failed to save Chat to localStorage: ${error}`);
         }
     };
 
@@ -78,7 +78,7 @@ export default function Channels({ team, onSelectChannel }) {
                 await deleteChannelById(channelId, currentTeam.id);
                 setChannelUpdated((prev) => !prev);
             } catch (error) {
-                toast.error("Failed to delete channel", error);
+                toast.error(`Failed to delete channel: ${error}`);
             }
         }
     };

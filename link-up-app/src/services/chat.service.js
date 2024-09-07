@@ -30,7 +30,7 @@ export const setMsgStatusForEachUser = async (users, messageId, status = 'unread
         await Promise.all(promises);
 
     } catch (error) {
-        toast.error("Error setting message status for members:", error);
+        toast.error(`Error setting message status for members: ${error}`);
         throw error;
     }
 };
@@ -58,7 +58,7 @@ export const getMessageInfo = async (messageIds) => {
         return filteredTeams;
 
     } catch (error) {
-        toast.error("Error getting message info", error);
+        toast.error(`Error getting message info: ${error}`);
         throw error;
     }
 };

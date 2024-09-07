@@ -22,7 +22,7 @@ export default function Teams() {
                     setTeams(listTeams);
                 }
             } catch (e) {
-                console.error("Error loading Teams ", e);
+                console.error(`Error loading Teams: ${e}`);
             }
         };
 
