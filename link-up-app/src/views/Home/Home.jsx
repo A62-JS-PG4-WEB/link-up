@@ -35,8 +35,8 @@ export default function Home({ team }) {
             <div className="flex h-screen content">
                 {/* Main Content */}
                 <div className="flex-1 flex p-8 text-white">
-                    <div className="w-1/4 space-y-6">
-                        <Team team={team} onClose={() => setSelectedChat(null)}/>
+                    <div className="w-1/8 space-y-3">
+                        <Team team={team} onClose={() => setSelectedChat(null)} />
                         {/* Text Channels */}
                         <TextChannelsSection team={team} onSelectChannel={handleSelectChannel} />
                         {/* Voice Channels */}
