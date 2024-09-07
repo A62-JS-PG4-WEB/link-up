@@ -1,5 +1,7 @@
 import { ref, get, set, remove, push, update } from "firebase/database";
 import { db } from '../config/firebase-config';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const createVoiceChannel = async (name, owner, teamID) => {
     const voiceChannel = { name, owner, createdOn: new Date().toString() };
@@ -28,7 +30,7 @@ export const getVoiceChannelsInfoById = async (channelIds) => {
         const channels = await Promise.all(promises);
         return channels;
     } catch (error) {
-        console.error("Error fetching voice channels information:", error);
+        toast.error("Error fetching voice channels information:", error);
         throw error;
     }
 };
@@ -37,7 +39,7 @@ export const deleteVoiceChannelById = async (channelId) => {
     try {
         await remove(ref(db, `voiceChannels/${channelId}`));
     } catch (error) {
-        console.error("Error deleting voice channel:", error);
+        toast.error("Error deleting voice channel:", error);
         throw error;
     }
 };

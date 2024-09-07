@@ -5,6 +5,9 @@ import { AppContext } from "../../state/app.context";
 import { useNavigate, useLocation } from "react-router-dom";
 import Profile from "../../views/Profile/Profile";
 import Invitations from "../../views/Invitations/Invitations";
+import SearchUser from "../SearchUser/SearchUser";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function SideNav() {
@@ -18,16 +21,16 @@ export default function SideNav() {
 
     const logout = async () => {
         const confirmLogout = window.confirm("Are you sure you want to logout?");
-        
+        localStorage.clear();
+        sessionStorage.clear();
+
         if (confirmLogout) {
             try {
-                localStorage.clear();
-                sessionStorage.clear();
-                await logoutUser(); 
+                await logoutUser();
                 setAppState({ user: null, userData: null });
                 navigate('/');
             } catch (error) {
-                console.error("Logout failed", error);
+                toast.error("Logout failed", error);
             }
         }
     };
@@ -53,6 +56,10 @@ export default function SideNav() {
     useEffect(() => {
         setIsProfilePage(location.pathname === '/profile');
     }, [location.pathname]);
+
+    const handleSearchKeyDown = (e) => {
+
+    };
 
     return (
         <div className="flex h-screen sidenav">
@@ -87,19 +94,7 @@ export default function SideNav() {
                         )}
                     </a>
 
-                    {/* Search */}
-                    <div className="flex items-center p-4 text-white hover:bg-gray-700 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
-                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                        </svg>
-                        {isSidebarOpen && (
-                            <input
-                                type="text"
-                                placeholder="Search users..."
-                                className="ml-4 p-1 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none"
-                            />
-                        )}
-                    </div>
+
 
                     {/* Notifications */}
                     <a
@@ -122,6 +117,25 @@ export default function SideNav() {
 
                         {isSidebarOpen && <Invitations />}
                     </a>
+                    {/* Search */}
+                    <div className="flex flex-col p-4 text-white hover:bg-gray-700">
+                        <div className="flex items-center">
+                            <div className="flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                </svg>
+                            </div>
+
+                            {isSidebarOpen && (
+                                <div className="ml-4 flex-grow">
+                                    <SearchUser />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+
+
                 </nav>
 
                 {/* Profile and Logout */}

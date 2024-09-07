@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { AppContext } from "../../state/app.context";
-import { updateProfilePicture, updateUserEmail, updateUserPassword, updateUserPhoneNumber } from "../../services/users.service";
+import { updateProfilePicture, updateUserEmail, updateUserPassword, updateUserPhoneNumber, updateAccountInfoDB } from "../../services/users.service";
 import { auth } from "../../config/firebase-config";
 import { getDownloadURL, ref, uploadBytes, getStorage } from "firebase/storage";
 
@@ -8,7 +8,7 @@ const storage = getStorage();
 
 export default function Profile() {
   const { userData, user, setAppState } = useContext(AppContext);
-  const [username, setUsername] = useState("");
+  const [username, setUsername,] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [oldPassword, setOldPassword] = useState("");
@@ -68,6 +68,8 @@ export default function Profile() {
           return;
         }
 
+        await updateAccountInfoDB(userData.username, email);
+
         const successMessage = await updateUserEmail(email, oldPassword);
         setMessage(successMessage);
 
@@ -99,18 +101,18 @@ export default function Profile() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div className="container mx-auto p-6 bg-gray-800 rounded-lg ">
-
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="container mx-auto p-8 bg-white rounded-lg shadow-lg max-w-lg">
+        <h1 className="text-2xl font-bold mb-4">Profile</h1>
 
         <div className="mb-6">
-          <p className="text-lg font-semibold text-gray-300">Username: {userData?.username || "User"}</p>
+          <p className="text-lg font-semibold">Current Username: {userData?.username || "User"}</p>
         </div>
 
         {/* Profile Picture Upload */}
         <div className="flex items-center justify-center mb-6">
           <div className="avatar">
-            <div className="w-24 rounded-full ring ring-primary ring-offset-gray-900">
+            <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
               <img src={imagePreview} alt="User avatar" />
             </div>
           </div>
@@ -120,7 +122,7 @@ export default function Profile() {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="file-input file-input-bordered file-input-primary w-full max-w-xs mb-4 bg-gray-700 text-white"
+            className="file-input file-input-bordered file-input-primary w-full max-w-xs mb-4"
           />
           <button
             onClick={handleImageUpload}
@@ -132,55 +134,59 @@ export default function Profile() {
 
         {/* Profile Form */}
         <div className="flex flex-col space-y-4">
+
           {/* Email */}
+
           <div className="form-control w-full">
             <label className="label">
-              <span className="label-text text-gray-300">Email</span>
+              <span className="label-text">Email</span>
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="input input-bordered w-full bg-gray-700 text-white"
+              className="input input-bordered w-full"
             />
           </div>
 
-          {/* Phone Number */}
-          <div className="form-control w-full">
+
+      {/* Phone Number */}
+      <div className="form-control w-full">
             <label className="label">
-              <span className="label-text text-gray-300">Phone Number</span>
+              <span className="label-text">Phone Number</span>
             </label>
             <input
               type="tel"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
-              className="input input-bordered w-full bg-gray-700 text-white"
+              className="input input-bordered w-full"
             />
           </div>
+
 
           {/* Old Password */}
           <div className="form-control w-full">
             <label className="label">
-              <span className="label-text text-gray-300">Old Password</span>
+              <span className="label-text">Old Password</span>
             </label>
             <input
               type="password"
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
-              className="input input-bordered w-full bg-gray-700 text-white"
+              className="input input-bordered w-full"
             />
           </div>
 
           {/* New Password */}
           <div className="form-control w-full">
             <label className="label">
-              <span className="label-text text-gray-300">New Password</span>
+              <span className="label-text">New Password</span>
             </label>
             <input
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="input input-bordered w-full bg-gray-700 text-white"
+              className="input input-bordered w-full"
             />
           </div>
 

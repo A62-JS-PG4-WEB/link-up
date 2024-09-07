@@ -7,6 +7,8 @@ import { db } from '../../config/firebase-config';
 import { get, onValue, ref } from 'firebase/database';
 import { ChannelInfo } from '../ChannelInfo/ChannelInfo';
 import GifSelector from '../GifSelector/GifSelector';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Chat({ channel, onClose }) {
     const { userData } = useContext(AppContext);
@@ -40,7 +42,7 @@ export default function Chat({ channel, onClose }) {
                         const detailedMessages = await getMessageInfo(messageIds);
                         setCurrentMessages(detailedMessages);
                     } catch (error) {
-                        console.error("Failed to load messages", error);
+                        toast.error("Failed to load messages", error);
                     }
                 } else {
                     setCurrentMessages([]);
@@ -75,9 +77,8 @@ export default function Chat({ channel, onClose }) {
         try {
 
             if (!message.message) {
-               return alert("Message can not be empty!")
+                return toast.warn("Message can not be empty!")
             }
-            console.log(message);
             const sentMessage = {
                 ...message,
                 teamID: currentTeam.id,
@@ -95,7 +96,7 @@ export default function Chat({ channel, onClose }) {
             setMessage({ message: '' });
 
         } catch (error) {
-            console.error('Message not sent', error);
+            toast.error('Message not sent', error);
         }
     };
 
@@ -104,7 +105,7 @@ export default function Chat({ channel, onClose }) {
             const snapshot = await get(ref(db, `users/${senderUsername}/photoURL`));
             return snapshot.val() || null;
         } catch (error) {
-            console.error('Error fetching user photo:', error);
+            toast.error('Error fetching user photo:', error);
             return null;
         }
     }
@@ -125,7 +126,6 @@ export default function Chat({ channel, onClose }) {
     }, [currentMessages]);
 
     const openPopUpChannelInfo = () => {
-        console.log('Channel Info Opened:', currentChat);
         setIsChannelInfoVisible(true);
     };
 
@@ -155,7 +155,7 @@ export default function Chat({ channel, onClose }) {
 
 
     return (
-        <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 max-w-3xl h-[600px]">
+        <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 h-full min-h-[600px]">
             <div className="flex items-center justify-between mb-4">
                 <button className=" text-white py-2 px-4 rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     onClick={openPopUpChannelInfo}>
@@ -258,7 +258,7 @@ export default function Chat({ channel, onClose }) {
                         onChange={(e) => createMessage('message', e.target.value)}
                     />
                     <button
-                        className="p-4 bg-indigo-500 text-white rounded-lg hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-500 transition-all ease-in-out"
+                        className="p-4 bg-indigo-500 text-white rounded-lg hover:bg-indigo-400 focus:ring-2 focus:ring-indigo-500 transition-all ease-in-out"
                     >
                         Send
                     </button>

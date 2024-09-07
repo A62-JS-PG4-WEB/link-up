@@ -5,11 +5,13 @@ import CreateChannel from "../../views/CreateChannel/CreateChannel";
 import { getChannelsInfoById, getUserChannels } from "../../services/channels.service";
 import PropTypes from 'prop-types';
 import { deleteChannelById } from "../../services/channels.service";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Channels({ team, onSelectChannel }) {
     const location = useLocation();
     const { userData } = useContext(AppContext);
-   const [currentTeam, setCurrentTeam] = useState(team || location.state?.team);
+    const [currentTeam, setCurrentTeam] = useState(team || location.state?.team);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [channels, setChannels] = useState([]);
     const [channelUpdated, setChannelUpdated] = useState(false);
@@ -17,12 +19,12 @@ export default function Channels({ team, onSelectChannel }) {
     useEffect(() => {
         if (!team) {
             const savedTeam = localStorage.getItem("selectedTeam");
-            
+
             if (savedTeam) {
                 try {
                     setCurrentTeam(JSON.parse(savedTeam));
                 } catch (error) {
-                    console.error("Failed to parse team from localStorage", error);
+                    toast.error("Failed to parse team from localStorage", error);
                 }
             }
         } else {
@@ -31,23 +33,19 @@ export default function Channels({ team, onSelectChannel }) {
     }, [location.state, team]);
 
     useEffect(() => {
-        console.log("current team:", currentTeam); 
 
         const loadChannels = async () => {
             try {
                 if (userData && userData.username && currentTeam) {
-                   
-                    
+
+
                     const allChannels = await getUserChannels(userData.username);
-                   // console.log("All channels:", allChannels); 
                     const listChannels = await getChannelsInfoById(allChannels);
-                   // console.log("List channels:", listChannels); 
-                  const relevantChannels = listChannels.filter((ch) => ch?.team === currentTeam.id);
-                  //  console.log("relevant channels:", relevantChannels); 
+                    const relevantChannels = listChannels.filter((ch) => ch?.team === currentTeam.id);
                     setChannels(relevantChannels);
                 }
             } catch (e) {
-                console.error("Error loading Channels", e);
+                toast.error("Error loading Channels", e);
             }
         };
         loadChannels();
@@ -66,12 +64,11 @@ export default function Channels({ team, onSelectChannel }) {
     };
 
     const handleChannelClick = async (channel) => {
-        console.log("chosen channel", channel); 
         try {
             sessionStorage.setItem('selectedChat', JSON.stringify(channel));
             onSelectChannel(channel);
         } catch (error) {
-            console.error("Failed to save Chat to localStorage", error);
+            toast.error("Failed to save Chat to localStorage", error);
         }
     };
 
@@ -81,7 +78,7 @@ export default function Channels({ team, onSelectChannel }) {
                 await deleteChannelById(channelId, currentTeam.id);
                 setChannelUpdated((prev) => !prev);
             } catch (error) {
-                console.error("Failed to delete channel", error);
+                toast.error("Failed to delete channel", error);
             }
         }
     };
@@ -89,17 +86,17 @@ export default function Channels({ team, onSelectChannel }) {
     return (
         <div className="channels">
             <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-semibold">Text Channels</h3>
+                <h3 className="text-lg font-semibold">Channels</h3>
                 {/* {userData?.username === currentTeam?.owner && ( */}
-                    <button
-                        onClick={handleCreateChannelClick}
-                        className="px-1 py-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white text-sm font-medium rounded-md shadow-sm hover:from-gray-700 hover:to-gray-800 transition duration-300 ease-in-out transform hover:scale-105"
-                    >
-                        Create Channel
-                    </button>
+                <button
+                    onClick={handleCreateChannelClick}
+                    className="px-1 py-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white text-sm font-medium rounded-md shadow-sm hover:from-gray-700 hover:to-gray-800 transition duration-300 ease-in-out transform hover:scale-105"
+                >
+                    +
+                </button>
                 {/* )} */}
             </div>
-            <div className="space-y-2">              
+            <div className="space-y-2">
                 {channels.length > 0 ? (
                     channels.map((ch) => (
                         <div key={ch.id} className="flex justify-between items-center w-full p-2 bg-gray-700 rounded-md hover:bg-gray-600">
@@ -119,7 +116,7 @@ export default function Channels({ team, onSelectChannel }) {
                         </div>
                     ))
                 ) : (
-                    <p className="text-gray-400">No text channels available</p>    
+                    <p className="text-gray-400">No text channels available</p>
                 )}
             </div>
             {isPopupOpen && (

@@ -64,9 +64,11 @@ function App() {
     <>
       <BrowserRouter>
         <AppContext.Provider value={{ ...appState, setAppState, invitations, setInvitations }}>
+
+          <ToastContainer stacked closeOnClick />
+
           {!user && <Nav />}
 
-          {/* <ToastContainer stacked closeOnClick /> */}
 
           <Routes>
             <Route path='/' element={<Landing />} />

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { getVoiceChannelsInfoById, getUserVoiceChannels, createVoiceChannel } from "../../services/voice.service.js";
 import CreateVoiceChannelPopup from "../../views/CreateVoiceChannel/CreateVoiceChannel.jsx";
 import PropTypes from 'prop-types';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function VoiceChannels({ team }) {
     const [voiceChannels, setVoiceChannels] = useState([]);
@@ -17,7 +18,7 @@ export default function VoiceChannels({ team }) {
                 setVoiceChannels(relevantVoiceChannels);
             }
         } catch (e) {
-            console.error("Error loading voice channels", e);
+            toast.error("Error loading voice channels", e);
         }
     };
 
@@ -41,12 +42,12 @@ export default function VoiceChannels({ team }) {
     return (
         <div className="bg-gray-800 p-4 rounded-lg">
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">Voice Channels</h3>
+                <h3 className="text-lg font-semibold">Direct Messages</h3>
                 <button
                     onClick={handleCreateVoiceChannelClick}
                     className="px-1 py-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white text-sm font-medium rounded-md shadow-sm hover:from-gray-700 hover:to-gray-800 transition duration-300 ease-in-out transform hover:scale-105"
                 >
-                    Create Channel
+                    +
                 </button>
             </div>
             <div className="space-y-2">
@@ -60,7 +61,7 @@ export default function VoiceChannels({ team }) {
                         </button>
                     ))
                 ) : (
-                    <p className="text-gray-400">No voice channels available</p>
+                    <p className="text-gray-400">No direct messages available</p>
                 )}
             </div>
             {isPopupOpen && (
@@ -74,9 +75,13 @@ export default function VoiceChannels({ team }) {
     );
 }
 
-// VoiceChannels.propTypes = {
-//     team: PropTypes.shape({
-//         id: PropTypes.string.isRequired,
-//         owner: PropTypes.string.isRequired,
-//     }).isRequired,
-// };
+
+VoiceChannels.propTypes = {
+    team: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        owner: PropTypes.string,
+        id: PropTypes.string,
+        createdOn: PropTypes.string,
+        members: PropTypes.arrayOf(PropTypes.string),
+    }),
+};
