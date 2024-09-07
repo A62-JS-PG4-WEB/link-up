@@ -21,7 +21,6 @@ export const createInvitation = async (invitation) => {
 export const getInvitations = async (email) => {
     const snapshot = await get(invitationsQuery(email))
     const data = snapshot.val();
-    console.log(data);
 
     return data ? Object.values(data) : [];
 };

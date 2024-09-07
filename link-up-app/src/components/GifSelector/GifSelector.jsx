@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 // import axios from 'axios';
 import { GIPHY_API_KEY, GIPHY_API_URL } from '../../common/constants';
 import './GifSelector.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function GifSelector({ onSelect }) {
     const [searchTerm, setSearchTerm] = useState('');
@@ -21,7 +23,7 @@ export default function GifSelector({ onSelect }) {
                 });
                 setGifs(response.data.data);
             } catch (error) {
-                console.error('Error fetching GIFs', error);
+                toast.error('Error fetching GIFs', error);
             }
         }
     };
