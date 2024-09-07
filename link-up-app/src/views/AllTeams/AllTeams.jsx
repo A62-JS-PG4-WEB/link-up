@@ -16,9 +16,7 @@ export default function AllTeams({ teams }) {
         } catch (error) {
             toast.error("Failed to save team to localStorage", error);
         }     
-        sessionStorage.clear();    
-        
-        navigate("/home", { state: { selectedTeam } });
+      navigate("/home", { state: { selectedTeam } });
     }
 
     return (

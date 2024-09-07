@@ -73,9 +73,9 @@ export default function Teams() {
                 <div className="teamsList rounded-lg max-h-60 overflow-y-auto">
                     <button
                         onClick={handleCreateTeamClick}
-                        className="p-2 bg-gray-600 text-white rounded-lg transition-colors duration-300 ease-in-out hover:bg-gray-500"
+                        className="mt-4 ml-6 p-2  bg-gray-600 text-white rounded-lg transition-colors duration-300 ease-in-out hover:bg-gray-500"
                     >
-                        Add New Team +
+                        New Team +
                     </button>
                     {isPopupOpen && (
                         <CreateTeam onClose={handleClosePopup} onTeamCreated={handleTeamCreated} />

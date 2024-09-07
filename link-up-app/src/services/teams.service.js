@@ -1,4 +1,4 @@
-import { equalTo, get, orderByChild, orderByValue, push, query, ref, update } from "firebase/database";
+import { equalTo, get, orderByChild, orderByValue, push, query, ref, remove, update } from "firebase/database";
 import { db } from "../config/firebase-config";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -78,3 +78,6 @@ export const getTeamChannels = async (teamId) => {
     return Object.keys(snapshot.val());
 };
 
+export const removeUserFromTeam = async (username, teamId) => {    
+    await remove(ref(db, `teams/${teamId}/members/${username}`));
+}
