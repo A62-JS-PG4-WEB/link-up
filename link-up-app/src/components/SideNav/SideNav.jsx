@@ -6,7 +6,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Profile from "../../views/Profile/Profile";
 import Invitations from "../../views/Invitations/Invitations";
 import SearchUser from "../SearchUser/SearchUser";
-
+import { updateUserOnlineStatus } from "../../services/users.service";
+import '../StatusAvatar/StatusAvatar.css';
 
 export default function SideNav() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -19,19 +20,26 @@ export default function SideNav() {
 
     const logout = async () => {
         const confirmLogout = window.confirm("Are you sure you want to logout?");
-        localStorage.clear();
-        sessionStorage.clear();
-
+        
         if (confirmLogout) {
             try {
-                await logoutUser();
+                if (user) {
+                    await updateUserOnlineStatus(userData?.username, false);
+                }
+    
+                localStorage.clear();
+                sessionStorage.clear()
+
+                await logoutUser(); 
                 setAppState({ user: null, userData: null });
-                navigate('navigate('/')');
+    
+                navigate('/');
             } catch (error) {
                 console.error("Logout failed", error);
             }
         }
     };
+
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);

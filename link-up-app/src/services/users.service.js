@@ -4,6 +4,23 @@ import { auth } from '../config/firebase-config';
 import { updateProfile, updateEmail, updatePassword, sendEmailVerification, reauthenticateWithCredential, EmailAuthProvider  } from "firebase/auth";
 import { collection, where, getDocs } from 'firebase/firestore';
 
+export const updateUserOnlineStatus = async (username, isOnline) => {
+  const onlineUserRef = ref(db, `onlineUsers/${username}`);
+  const userRef = ref(db, `users/${username}`);
+
+  console.log(`Updating ${username} to isOnline: ${isOnline}`);
+
+  try {
+    await Promise.all([
+      update(onlineUserRef, { isOnline }),
+      update(userRef, { isOnline })
+    ]);
+    console.log('Update successful');
+  } catch (error) {
+    console.error('Error updating user online status:', error);
+  }
+};
+
 export const searchUsers = async (searchTerm) => {
   try {
     const usersRef = collection(db, 'users'); 

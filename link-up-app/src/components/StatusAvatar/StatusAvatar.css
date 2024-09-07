@@ -1,0 +1,7 @@
+.avatar.online .w-10 {
+    border: 2px solid green;
+}
+
+.avatar.offline .w-10 {
+    border: 2px solid gray;
+}

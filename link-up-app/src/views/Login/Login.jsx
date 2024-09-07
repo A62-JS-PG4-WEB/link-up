@@ -5,6 +5,7 @@ import { loginUser } from "../../services/auth.service";
 import { getUserData } from "../../services/users.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { updateUserOnlineStatus } from "../../services/users.service";
 
 export default function Login() {
     const [user, setUser] = useState({
@@ -39,6 +40,8 @@ export default function Login() {
             });
 
             localStorage.setItem('loggedUserData', JSON.stringify(userData));
+
+            await updateUserOnlineStatus(userData?.username, true);
 
             navigate('/home');
             toast.success('Succsessfully logged in!')

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Team from '../Team/Team';
 import TextChannelsSection from '../../components/TextChannelsSection/TextChannelsSection';
-import VoiceChannels from '../../components/VoiceChannels/VoiceChannels';
 import Chat from '../../components/Chat/Chat';
 import SideNav from '../../components/SideNav/SideNav';
+import DirectMessages from '../../components/DirectMessages/DirectMessages';
 
 export default function Home({ team }) {
     const [selectedChat, setSelectedChat] = useState(null);
@@ -40,7 +40,7 @@ export default function Home({ team }) {
                         {/* Text Channels */}
                         <TextChannelsSection team={team} onSelectChannel={handleSelectChannel} />
                         {/* Voice Channels */}
-                        <VoiceChannels team={team} />
+                        <DirectMessages team={team} />
                     </div>
                     {/* Chat Section */}
                     {/* Messages Container */}
