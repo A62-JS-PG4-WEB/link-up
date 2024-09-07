@@ -8,7 +8,7 @@ export default function ChatView() {
     const [currentMessages, setCurrentMessages ] = useState([]);
 
     useEffect(() => {
-        const savedChat = localStorage.getItem('selectedChat');
+        const savedChat = sessionStorage.getItem('selectedChat');
 
         console.log(JSON.parse(savedChat));
         console.log(userData);

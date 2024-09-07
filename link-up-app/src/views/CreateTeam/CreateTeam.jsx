@@ -7,7 +7,7 @@ import { addUserTeam } from "../../services/users.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function CreateTeam({ onClose }) {
+export default function CreateTeam({ onClose, onTeamCreated }) {
     const [team, setTeam] = useState({ name: '' });
     const { userData } = useContext(AppContext);
 
@@ -45,26 +45,32 @@ export default function CreateTeam({ onClose }) {
         try {
             const existentTeam = await getTeams(team.name);
             if (existentTeam) {
-                toast.error(`Team ${team.name} already exists`);
+                console.error(`Team ${team.name} already exists`);
                 return;
             }
 
-            const teamId = await createTeam(team.name.trim(), userData.username, userData.username);
-            setTeam({ name: '' });
+            const newTeam = { name: team.name.trim(), owner: userData.username, createdOn: new Date().toString() };
+            const teamId = await createTeam(newTeam, userData.username);
+            newTeam.id = teamId;
             await addUserTeam(teamId, userData.username);
-            onClose();
+
             toast.success(`Team ${team.name} created`)
+            onClose();
+            onTeamCreated(newTeam);
+            setTeam({ name: '' });
         } catch (error) {
-            toast.error(error.message);
+            console.error(error.message);
         }
     };
+
+
 
     return (
         <div className="popup-overlay fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-60 z-50">
             <div className="bg-gray-400 p-6 rounded shadow-lg relative">
                 <button
                     onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-700 hover:text-gray-900 bg-gray-400 p-2 rounded"
+                    className="absolute top-2 right-2 text-gray-700 hover:text-red-800 p-2 rounded"
                 >
                     &times;
                 </button>
@@ -81,7 +87,7 @@ export default function CreateTeam({ onClose }) {
                                 placeholder="Name your Team"
                                 value={team.name}
                                 onChange={(e) => updateTeam('name', e.target.value)}
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm"
+                                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm"
                             />
                         </div>
                     </div>

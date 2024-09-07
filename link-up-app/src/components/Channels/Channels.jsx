@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../state/app.context";
 import { useLocation } from "react-router-dom";
 import CreateChannel from "../../views/CreateChannel/CreateChannel";
@@ -31,8 +31,7 @@ export default function Channels({ team, onSelectChannel }) {
     }, [location.state, team]);
 
     useEffect(() => {
-        console.log("current team:", currentTeam); 
-
+    
         const loadChannels = async () => {
             try {
                 if (userData && userData.username && currentTeam) {
@@ -42,9 +41,7 @@ export default function Channels({ team, onSelectChannel }) {
                    // console.log("All channels:", allChannels); 
                     const listChannels = await getChannelsInfoById(allChannels);
                    // console.log("List channels:", listChannels); 
-                  const relevantChannels = listChannels.filter((ch) => ch.team === currentTeam.id);
-                    
-                    
+                  const relevantChannels = listChannels.filter((ch) => ch?.team === currentTeam.id);
                   //  console.log("relevant channels:", relevantChannels); 
                     setChannels(relevantChannels);
                 }
@@ -70,7 +67,7 @@ export default function Channels({ team, onSelectChannel }) {
     const handleChannelClick = async (channel) => {
         console.log("chosen channel", channel); 
         try {
-            localStorage.setItem('selectedChat', JSON.stringify(channel));
+            sessionStorage.setItem('selectedChat', JSON.stringify(channel));
             onSelectChannel(channel);
         } catch (error) {
             console.error("Failed to save Chat to localStorage", error);
@@ -91,19 +88,18 @@ export default function Channels({ team, onSelectChannel }) {
     return (
         <div className="channels">
             <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-semibold">Text Channels</h3>
-                {userData?.username === currentTeam?.owner && (
+                <h3 className="text-lg font-semibold">Channels</h3>
+                {/* {userData?.username === currentTeam?.owner && ( */}
                     <button
                         onClick={handleCreateChannelClick}
                         className="px-1 py-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white text-sm font-medium rounded-md shadow-sm hover:from-gray-700 hover:to-gray-800 transition duration-300 ease-in-out transform hover:scale-105"
                     >
-                        Create Channel
+                        +
                     </button>
-
-                )}
+                {/* )} */}
             </div>
-            <div className="space-y-2">
-                {channels.length > 0 &&
+            <div className="space-y-2">              
+                {channels.length > 0 ? (
                     channels.map((ch) => (
                         <div key={ch.id} className="flex justify-between items-center w-full p-2 bg-gray-700 rounded-md hover:bg-gray-600">
                             <button
@@ -118,10 +114,12 @@ export default function Channels({ team, onSelectChannel }) {
                                 >
                                     Delete
                                 </button>
-
                             )}
                         </div>
-                    ))}
+                    ))
+                ) : (
+                    <p className="text-gray-400">No text channels available</p>    
+                )}
             </div>
             {isPopupOpen && (
                 <CreateChannel
