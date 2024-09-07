@@ -258,7 +258,7 @@ export default function Chat({ channel, onClose }) {
                         onChange={(e) => createMessage('message', e.target.value)}
                     />
                     <button
-                        className="p-4 bg-indigo-500 text-white rounded-lg hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-500 transition-all ease-in-out"
+                        className="p-4 bg-indigo-500 text-white rounded-lg hover:bg-indigo-400 focus:ring-2 focus:ring-indigo-500 transition-all ease-in-out"
                     >
                         Send
                     </button>

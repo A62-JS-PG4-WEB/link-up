@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import AddMembers from "../InviteTeamMember/InviteTeamMember";
 import { AppContext } from "../../state/app.context";
 import { removeUserFromTeam } from "../../services/teams.service";
+import InviteTeamMember from "../InviteTeamMember/InviteTeamMember";
 
 export default function Team({ team, onClose }) {
 
@@ -114,7 +115,7 @@ export default function Team({ team, onClose }) {
                                         Invite +
                                     </button>
                                     {isPopupOpen && (
-                                        <AddMembers
+                                        <InviteTeamMember
                                             onClose={handleClosePopup}
                                             team={currentTeam}
                                         />
