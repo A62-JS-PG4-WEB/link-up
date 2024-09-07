@@ -23,14 +23,14 @@ export const searchUsers = async (searchTerm) => {
       console.log('No users found');
     }
   } catch (error) {
-    toast.error('Error fetching users:', error);
+    toast.error(`Error fetching users: ${error}`);
   }
 };
 export const updateAccountInfoDB = async (username, newEmail) => {
   try {
     await update(ref(db, `users/${username}`), { email: newEmail });
   } catch (error) {
-    toast.error('Error updating personal info:', error);
+    toast.error(`Error updating personal info: ${error}`);
     throw new Error(error.message);
   }
 };
@@ -39,7 +39,7 @@ export const sendVerificationEmail = async (user) => {
   try {
     await sendEmailVerification(user);
   } catch (error) {
-    toast.error('Error sending verification email:', error);
+    toast.error(`Error sending verification email: ${error}`);
   }
 };
 
@@ -134,7 +134,7 @@ export const getUserByEmail = async (email) => {
       return null;
     }
   } catch (error) {
-    toast.error('Error fetching user by email:', error);
+    toast.error(`Error fetching user by email: ${error}`);
     throw new Error(error.message);
   }
 };

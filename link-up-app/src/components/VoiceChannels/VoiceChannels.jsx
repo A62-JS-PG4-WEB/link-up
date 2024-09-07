@@ -18,7 +18,7 @@ export default function VoiceChannels({ team }) {
                 setVoiceChannels(relevantVoiceChannels);
             }
         } catch (e) {
-            toast.error("Error loading voice channels", e);
+            toast.error(`Error loading voice channels: ${e}`);
         }
     };
 

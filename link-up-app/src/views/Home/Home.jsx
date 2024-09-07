@@ -17,7 +17,7 @@ export default function Home({ team }) {
             try {
                 setSelectedChat(JSON.parse(savedChat));
             } catch (error) {
-                toast.error("Failed to parse chat from localStorage", error);
+                toast.error(`Failed to parse chat from localStorage: ${error}`);
             }
         }
     }, []);
@@ -27,7 +27,7 @@ export default function Home({ team }) {
         try {
             sessionStorage.setItem('selectedChat', JSON.stringify(channel));
         } catch (error) {
-            toast.error("Failed to save chat to localStorage", error);
+            toast.error(`Failed to save chat to localStorage: ${error}`);
         }
     };
 

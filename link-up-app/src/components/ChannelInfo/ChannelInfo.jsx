@@ -22,7 +22,7 @@ export function ChannelInfo({ channel, onClose }) {
                 try {
                     setCurrentChat(JSON.parse(savedChat));
                 } catch (error) {
-                    toast.error("Failed to parse chat from localStorage", error);
+                    console.error(`Failed to parse chat from localStorage ${error}`);
                 }
             }
 
@@ -39,7 +39,7 @@ export function ChannelInfo({ channel, onClose }) {
                     const team = await getTeamInfoById(currentChat.team);
                     setChatInTeam(team.name);
                 } catch (error) {
-                    toast.error("Failed to load team info", error);
+                    console.error(error);
                 }
             };
             loadInfo();
@@ -58,7 +58,7 @@ export function ChannelInfo({ channel, onClose }) {
                     setMembers(chMembers);
 
                 } catch (error) {
-                    toast.error("Failed to load team info", error);
+                    console.error(error);
                 }
             };
             loadMembers();

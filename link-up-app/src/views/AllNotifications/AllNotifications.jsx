@@ -32,7 +32,7 @@ export default function AllNotifications() {
                 setRejectedInvitations(rejected);
 
             } catch (error) {
-                toast.error("Failed to fetch Notifications", error);
+                toast.error(`Failed to fetch Notifications: ${error}`);
             }
         }
 
@@ -59,7 +59,7 @@ export default function AllNotifications() {
 
             toast.success('Invitation accepted');
         } catch (error) {
-            toast.error("Failed to accept invitation", error);
+            toast.error(`Failed to accept invitation ${error}`);
         }
     };
 
@@ -77,7 +77,7 @@ export default function AllNotifications() {
 
             toast.warn('Invitation rejected');
         } catch (error) {
-            toast.error("Failed to reject invitation", error);
+            toast.error(`Failed to reject invitation: ${error}`);
         }
     };
 

@@ -14,9 +14,9 @@ export default function AllTeams({ teams }) {
             localStorage.setItem('selectedTeam', JSON.stringify(team));
             // localStorage.removeItem('selectedChat');  
         } catch (error) {
-            toast.error("Failed to save team to localStorage", error);
-        }     
-      navigate("/home", { state: { selectedTeam } });
+            toast.error(`Failed to save team to localStorage: ${error}`);
+        }
+        navigate("/home", { state: { selectedTeam } });
     }
 
     return (

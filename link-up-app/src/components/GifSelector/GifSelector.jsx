@@ -2,9 +2,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 // import axios from 'axios';
-import { GIPHY_API_KEY, GIPHY_API_URL } from '../../common/constants';
+import { GIPHY_API_KEY, GIPHY_SEARCH_URL } from '../../common/constants';
 import './GifSelector.css';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function GifSelector({ onSelect }) {
@@ -14,16 +13,16 @@ export default function GifSelector({ onSelect }) {
     const fetchGifs = async (term) => {
         if (term) {
             try {
-                const response = await axios.get(GIPHY_API_URL, {
-                    params: {
-                        api_key: GIPHY_API_KEY,
-                        q: term,
-                        limit: 25
-                    }
-                });
-                setGifs(response.data.data);
+                const params = new URLSearchParams({
+                    api_key: GIPHY_API_KEY,
+                    q: term,
+                    limit: 25
+                }).toString();
+                const response = await fetch(`${GIPHY_SEARCH_URL}?${params}`);
+                const data = await response.json();
+                setGifs(data.data);
             } catch (error) {
-                toast.error('Error fetching GIFs', error);
+                console.error(`Error fetching GIFs: ${error}`);
             }
         }
     };
@@ -33,6 +32,8 @@ export default function GifSelector({ onSelect }) {
         setSearchTerm(term);
         fetchGifs(term);
     };
+
+    console.log(gifs)
 
     return (
         <div className="gif-selector">

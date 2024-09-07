@@ -49,7 +49,7 @@ function App() {
 
         setAppState(prevState => ({ ...prevState, userData }));
       } catch (error) {
-        toast.error('Error fetching user data:', error);
+        toast.error(`Error fetching user data: ${error}`);
       }
     };
 

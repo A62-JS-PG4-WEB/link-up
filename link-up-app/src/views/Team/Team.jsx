@@ -28,18 +28,18 @@ export default function Team({ team, onClose }) {
                     setCurrentTeam(parsedTeam);
                     setMembers(parsedTeam.members || {});
                 } catch (error) {
-                    toast.error("Failed to parse team from localStorage", error);
+                    toast.error(`Failed to parse team from localStorage: ${error}`);
                 }
             }
         } else {
             setCurrentTeam(team || location.state?.team);
             setMembers(team?.members || {});
         }
-       
+
     }, [userData, location.state, team]);
 
     const handleAddClick = () => {
-        console.log("Invite button clicked!"); 
+        console.log("Invite button clicked!");
         setIsPopupOpen(true);
     };
 
@@ -55,7 +55,7 @@ export default function Team({ team, onClose }) {
         setIsTeamsInfoVisible(!isTeamInfoVisible);
     };
 
-    
+
     const handleRemoveMember = async (username) => {
         const confirmRemoval = window.confirm(`Confirm removal of ${username} from ${currentTeam.name}`);
 
@@ -68,32 +68,32 @@ export default function Team({ team, onClose }) {
                     return newMembers;
                 });
             } catch (error) {
-                console.error("Member removal failed", error);
+                console.error(`Member removal failed ${error}`);
             }
         }
     };
 
     return (
         <div className="bg-gray-800 p-4 rounded-lg mt-7">
-        {currentTeam ? (
-            <>
-                <div className="flex justify-between items-center">
-                    <h3 className="text-lg font-semibold mb-2 inline-flex items-center">
-                        {currentTeam.name}
-                    </h3>
+            {currentTeam ? (
+                <>
+                    <div className="flex justify-between items-center">
+                        <h3 className="text-lg font-semibold mb-2 inline-flex items-center">
+                            {currentTeam.name}
+                        </h3>
 
-                    <div className="teamButtons flex space-x-2">
-                        <button
-                            onClick={handleToggleTeamsList}
-                            className="p-2 bg-gradient-to-r from-gray-800 to-gray-900 text-white text-sm font-medium rounded-md shadow-sm hover:from-gray-700 hover:to-gray-800 transition duration-300 ease-in-out transform hover:scale-105"
-                        >
-                            ^
-                        </button>
+                        <div className="teamButtons flex space-x-2">
+                            <button
+                                onClick={handleToggleTeamsList}
+                                className="p-2 bg-gradient-to-r from-gray-800 to-gray-900 text-white text-sm font-medium rounded-md shadow-sm hover:from-gray-700 hover:to-gray-800 transition duration-300 ease-in-out transform hover:scale-105"
+                            >
+                                ^
+                            </button>
+                        </div>
                     </div>
-                </div>
-                {isTeamInfoVisible && (
+                    {isTeamInfoVisible && (
                         <div className="teamsList rounded-lg mt-4">
-                                <div className="mb-2 ml-1">
+                            <div className="mb-2 ml-1">
                                 {currentTeam.owner && (
                                     <p>
                                         <strong>Owner:</strong> {currentTeam.owner}
@@ -125,53 +125,53 @@ export default function Team({ team, onClose }) {
                                 </div>
                             )}
 
-                        <div className="text-sm mt-4">
-                            
-                            {members &&
-                                Object.keys(members).length > 0 ? (
-                                <div className="mb-3">
-                                    <button
-                                        onClick={toggleDropdown}
-                                          className="p-2 bg-gray-600 text-white rounded-lg transition-colors duration-300 ease-in-out hover:bg-gray-500"
-                                    >
-                                        {isDropdownOpen
-                                            ? "Hide Members"
-                                            : "Show Members"}
-                                    </button>
-                                    {isDropdownOpen && (
-                                      <ul className="ml-4 mt-2">
-                                      {Object.keys(members).map((memberKey, index) => (
-                                          <li
-                                              key={index}
-                                              className="flex justify-between items-center"
-                                          >
-                                              <span>{memberKey}</span>
-                                              {userData?.username === currentTeam.owner && (
-                                              <button
-                                                  className="text-white mr-2 hover:text-red-800"
-                                                  onClick={() => handleRemoveMember(memberKey)}
-                                              >
-                                                  x
-                                              </button>)}
-                                          </li>
-                                      ))}
-                                  </ul>
-                                    )}
-                                </div>
-                            ) : (
-                                <p>No members found</p>
-                            )}
-                        
+                            <div className="text-sm mt-4">
+
+                                {members &&
+                                    Object.keys(members).length > 0 ? (
+                                    <div className="mb-3">
+                                        <button
+                                            onClick={toggleDropdown}
+                                            className="p-2 bg-gray-600 text-white rounded-lg transition-colors duration-300 ease-in-out hover:bg-gray-500"
+                                        >
+                                            {isDropdownOpen
+                                                ? "Hide Members"
+                                                : "Show Members"}
+                                        </button>
+                                        {isDropdownOpen && (
+                                            <ul className="ml-4 mt-2">
+                                                {Object.keys(members).map((memberKey, index) => (
+                                                    <li
+                                                        key={index}
+                                                        className="flex justify-between items-center"
+                                                    >
+                                                        <span>{memberKey}</span>
+                                                        {userData?.username === currentTeam.owner && (
+                                                            <button
+                                                                className="text-white mr-2 hover:text-red-800"
+                                                                onClick={() => handleRemoveMember(memberKey)}
+                                                            >
+                                                                x
+                                                            </button>)}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <p>No members found</p>
+                                )}
+
+                            </div>
                         </div>
-                    </div>
-                )}
-            </>
-        ) : (
-            <>
-                <h3 className="text-lg font-semibold mb-2">Team</h3>
-                <p className="text-gray-400">No team selected</p>
-            </>
-        )}
-    </div>
-);
+                    )}
+                </>
+            ) : (
+                <>
+                    <h3 className="text-lg font-semibold mb-2">Team</h3>
+                    <p className="text-gray-400">No team selected</p>
+                </>
+            )}
+        </div>
+    );
 }

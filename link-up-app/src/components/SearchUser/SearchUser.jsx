@@ -47,7 +47,7 @@ const SearchUser = () => {
             setSearchedUser(userFromDB || null);
             setIsDropdownOpen(true);
         } catch (error) {
-            toast.error('Search failed:', error);
+            toast.error(`Search failed: ${error}`);
         }
     };
 
