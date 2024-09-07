@@ -4,6 +4,8 @@ import { getTeamInfoById } from "../../services/teams.service";
 import { getChannelsMembersByID, leaveChannel } from "../../services/channels.service";
 import AddChannelMembers from "../../views/AddChannelMembers/AddChannelMembers";
 import { AppContext } from "../../state/app.context";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function ChannelInfo({ channel, onClose }) {
     const { userData } = useContext(AppContext);
@@ -11,7 +13,7 @@ export function ChannelInfo({ channel, onClose }) {
     const [chatInTeam, setChatInTeam] = useState(null);
     const [members, setMembers] = useState([]);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    
+
 
     useEffect(() => {
         if (!channel) {
@@ -20,7 +22,7 @@ export function ChannelInfo({ channel, onClose }) {
                 try {
                     setCurrentChat(JSON.parse(savedChat));
                 } catch (error) {
-                    console.error("Failed to parse chat from localStorage", error);
+                    toast.error("Failed to parse chat from localStorage", error);
                 }
             }
 
@@ -37,7 +39,7 @@ export function ChannelInfo({ channel, onClose }) {
                     const team = await getTeamInfoById(currentChat.team);
                     setChatInTeam(team.name);
                 } catch (error) {
-                    console.error("Failed to load team info", error);
+                    toast.error("Failed to load team info", error);
                 }
             };
             loadInfo();
@@ -51,13 +53,12 @@ export function ChannelInfo({ channel, onClose }) {
                 try {
                     const team = await getTeamInfoById(currentChat.team);
                     const chMembers = await getChannelsMembersByID(currentChat.id);
-                    console.log(chMembers);
 
                     setChatInTeam(team.name);
                     setMembers(chMembers);
 
                 } catch (error) {
-                    console.error("Failed to load team info", error);
+                    toast.error("Failed to load team info", error);
                 }
             };
             loadMembers();
@@ -65,7 +66,6 @@ export function ChannelInfo({ channel, onClose }) {
     }, [currentChat]);
 
     useEffect(() => {
-        console.log(chatInTeam);
     }, [chatInTeam]);
 
     const addMembersInChat = () => {
@@ -80,7 +80,7 @@ export function ChannelInfo({ channel, onClose }) {
     const handleLeaveChannel = async () => {
 
         const confirmation = window.confirm('are you sure you wanna leave chat');
-        if (confirmation){
+        if (confirmation) {
             await leaveChannel(userData.username, currentChat.id)
         }
     };
@@ -126,7 +126,7 @@ export function ChannelInfo({ channel, onClose }) {
 
             </div>
             <div className="flex justify-center mt-4"
-            onClick={handleLeaveChannel}>
+                onClick={handleLeaveChannel}>
                 <button className="ml-auto text-white hover:text-red-800 "> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-box-arrow-right" viewBox="0 0 16 16">
                     <path fillRule="evenodd" d="M10 3.5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 15 4.5v7a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5z" />
                     <path fillRule="evenodd" d="M4.854 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .707.707L6.207 7.5H13.5a.5.5 0 0 1 0 1H6.207l2.354 2.354a.5.5 0 1 1-.707.707l-3-3z" />

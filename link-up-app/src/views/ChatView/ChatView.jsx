@@ -1,17 +1,16 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../state/app.context";
 import { getIdsOfMessages, getMessageInfo } from "../../services/chat.service";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ChatView() {
     const { userData } = useContext(AppContext);
     const [currentChat, setCurrentChat] = useState(channel || location.state?.channel);
-    const [currentMessages, setCurrentMessages ] = useState([]);
+    const [currentMessages, setCurrentMessages] = useState([]);
 
     useEffect(() => {
         const savedChat = sessionStorage.getItem('selectedChat');
-
-        console.log(JSON.parse(savedChat));
-        console.log(userData);
 
         if (savedChat) {
             const loadMessages = async () => {
@@ -21,10 +20,9 @@ export default function ChatView() {
                     const messageIds = await getIdsOfMessages(currentChat.id);
                     const detailedMessage = await getMessageInfo(messageIds);
                     setCurrentMessages(detailedMessage)
-                    console.log(currentMessages);
-                    
+
                 } catch (error) {
-                    console.error("Failed to parse channel from localStorage", error);
+                    toast.error("Failed to parse channel from localStorage", error);
                 }
             }
 
@@ -33,7 +31,7 @@ export default function ChatView() {
     }, [userData, setCurrentChat]);
 
 
-   
+
     return (
         <div className="chat-container">
             {currentMessages.map((m) => (
@@ -75,7 +73,7 @@ export default function ChatView() {
                         <div className="chat-bubble">{m.message}</div>
                         {/* <div className="chat-footer opacity-50">Delivered</div> */}
 
-                        
+
                     </div>
                 )
             ))}

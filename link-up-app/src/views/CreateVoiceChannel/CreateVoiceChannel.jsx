@@ -1,6 +1,8 @@
 import { useState } from "react";
 import PropTypes from 'prop-types';
 import { createVoiceChannel } from "../../services/voice.service.js";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function CreateVoiceChannelPopup({ team, onClose, onVoiceChannelCreated }) {
     const [channelName, setChannelName] = useState("");
@@ -12,7 +14,7 @@ export default function CreateVoiceChannelPopup({ team, onClose, onVoiceChannelC
                 await createVoiceChannel(channelName, team.owner, team.id);
                 onVoiceChannelCreated(); // Notify parent component to reload voice channels
             } catch (error) {
-                console.error("Failed to create voice channel", error);
+                toast.error("Failed to create voice channel", error);
             }
         }
     };

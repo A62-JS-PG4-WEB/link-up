@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import AddMembers from "../InviteTeamMember/InviteTeamMember";
 import { AppContext } from "../../state/app.context";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { removeUserFromTeam } from "../../services/teams.service";
 import InviteTeamMember from "../InviteTeamMember/InviteTeamMember";
 
@@ -26,7 +28,7 @@ export default function Team({ team, onClose }) {
                     setCurrentTeam(parsedTeam);
                     setMembers(parsedTeam.members || {});
                 } catch (error) {
-                    console.error("Failed to parse team from localStorage", error);
+                    toast.error("Failed to parse team from localStorage", error);
                 }
             }
         } else {

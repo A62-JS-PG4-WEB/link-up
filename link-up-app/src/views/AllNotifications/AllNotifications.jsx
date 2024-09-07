@@ -5,6 +5,8 @@ import { addUserTeam } from '../../services/users.service';
 import { addTeamMember, getTeamChannels } from '../../services/teams.service';
 import SideNav from '../../components/SideNav/SideNav';
 import { addUserToTeamChannels } from '../../services/channels.service';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AllNotifications() {
     const { userData } = useContext(AppContext);
@@ -31,7 +33,7 @@ export default function AllNotifications() {
                 setRejectedInvitations(rejected);
 
             } catch (error) {
-                console.error("Failed to fetch Notifications", error);
+                toast.error("Failed to fetch Notifications", error);
             }
         }
 
@@ -41,7 +43,6 @@ export default function AllNotifications() {
     const handleAccept = async (id) => {
         try {
             const teamId = await acceptInvitation(id, userData.username);
-            console.log(teamId);
 
             await addUserTeam(teamId, userData.username);
             const channelsT = await getTeamChannels(teamId);
@@ -57,9 +58,9 @@ export default function AllNotifications() {
                 { id, status: 'accepted' }
             ]);
 
-            alert('Invitation accepted');
+            toast.success('Invitation accepted');
         } catch (error) {
-            console.error("Failed to accept invitation", error);
+            toast.error("Failed to accept invitation", error);
         }
     };
 
@@ -75,9 +76,9 @@ export default function AllNotifications() {
                 { id, status: 'rejected' }
             ]);
 
-            alert('Invitation rejected');
+            toast.warn('Invitation rejected');
         } catch (error) {
-            console.error("Failed to reject invitation", error);
+            toast.error("Failed to reject invitation", error);
         }
     };
 

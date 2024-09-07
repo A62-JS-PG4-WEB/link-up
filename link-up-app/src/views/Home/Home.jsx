@@ -5,6 +5,8 @@ import TextChannelsSection from '../../components/TextChannelsSection/TextChanne
 import VoiceChannels from '../../components/VoiceChannels/VoiceChannels';
 import Chat from '../../components/Chat/Chat';
 import SideNav from '../../components/SideNav/SideNav';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home({ team }) {
     const [selectedChat, setSelectedChat] = useState(null);
@@ -15,7 +17,7 @@ export default function Home({ team }) {
             try {
                 setSelectedChat(JSON.parse(savedChat));
             } catch (error) {
-                console.error("Failed to parse chat from localStorage", error);
+                toast.error("Failed to parse chat from localStorage", error);
             }
         }
     }, []);
@@ -25,7 +27,7 @@ export default function Home({ team }) {
         try {
             sessionStorage.setItem('selectedChat', JSON.stringify(channel));
         } catch (error) {
-            console.error("Failed to save chat to localStorage", error);
+            toast.error("Failed to save chat to localStorage", error);
         }
     };
 

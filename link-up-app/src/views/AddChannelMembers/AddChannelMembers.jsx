@@ -3,7 +3,8 @@ import { AppContext } from "../../state/app.context";
 import { createTeam } from "../../services/teams.service";
 import { addUserTeam } from "../../services/users.service";
 import { createInvitation } from "../../services/invitations.service";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddChannelMembers({ onClose, channel }) {
     const [emailInput, setEmailInput] = useState({ email: '' });
@@ -73,7 +74,7 @@ export default function AddChannelMembers({ onClose, channel }) {
             setEmailInput({ email: '' });
             onClose();
         } catch (error) {
-            console.error(error.message);
+            toast.error(error.message);
         }
     };
 
