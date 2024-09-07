@@ -19,7 +19,8 @@ export default function GifSelector({ onSelect }) {
                     limit: 25
                 }).toString();
                 const response = await fetch(`${GIPHY_SEARCH_URL}?${params}`);
-                setGifs(response.data.data);
+                const data = await response.json();
+                setGifs(data.data);
             } catch (error) {
                 console.error(`Error fetching GIFs: ${error}`);
             }
@@ -31,6 +32,8 @@ export default function GifSelector({ onSelect }) {
         setSearchTerm(term);
         fetchGifs(term);
     };
+
+    console.log(gifs)
 
     return (
         <div className="gif-selector">
