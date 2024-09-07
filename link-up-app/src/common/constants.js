@@ -6,3 +6,4 @@ export const MIN_CHANNEL_NAME_LENGTH = 3;
 export const MAX_CHANNEL_NAME_LENGTH = 30;
 export const GIPHY_API_KEY = 'N99BMoi9pa2HYOFDWBPXUn4cxO6yZZQU';
 export const GIPHY_API_URL = 'https://api.giphy.com/v1/gifs/search';
+export const defaultPhotoUrl = 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp';

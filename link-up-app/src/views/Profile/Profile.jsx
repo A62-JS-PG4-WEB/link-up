@@ -3,6 +3,7 @@ import { AppContext } from "../../state/app.context";
 import { updateProfilePicture, updateUserEmail, updateUserPassword, updateUserPhoneNumber, updateAccountInfoDB } from "../../services/users.service";
 import { auth } from "../../config/firebase-config";
 import { getDownloadURL, ref, uploadBytes, getStorage } from "firebase/storage";
+import { defaultPhotoUrl } from "../../common/constants";
 
 const storage = getStorage();
 
@@ -14,7 +15,7 @@ export default function Profile() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [profileImage, setProfileImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState("https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp");
+  const [imagePreview, setImagePreview] = useState(defaultPhotoUrl);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -23,7 +24,7 @@ export default function Profile() {
       setUsername(user.username || "");
       setEmail(user.email || "");
       setPhoneNumber(user.phoneNumber || "");
-      setImagePreview(user.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp");
+      setImagePreview(user.photoURL || defaultPhotoUrl);
     }
   }, [user, userData]);
 
@@ -150,8 +151,8 @@ export default function Profile() {
           </div>
 
 
-      {/* Phone Number */}
-      <div className="form-control w-full">
+          {/* Phone Number */}
+          <div className="form-control w-full">
             <label className="label">
               <span className="label-text">Phone Number</span>
             </label>

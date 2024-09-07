@@ -62,6 +62,7 @@ export default function Chat({ channel, onClose }) {
     }, [currentMessages]);
 
     const createMessage = (key, value) => {
+
         if (message[key] !== value) {
             setMessage({
                 ...message,
