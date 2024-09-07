@@ -20,10 +20,10 @@ export default function Profile() {
 
   useEffect(() => {
     if (user) {
-      setUsername(user.username || "");
-      setEmail(user.email || "");
-      setPhoneNumber(user.phoneNumber || "");
-      setImagePreview(user.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp");
+      setUsername(userData?.username || "");
+      setEmail(userData?.email || "");
+      setPhoneNumber(userData?.phone || "");
+      setImagePreview(user?.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp");
     }
   }, [user, userData]);
 
