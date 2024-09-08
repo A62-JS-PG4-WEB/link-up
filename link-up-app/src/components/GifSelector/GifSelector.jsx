@@ -36,15 +36,15 @@ export default function GifSelector({ onSelect }) {
     console.log(gifs)
 
     return (
-        <div className="gif-selector">
+        <div className="gif-selector bg-slate-700">
             <input
                 type="text"
                 placeholder="Search GIFs..."
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className="p-2 rounded-lg border border-gray-300"
+                className="p-2 rounded-lg border bg-slate-600 text-gray-100 border-gray-600"
             />
-            <div className="gif-results grid grid-cols-3 gap-2 mt-2">
+            <div className="gif-results grid grid-cols-3 gap-2 mt-2 bg-gray-800">
                 {gifs.map((gif) => (
                     <img
                         key={gif.id}

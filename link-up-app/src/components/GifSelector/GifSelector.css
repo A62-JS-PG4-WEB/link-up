@@ -1,18 +1,28 @@
 .gif-selector {
     position: absolute;
-    bottom: 60px;
-    right: 20px;
-    background: white;
+    bottom: 90px;
+    right: 55px;
+    border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 10px;
+    padding: 16px;
     max-height: 300px;
+    max-width: 250px;
     overflow-y: auto;
+    background-color: white;
+    z-index: 1000;
 }
 
 .gif-results img {
     width: 100%;
     height: auto;
     border-radius: 8px;
+    border: 1px solid rgb(255, 255, 255);
     cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.gif-results img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
