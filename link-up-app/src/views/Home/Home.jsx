@@ -5,9 +5,16 @@ import TextChannelsSection from '../../components/TextChannelsSection/TextChanne
 import Chat from '../../components/Chat/Chat';
 import SideNav from '../../components/SideNav/SideNav';
 import DirectMessages from '../../components/DirectMessages/DirectMessages';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
-export default function Home({ team }) {
+export default function Home({ team, onSelectDirectMessage }) {
     const [selectedChat, setSelectedChat] = useState(null);
+    const [selectedDirectMessage, setSelectedDirectMessage] = useState(null);
+
+    const handleSelectDirectMessage = (dm) => {
+        setSelectedDirectMessage(dm);
+    };
 
     useEffect(() => {
         const savedChat = sessionStorage.getItem('selectedChat');
@@ -15,7 +22,7 @@ export default function Home({ team }) {
             try {
                 setSelectedChat(JSON.parse(savedChat));
             } catch (error) {
-                console.error("Failed to parse chat from localStorage", error);
+                toast.error(`Failed to parse chat from localStorage: ${error}`);
             }
         }
     }, []);
@@ -25,7 +32,16 @@ export default function Home({ team }) {
         try {
             sessionStorage.setItem('selectedChat', JSON.stringify(channel));
         } catch (error) {
-            console.error("Failed to save chat to localStorage", error);
+            toast.error(`Failed to save chat to localStorage: ${error}`);
+        }
+    };
+
+    const handleDirectMessageClick = async (dm) => {
+        try {
+            sessionStorage.setItem('selectedDirectMessage', JSON.stringify(dm));
+            onSelectDirectMessage(dm);
+        } catch (error) {
+            toast.error(`Failed to save Direct Message to sessionStorage: ${error}`);
         }
     };
 
@@ -35,27 +51,28 @@ export default function Home({ team }) {
             <div className="flex h-screen content">
                 {/* Main Content */}
                 <div className="flex-1 flex p-8 text-white">
-                    <div className="w-1/4 space-y-6">
-                        <Team team={team} onClose={() => setSelectedChat(null)}/>
+                    <div className="w-1/8 space-y-3">
+                        <Team team={team} onClose={() => setSelectedChat(null)} />
                         {/* Text Channels */}
                         <TextChannelsSection team={team} onSelectChannel={handleSelectChannel} />
-                        {/* Voice Channels */}
-                        <DirectMessages team={team} />
+                        {/* Direct Messages */}
+                        <DirectMessages onSelectDirectMessage={handleSelectDirectMessage} />
                     </div>
                     {/* Chat Section */}
                     {/* Messages Container */}
                     <div className="flex-1">
                         {selectedChat ? (
                             <Chat channel={selectedChat} onClose={() => setSelectedChat(null)} />
+                        ) : selectedDirectMessage ? (
+                            <Chat directMessage={selectedDirectMessage} onClose={() => setSelectedDirectMessage(null)} />
                         ) : (
-                            <div className="text-white">Please select a channel to start chatting.</div>
+                            <div className="text-white">Please select a channel or direct message to start chatting.</div>
                         )}
                     </div>
                 </div>
+                <ToastContainer />
             </div>
         </div>
-
-
     );
 }
 

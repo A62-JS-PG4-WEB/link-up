@@ -1,94 +1,74 @@
 import PropTypes from 'prop-types';
-import { createDirectMessage } from "../../services/direct-messages.service.js";
+import { createDirectMessage, addUserToDirectMessages } from "../../services/direct-messages.service.js";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../state/app.context.js";
-import { MIN_CHANNEL_NAME_LENGTH, MAX_CHANNEL_NAME_LENGTH } from "../../common/constants.js";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export default function CreateDirectMessages({ onClose, onDirectMessageCreated }) {
-    const [recipient, setRecipient] = useState(''); 
+export default function CreateDirectMessage({ onClose, onDirectMessageCreated }) {
+    const [userToMessage, setUserToMessage] = useState('');
     const { userData } = useContext(AppContext);
-
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (event.target.classList.contains('popup-overlay')) {
-                onClose();
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [onClose]);
-
-    const updateRecipient = (value) => {
-        if (recipient !== value) {
-            setRecipient(value);
-        }
-    };
 
     const handleCreateDirectMessage = async (e) => {
         e.preventDefault();
 
-        if (recipient.length < MIN_CHANNEL_NAME_LENGTH || recipient.length > MAX_CHANNEL_NAME_LENGTH) {
-            alert(`Recipient name must be between ${MIN_CHANNEL_NAME_LENGTH} and ${MAX_CHANNEL_NAME_LENGTH}`);
+        if (!userToMessage.trim()) {
+            toast.warn('Please enter a username.');
             return;
         }
 
         try {
-            const directMessageId = await createDirectMessage(userData.username, recipient.trim());
-
-            setRecipient(''); 
-
+            const recipient = userToMessage.trim();
+            const directMessageId = await createDirectMessage(userData.username, recipient);
+            await addUserToDirectMessages([directMessageId], userData.username);
+            await addUserToDirectMessages([directMessageId], recipient);  // Add recipient to the direct message
+            onDirectMessageCreated(directMessageId);
             onClose();
-            onDirectMessageCreated(directMessageId); 
         } catch (error) {
-            console.error("Error creating direct message:", error.message);
+            toast.error(error.message);
         }
     };
 
     return (
-        <div className="popup-overlay fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-60 z-50">
-            <div className="bg-gray-400 p-6 rounded shadow-lg relative">
-                <button
-                    onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-700 hover:text-red-800 p-2 rounded"
-                >
-                    &times;
-                </button>
-                <h2 className="text-lg font-semibold text-gray-900">Create New Direct Message</h2>
-                <form onSubmit={handleCreateDirectMessage} className="space-y-6 mt-4">
-                    <div>
-                        <div className="mt-2">
-                            <input
-                                id="recipient"
-                                name="recipient"
-                                type="text"
-                                required
-                                autoComplete="recipient"
-                                placeholder="Enter username to chat with"
-                                value={recipient}
-                                onChange={(e) => updateRecipient(e.target.value)}
-                                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm"
-                            />
-                        </div>
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75">
+            <div className="bg-gray-800 p-6 rounded-lg w-1/3 relative">
+                <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-lg font-semibold">Create New Direct Message</h4>
+                    <button
+                        onClick={onClose}
+                        className="text-white hover:text-red-500 p-2 rounded-full"
+                        aria-label="Close"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <form onSubmit={handleCreateDirectMessage}>
+                    <div className="mb-4">
+                        <input
+                            id="user"
+                            name="user"
+                            type="text"
+                            required
+                            autoComplete="off"
+                            placeholder="Enter username"
+                            value={userToMessage}
+                            onChange={(e) => setUserToMessage(e.target.value)}
+                            className="w-full p-2 rounded-md bg-gray-700 text-white focus:outline-none"
+                        />
                     </div>
-                    <div>
-                        <button
-                            type="submit"
-                            className="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-pink-600"
-                        >
-                            Create
-                        </button>
-                    </div>
+                    <button
+                        type="submit"
+                        className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500"
+                    >
+                        Create Direct Message
+                    </button>
                 </form>
             </div>
         </div>
     );
 }
 
-CreateDirectMessages.propTypes = {
+CreateDirectMessage.propTypes = {
     onClose: PropTypes.func.isRequired,
     onDirectMessageCreated: PropTypes.func.isRequired,
 };
