@@ -1,19 +1,46 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../state/app.context";
-import { createTeam } from "../../services/teams.service";
-import { addUserTeam } from "../../services/users.service";
+import { createTeam, getTeamInfoById, getTeamMembersNames } from "../../services/teams.service";
+import { addUserChannel, addUserTeam } from "../../services/users.service";
 import { createInvitation } from "../../services/invitations.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { addUserToChannel, getChannelsMembersByID } from "../../services/channels.service";
 
 export default function AddChannelMembers({ onClose, channel }) {
-    const [emailInput, setEmailInput] = useState({ email: '' });
     const { userData } = useContext(AppContext);
+    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [selectAll, setSelectAll] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [teamMembers, setTeamMembers] = useState([]);
+    const options = ["Star Wars", "Harry Potter", "Lord of the Rings"];
 
     useEffect(() => {
+
+        const teamId = JSON.parse(localStorage.getItem('selectedTeam')).id;
+        console.log('team members loading');
+
+        const loadMembers = async () => {
+            try {
+                const members = await getTeamMembersNames(teamId);
+                const filteredMembers = Object.keys(members).filter(m => m !== userData.username);
+                setTeamMembers(filteredMembers);
+
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        loadMembers();
+    }, []);
+
+    useEffect(() => {
+        console.log('pop up open');
+
         const handleClickOutside = (event) => {
             if (event.target.classList.contains('popup-overlay')) {
                 onClose();
+            } else if (!event.target.closest('.relative')) {
+                setIsDropdownOpen(false);
             }
         };
 
@@ -22,84 +49,115 @@ export default function AddChannelMembers({ onClose, channel }) {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [onClose]);
-
-    const updateEmailInput = (key, value) => {
-
-        if (emailInput[key] !== value) {
-            setEmailInput({
-                ...emailInput,
-                [key]: value,
-            });
-        }
-    };
+    }, []);
 
     const handleAddMembers = async (e) => {
-
         e.preventDefault();
 
+        const channel = JSON.parse(sessionStorage.getItem('selectedChat'));
+      //  const channelId = JSON.parse(sessionStorage.getItem('selectedChat')).id;
+        console.log('Selected options:', selectedOptions);
         try {
+            selectedOptions.map(async (username) => {
 
-            // const channelName = JSON.parse(localStorage.getItem('selectedChat')).name;
-            // const channelId = JSON.parse(localStorage.getItem('selectedChat')).id;
+                await addUserChannel(channel.id, username);
+                await addUserToChannel(channel.id, username);
+                toast.success(`${username} added to #${channel.name}`)
 
-            // const notification = {
-            //     type: "channel",
-            //     channelId: channelId,
-            //     channelName: channelName,
-            //     message: `You've been added to channel ${channelName}`,
-            //     email: emailInput.email,
-            //     senderUsername: userData.username,      
-            //     createdOn: new Date().getTime(),
-            //     updatedOn: new Date().getTime()
-            // };
-            const teamName = JSON.parse(localStorage.getItem('selectedTeam')).name;
-            const teamId = JSON.parse(localStorage.getItem('selectedTeam')).id;
+            })
+            //     await createInvitation(invitation);
+            // await createInvitation(notification);
 
-            const invitation = {
-                type: "team",
-                status: "pending",
-                teamID: teamId,
-                teamName: teamName,
-                message: `You are invitated to team ${teamName}`,
-                email: emailInput.email,
-                senderUsername: userData.username,
-                createdOn: new Date().getTime(),
-                updatedOn: new Date().getTime()
-            };
-
-            await createInvitation(invitation);
-            await createInvitation(notification);
-
-            setEmailInput({ email: '' });
             onClose();
         } catch (error) {
             toast.error(error.message);
         }
     };
 
+    const handleOptionChange = (memberName) => {
+        if (selectedOptions.includes(memberName)) {
+            setSelectedOptions(selectedOptions.filter(item => item !== memberName));
+        } else {
+            setSelectedOptions([...selectedOptions, memberName]);
+        }
+    };
+
+    const handleSelectAll = () => {
+        if (selectAll) {
+            setSelectedOptions([]);
+        } else {
+            setSelectedOptions(teamMembers);
+        }
+        setSelectAll(!selectAll);
+    };
+
+    // const handleSubmit = () => {
+    //     console.log('Selected options:', selectedOptions);
+    //     onClose();
+    // };
+
+
+
     return (
         <div className="popup-overlay fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-60 z-50">
-            <div className="bg-gray-400 p-6 rounded shadow-lg relative">
+            <div className="bg-gray-900 p-6 rounded shadow-lg relative">
                 <button
                     onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-700 hover:text-red-800 p-2 rounded"
+                    className="absolute top-2 right-2 text-gray-600 hover:text-red-800 p-2 rounded"
                 >
                     &times;
                 </button>
-                <div>
-                    <div className="space-y-6 mt-4">
-                        <button
-                            className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white shadow-sm  hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-500 transition-all ease-in-out"
-                        >
-                            Add Member
-                        </button>
-                        <button
-                            className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white shadow-sm  hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-500 transition-all ease-in-out"
-                        >
-                            Add All Team Members
-                        </button>
+                <div className="form-control w-full max-w-xs">
+                    <div className="label">
+                        <span className="label-text text-gray-200">Add One or More Members</span>
                     </div>
+                    <div className="relative py-2 rounded-md">
+                        <button
+                            className="select select-bordered p-2 w-full text-left text-gray-400"
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                        >
+                            {selectedOptions.length > 0 ? `${selectedOptions.length} selected` : 'Pick One or All'}
+                        </button>
+                        {isDropdownOpen && (
+                            <div className="absolute z-10 mt-1 w-full bg-gray-700 rounded-md shadow-lg max-h-60 overflow-auto focus:outline-none">
+                                {teamMembers.length > 0 && (
+                                    <ul className="py-1 text-sm text-gray-200">
+                                        <li>
+                                            <label className="flex items-center p-2 cursor-pointer hover:bg-gray-600">
+                                                <input
+                                                    type="checkbox"
+                                                    className="checkbox checkbox-sm mr-2"
+                                                    checked={selectAll}
+                                                    onChange={handleSelectAll}
+                                                />
+                                                <span>Select All</span>
+                                            </label>
+                                        </li>
+                                        {teamMembers.map((m, index) => (
+                                            <li key={index}>
+                                                <label className="flex items-center p-2 cursor-pointer hover:bg-gray-600">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="checkbox checkbox-sm mr-2"
+                                                        checked={selectedOptions.includes(m)}
+                                                        onChange={() => handleOptionChange(m)}
+                                                    />
+                                                    <span>{m}</span>
+                                                </label>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                    <button
+                        onClick={handleAddMembers}
+                        className="mt-4 bg-indigo-400 text-white px-4 py-2 rounded-md hover:bg-indigo-300"
+                    >
+                        Add
+                    </button>
+
                 </div>
             </div>
         </div>

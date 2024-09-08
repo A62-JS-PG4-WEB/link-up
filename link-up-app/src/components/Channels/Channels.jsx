@@ -180,10 +180,11 @@ export default function Channels({ team, onSelectChannel }) {
                     </div>
                 </div>
             )}
+            
             <div className="space-y-2">
                 {channels.length > 0 ? (
                     channels.map((ch) => (
-                        <div key={ch.id} className="flex justify-between items-center w-full p-2 bg-gray-700 rounded-md hover:bg-gray-600">
+                        <div key={ch.id} className="flex justify-between items-center w-full p-2 rounded-md hover:bg-gray-600">
                             <button
                                 onClick={() => handleChannelClick(ch)}
                                 className="text-left">

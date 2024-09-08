@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from '../../state/app.context';
-import { getMessageInfo, sendMessage, sentMessageSaveInChannels, setMsgStatusForEachUser } from '../../services/chat.service';
+import { getMessageInfo, sendMessage, sentMessageSaveInChannels } from '../../services/chat.service';
 import { getChannelsMembersByID } from '../../services/channels.service';
 import { db } from '../../config/firebase-config';
 import { get, onValue, ref } from 'firebase/database';
@@ -89,7 +89,7 @@ export default function Chat({ channel, onClose }) {
             const messageId = await sendMessage(sentMessage);
             await sentMessageSaveInChannels(currentChat.id, messageId);
             const members = await getChannelsMembersByID(currentChat.id);
-            await setMsgStatusForEachUser(members, messageId);
+          //  await setMsgStatusForEachUser(members, messageId);
 
             setCurrentMessages([...currentMessages, sentMessage]);
             setMessage({ message: '' });
