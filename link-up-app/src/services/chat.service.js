@@ -22,18 +22,18 @@ export const sentMessageSaveInChannels = async (channelId, messageId) => {
     });
 };
 
-export const setMsgStatusForEachUser = async (users, messageId, status = 'unread') => {
-    try {
-        const promises = users.map(async (username) => {
-            await set(ref(db, `messagesUsersStatuses/${messageId}/${username}`), status);
-        });
-        await Promise.all(promises);
+// export const setMsgStatusForEachUser = async (users, messageId, status = 'unread') => {
+//     try {
+//         const promises = users.map(async (username) => {
+//             await set(ref(db, `messagesUsersStatuses/${messageId}/${username}`), status);
+//         });
+//         await Promise.all(promises);
 
-    } catch (error) {
-        toast.error(`Error setting message status for members: ${error}`);
-        throw error;
-    }
-};
+//     } catch (error) {
+//         toast.error(`Error setting message status for members: ${error}`);
+//         throw error;
+//     }
+// };
 
 
 // export const getIdsOfMessages = async (channelId) => {

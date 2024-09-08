@@ -114,8 +114,6 @@ export const leaveChannel = async (username, channelId, channelName) => {
 
 
 export const getChannelByName = async (channelName) => {
-    console.log(channelName);
-    
     try {
         const snapshot = await get(query(ref(db, 'channels'), orderByChild('name'), equalTo(channelName)));
       
@@ -123,12 +121,12 @@ export const getChannelByName = async (channelName) => {
         if (snapshot.exists()) {
             const channels = [];
             snapshot.forEach(childSnapshot => {
-                const channel = childSnapshot.val(); // Get the data of each channel
-                channels.push(channel); // Add it to the array
+                const channel = childSnapshot.val(); 
+                channels.push(channel); 
             });
             return Object.values(snapshot.val());
         } else {
-            return []; // Return an empty array if no data found
+            return [];
         }
     } catch (error) {
         console.error("Error searching channels by name:", error);
