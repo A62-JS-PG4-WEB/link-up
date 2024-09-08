@@ -1,0 +1,7 @@
+.gif-container img {
+    max-height: 120px;
+    max-width: 120px;
+    border: 1px solid white;
+    border-radius: 4px;
+    object-fit: contain;
+}

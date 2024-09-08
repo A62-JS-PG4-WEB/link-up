@@ -9,6 +9,7 @@ import { ChannelInfo } from '../ChannelInfo/ChannelInfo';
 import GifSelector from '../GifSelector/GifSelector';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import '../Chat/Chat.css'
 
 export default function Chat({ channel, onClose }) {
     const { userData } = useContext(AppContext);
