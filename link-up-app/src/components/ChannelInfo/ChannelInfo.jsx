@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import { getTeamInfoById } from "../../services/teams.service";
-import { getChannelsMembersByID, leaveChannel } from "../../services/channels.service";
+import { capitalizeFirstLetter, getChannelsMembersByID, leaveChannel } from "../../services/channels.service";
 import AddChannelMembers from "../../views/AddChannelMembers/AddChannelMembers";
 import { AppContext } from "../../state/app.context";
 import { ToastContainer, toast } from 'react-toastify';
@@ -37,7 +37,7 @@ export function ChannelInfo({ channel, onClose }) {
             const loadInfo = async () => {
                 try {
                     const team = await getTeamInfoById(currentChat.team);
-                    setChatInTeam(team.name);
+                       setChatInTeam(capitalizeFirstLetter(team.name));
                 } catch (error) {
                     console.error(error);
                 }
@@ -54,7 +54,7 @@ export function ChannelInfo({ channel, onClose }) {
                     const team = await getTeamInfoById(currentChat.team);
                     const chMembers = await getChannelsMembersByID(currentChat.id);
 
-                    setChatInTeam(team.name);
+                    setChatInTeam(capitalizeFirstLetter(team.name));
                     setMembers(chMembers);
 
                 } catch (error) {
@@ -67,11 +67,6 @@ export function ChannelInfo({ channel, onClose }) {
 
     useEffect(() => {
     }, [chatInTeam]);
-
-    const addMembersInChat = () => {
-
-
-    };
 
     const handleAddClick = () => {
         setIsPopupOpen(true);
@@ -110,7 +105,7 @@ export function ChannelInfo({ channel, onClose }) {
                         &times;
                     </button>
                 </div>
-                <p>Chat Name: <strong>{currentChat?.name}</strong></p><br />
+                <p>Chat Name: <strong># {currentChat && (currentChat?.name).toLowerCase()}</strong></p><br />
                 <p>Team: <strong>{chatInTeam}</strong></p><br />
                 <p className="text-lg font-bold text-white">Members:</p>
 

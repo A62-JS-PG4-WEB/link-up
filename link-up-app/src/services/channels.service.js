@@ -132,4 +132,11 @@ export const getChannelByName = async (channelName) => {
         console.error("Error searching channels by name:", error);
         throw error;
     }
-}
+};
+
+export const capitalizeFirstLetter = (name) => {
+    return name
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+};

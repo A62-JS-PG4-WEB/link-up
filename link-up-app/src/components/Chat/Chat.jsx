@@ -10,6 +10,7 @@ import GifSelector from '../GifSelector/GifSelector';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../Chat/Chat.css'
+import { getUserTimestamp, updateUserTimestamp } from '../../services/users.service';
 
 export default function Chat({ channel, onClose }) {
     const { userData } = useContext(AppContext);
@@ -20,6 +21,8 @@ export default function Chat({ channel, onClose }) {
     const [photoUrls, setPhotoUrls] = useState({});
     const [isChannelInfoVisible, setIsChannelInfoVisible] = useState(false);
     const [isGifSelectorVisible, setIsGifSelectorVisible] = useState(false);
+    const [readMessages, setReadMessages] = useState([]);
+    const [unreadMessages, setUnreadMessages] = useState([]);
 
     useEffect(() => {
         if (channel) {
@@ -41,7 +44,26 @@ export default function Chat({ channel, onClose }) {
                     try {
                         const messageIds = Object.keys(messagesData);
                         const detailedMessages = await getMessageInfo(messageIds);
+                        const userTimestamp = await getUserTimestamp(currentChat.id, userData.username)
+                        const allReadMessages = detailedMessages.filter((m) => m.createdOn <= userTimestamp);
+                        const allUnreadMessages = detailedMessages.filter((m) => m.createdOn > userTimestamp);
+
+                        detailedMessages.map((m) => console.log(m.createdOn < userTimestamp));
+                        console.log('read', allReadMessages);
+                        console.log('unread', allUnreadMessages);
+
+                        setReadMessages(allReadMessages);
+                        setUnreadMessages(allUnreadMessages);
                         setCurrentMessages(detailedMessages);
+                        await updateUserTimestamp(currentChat.id, userData.username)
+
+                        //   if(unreadMessages.length > 0 ) {
+                        //     const lastMessageTime = (unreadMessages[unreadMessages.length-1]);
+                        //     console.log(lastMessageTime.createdOn);
+
+                        //     await updateUserTimestamp(currentChat.id, userData.username, lastMessageTime.createdOn )
+                        //   }
+
                     } catch (error) {
                         toast.error(`Failed to load messages: ${error}`);
                     }
@@ -89,8 +111,7 @@ export default function Chat({ channel, onClose }) {
 
             const messageId = await sendMessage(sentMessage);
             await sentMessageSaveInChannels(currentChat.id, messageId);
-            const members = await getChannelsMembersByID(currentChat.id);
-          //  await setMsgStatusForEachUser(members, messageId);
+            await getChannelsMembersByID(currentChat.id);
 
             setCurrentMessages([...currentMessages, sentMessage]);
             setMessage({ message: '' });
@@ -144,15 +165,13 @@ export default function Chat({ channel, onClose }) {
         setIsGifSelectorVisible(!isGifSelectorVisible);
     };
 
-
-
     return (
         <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 h-full min-h-[600px]">
             <div className="flex items-center justify-between mb-4">
                 <button className=" text-white py-2 px-4 rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     onClick={openPopUpChannelInfo}>
                     <h1 className="text-2xl font-bold text-white">
-                        # {currentChat?.name || "Loading..."} ^
+                        # {currentChat && (currentChat?.name).toLowerCase() || "Loading..."} ^
                     </h1>
                 </button>
                 <div className="flex justify-between items-center">
@@ -170,10 +189,10 @@ export default function Chat({ channel, onClose }) {
             <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
                 {/* <ChatView channel={currentChat}/> */}
                 <div className="chat-container">
-                    {currentMessages.map((m, index) => {
+                    {readMessages.map((m, index) => {
                         const showDateSeparator =
                             index === 0 ||
-                            new Date(currentMessages[index - 1].createdOn).toDateString() !== new Date(m.createdOn).toDateString();
+                            new Date(readMessages[index - 1].createdOn).toDateString() !== new Date(m.createdOn).toDateString();
                         return (
                             <div key={m.id}>
                                 {/* Date separator */}
@@ -186,17 +205,6 @@ export default function Chat({ channel, onClose }) {
                                 {m.senderUsername === userData.username ? (
                                     <div className="chat chat-end mb-4">
                                         <div className="chat-image avatar">
-                                            {/* <div className="w-10 rounded-full">
-                                                {userData.photoURL ? (
-                                                    <img
-                                                        alt="User avatar"
-                                                        src={userData.photoURL} />
-                                                ) : (
-                                                    <span className="flex items-center justify-center w-full h-full rounded-full bg-indigo-500">
-                                                        I
-                                                    </span>
-                                                )}
-                                            </div> */}
                                         </div>
                                         <div className="chat-header">
                                             me
@@ -238,13 +246,78 @@ export default function Chat({ channel, onClose }) {
                                             {m.message && <div>{m.message}</div>}
                                             {m.gif && <div className="gif-container-receiver"><img src={m.gif} alt="GIF" /></div>}
                                         </div>
-
-                                        {/* <div className="chat-footer opacity-50">Delivered</div> */}
                                     </div>
                                 )}
                             </div>
                         );
                     })}
+                    {unreadMessages.length > 0 && (
+                        <>
+                            <div className="unread-separator text-center my-1 py-1 text-gray-200 rounded-lg">
+                                <h1>New messages</h1>
+                            </div>
+                            {unreadMessages.map((m, index) => {
+                                const showDateSeparator =
+                                    index === 0 ||
+                                    new Date(unreadMessages[index - 1].createdOn).toDateString() !== new Date(m.createdOn).toDateString();
+                                return (
+                                    <div key={m.id}>
+                                        {/* Date separator */}
+                                        {showDateSeparator && (
+                                            <div className="date-separator text-center my-2 text-gray-500">
+                                                {new Date(m.createdOn).toLocaleDateString()}
+                                            </div>
+                                        )}
+                                        {/* User message */}
+                                        {m.senderUsername === userData.username ? (
+                                            <div className="chat chat-end mb-4">
+                                                <div className="chat-image avatar">
+                                                </div>
+                                                <div className="chat-header">
+                                                    me
+                                                    <time className="text-xs opacity-50 ml-1">
+                                                        {new Date(m.createdOn).toLocaleTimeString()}
+                                                    </time>
+                                                </div>
+                                                <div className="chat-bubble">
+                                                    {m.message && <div>{m.message}</div>}
+                                                    {m.gif && <div className="gif-container"><img src={m.gif} alt="GIF" /></div>}
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="chat chat-start">
+                                                <div className="chat-image avatar">
+                                                    <div className="w-10 rounded-full">
+                                                        {photoUrls[m.senderUsername] ? (
+                                                            <img
+                                                                alt="User avatar"
+                                                                src={photoUrls[m.senderUsername]}
+                                                                className="w-full h-full rounded-full object-cover"
+                                                            />
+                                                        ) : (
+                                                            <span className="flex items-center justify-center w-full h-full rounded-full bg-indigo-500 text-white font-bold text-lg">
+                                                                {m.senderUsername.charAt(0).toUpperCase()}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="chat-header">
+                                                    {m.senderUsername}
+                                                    <time className="text-xs opacity-50 ml-1">
+                                                        {new Date(m.createdOn).toLocaleTimeString()}
+                                                    </time>
+                                                </div>
+                                                <div className="chat-bubble">
+                                                    {m.message && <div>{m.message}</div>}
+                                                    {m.gif && <div className="gif-container-receiver"><img src={m.gif} alt="GIF" /></div>}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </>
+                    )}
                 </div>
             </div>
             {/* Input area */}

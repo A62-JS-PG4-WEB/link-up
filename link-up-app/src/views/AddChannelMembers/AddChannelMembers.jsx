@@ -55,8 +55,6 @@ export default function AddChannelMembers({ onClose, channel }) {
         e.preventDefault();
 
         const channel = JSON.parse(sessionStorage.getItem('selectedChat'));
-      //  const channelId = JSON.parse(sessionStorage.getItem('selectedChat')).id;
-        console.log('Selected options:', selectedOptions);
         try {
             selectedOptions.map(async (username) => {
 
@@ -90,13 +88,6 @@ export default function AddChannelMembers({ onClose, channel }) {
         }
         setSelectAll(!selectAll);
     };
-
-    // const handleSubmit = () => {
-    //     console.log('Selected options:', selectedOptions);
-    //     onClose();
-    // };
-
-
 
     return (
         <div className="popup-overlay fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-60 z-50">
@@ -162,30 +153,4 @@ export default function AddChannelMembers({ onClose, channel }) {
             </div>
         </div>
     );
-}
-{/* <h2 className="text-lg font-semibold text-gray-900">Add Member to Channel</h2>
-                <form onSubmit={handleAddMembers} className="space-y-6 mt-4">
-                    <div>
-                        <div className="mt-2">
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                required
-                                autoComplete="email"
-                                placeholder="email"
-                                value={emailInput.email}
-                                onChange={(e) => updateEmailInput('email', e.target.value)}
-                                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm"
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <button
-                            type="submit"
-                            className="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-pink-600"
-                        >
-                            Submit
-                        </button>
-                    </div>
-                </form> */}
+};
