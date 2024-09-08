@@ -204,8 +204,11 @@ export default function Chat({ channel, onClose }) {
                                                 {new Date(m.createdOn).toLocaleTimeString()}
                                             </time>
                                         </div>
-                                        {m.message && <div className="chat-bubble">{m.message}</div>}
-                                        {m.gif && <div className="gif-container"><img src={m.gif} /></div>}
+                                        <div className="chat-bubble">
+                                            {m.message && <div>{m.message}</div>}
+                                            {m.gif && <div className="gif-container"><img src={m.gif} alt="GIF" /></div>}
+                                        </div>
+
                                         {/* <div className="chat-footer opacity-50">Delivered</div> */}
                                     </div>
                                 ) : (
@@ -232,7 +235,6 @@ export default function Chat({ channel, onClose }) {
                                             </time>
                                         </div>
                                         {m.message && <div className="chat-bubble">{m.message}</div>}
-                                        {/* TODO gif container */}
                                         {m.gif && <div className="gif-container"><img src={m.gif} /></div>}
                                         {/* <div className="chat-footer opacity-50">Delivered</div> */}
                                     </div>
