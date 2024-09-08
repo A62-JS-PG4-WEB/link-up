@@ -125,7 +125,6 @@ export const getUserByUsername = async (username) => {
 
 export const getUserByEmail = async (email) => {
   try {
-    // Make sure the email field is correctly indexed in Firebase Realtime Database.
     const snapshot = await get(query(ref(db, 'users'), orderByChild('email'), equalTo(email)));
 
     if (snapshot.exists()) {

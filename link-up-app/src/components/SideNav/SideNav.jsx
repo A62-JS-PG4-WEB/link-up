@@ -57,10 +57,6 @@ export default function SideNav() {
         setIsProfilePage(location.pathname === '/profile');
     }, [location.pathname]);
 
-    const handleSearchKeyDown = (e) => {
-
-    };
-
     return (
         <div className="flex h-screen sidenav">
             <div

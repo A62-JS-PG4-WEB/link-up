@@ -81,7 +81,7 @@ export function ChannelInfo({ channel, onClose }) {
 
         const confirmation = window.confirm('are you sure you wanna leave chat');
         if (confirmation) {
-            await leaveChannel(userData.username, currentChat.id)
+            await leaveChannel(userData.username, currentChat.id, currentChat.name)
         }
     };
 
