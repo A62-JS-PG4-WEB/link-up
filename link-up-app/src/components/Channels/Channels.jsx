@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { deleteChannelById } from "../../services/channels.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import '../Channels/Channels.css';
 
 export default function Channels({ team, onSelectChannel }) {
     const location = useLocation();
@@ -54,6 +55,13 @@ export default function Channels({ team, onSelectChannel }) {
         };
         loadChannels();
     }, [userData, currentTeam, channelUpdated]);
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     const handleChannelCreated = () => {
         setChannelUpdated((prev) => !prev);
@@ -127,13 +135,6 @@ export default function Channels({ team, onSelectChannel }) {
 
     };
 
-    useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
     return (
         <div className="channels relative">
             <div className="flex items-center justify-between mb-2">
@@ -182,20 +183,22 @@ export default function Channels({ team, onSelectChannel }) {
             )}
             
             <div className="space-y-2">
+            <div className="channelsList rounded-lg max-h-60 overflow-y-auto">
                 {channels.length > 0 ? (
                     channels.map((ch) => (
                         <div key={ch.id} className="flex justify-between items-center w-full p-2 rounded-md hover:bg-gray-600">
                             <button
                                 onClick={() => handleChannelClick(ch)}
                                 className="text-left">
-                                # {ch.name}
+                                # {ch.name.toLowerCase()}
                             </button>
                             {userData?.username === currentTeam?.owner && (
                                 <button
                                     onClick={() => handleDeleteChannel(ch.id)}
-                                    className="text-xs text-red-500 hover:text-red-700 font-medium transition duration-200 ease-in-out"
+                                    className="text-white hover:text-red-500 p-2 rounded-full"
+                                    aria-label="Close"
                                 >
-                                    Delete
+                                    &times;
                                 </button>
                             )}
                         </div>
@@ -203,6 +206,7 @@ export default function Channels({ team, onSelectChannel }) {
                 ) : (
                     <p className="text-gray-400">No text channels available</p>
                 )}
+                </div>
             </div>
             {isPopupOpen && (
                 <CreateChannel

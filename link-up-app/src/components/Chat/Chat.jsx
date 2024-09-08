@@ -152,7 +152,7 @@ export default function Chat({ channel, onClose }) {
                 <button className=" text-white py-2 px-4 rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     onClick={openPopUpChannelInfo}>
                     <h1 className="text-2xl font-bold text-white">
-                        # {currentChat?.name || "Loading..."} ^
+                        # {currentChat && (currentChat?.name).toLowerCase() || "Loading..."} ^
                     </h1>
                 </button>
                 <div className="flex justify-between items-center">

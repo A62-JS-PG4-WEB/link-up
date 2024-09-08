@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { capitalizeFirstLetter } from "../../services/channels.service";
 
 
 export default function AllTeams({ teams }) {
@@ -17,7 +18,7 @@ export default function AllTeams({ teams }) {
             toast.error(`Failed to save team to localStorage: ${error}`);
         }
         navigate("/home", { state: { selectedTeam } });
-    }
+    };
 
     return (
         <div className="p-4">
@@ -28,7 +29,7 @@ export default function AllTeams({ teams }) {
                             onClick={() => navigatetoHome(t)}
                             className="flex items-center p-3 w-full text-gray-100 rounded-lg transition-colors duration-300 ease-in-out hover:bg-gray-700"
                         >
-                            {t.name}
+                          {capitalizeFirstLetter(t.name)}
                         </button>
                     </li>
                 ))}

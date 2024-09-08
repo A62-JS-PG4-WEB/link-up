@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { removeUserFromTeam } from "../../services/teams.service";
 import InviteTeamMember from "../InviteTeamMember/InviteTeamMember";
+import { capitalizeFirstLetter } from "../../services/channels.service";
 
 export default function Team({ team, onClose }) {
 
@@ -21,7 +22,7 @@ export default function Team({ team, onClose }) {
 
         if (!team) {
             const savedTeam = localStorage.getItem('selectedTeam');
-            // onClose()
+            onClose();
             if (savedTeam) {
                 try {
                     const parsedTeam = JSON.parse(savedTeam);
@@ -79,7 +80,7 @@ export default function Team({ team, onClose }) {
                 <>
                     <div className="flex justify-between items-center">
                         <h3 className="text-lg font-semibold mb-2 inline-flex items-center">
-                            {currentTeam.name}
+                            {capitalizeFirstLetter(currentTeam.name)}
                         </h3>
 
                         <div className="teamButtons flex space-x-2">
