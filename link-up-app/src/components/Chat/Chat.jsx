@@ -78,7 +78,11 @@ export default function Chat({ channel, onClose }) {
 
     useEffect(() => {
         const chatContainer = document.querySelector('.chat-container');
-        if (chatContainer) {
+        const firstUnreadMessage = document.querySelector('.unread-message');
+        
+        if (firstUnreadMessage) {
+            firstUnreadMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else if (chatContainer) {
             chatContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
     }, [currentMessages]);
@@ -254,8 +258,9 @@ export default function Chat({ channel, onClose }) {
                     {unreadMessages.length > 0 && (
                         <>
                             <div className="unread-separator text-center my-1 py-1 text-gray-200 rounded-lg">
-                                <h1>New messages</h1>
+                                <h1 className="unread-message">New messages</h1>
                             </div>
+                            
                             {unreadMessages.map((m, index) => {
                                 const showDateSeparator =
                                     index === 0 ||
