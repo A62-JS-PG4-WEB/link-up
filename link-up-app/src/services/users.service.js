@@ -162,3 +162,15 @@ export const addUserChannel = async (channelId, username) => {
   })
 };
 
+export const getUserTimestamp = async (channelId, username) => {
+  const snapshot =  await get(ref(db, `channels/${channelId}/members/${username}`));
+  console.log(snapshot.val());
+  
+  return snapshot.val();
+}
+
+export const updateUserTimestamp = async(channelId, username) => {
+  await update(ref(db), {
+    [`channels/${channelId}/members/${username}`]: new Date().getTime(),
+})
+}
