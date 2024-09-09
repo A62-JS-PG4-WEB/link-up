@@ -5,6 +5,7 @@ import { getMessageInfo, sendMessage, setMsgStatusForEachUser } from '../../serv
 import { db } from '../../config/firebase-config';
 import { get, onValue, ref } from 'firebase/database';
 import GifSelector from '../GifSelector/GifSelector';
+import { useNavigate } from 'react-router-dom';
 
 export default function ChatDirectMessages({ directMessageUser, onClose }) {
     const { userData } = useContext(AppContext);
@@ -13,6 +14,17 @@ export default function ChatDirectMessages({ directMessageUser, onClose }) {
     const [currentMessages, setCurrentMessages] = useState([]);
     const [photoUrls, setPhotoUrls] = useState({});
     const [isGifSelectorVisible, setIsGifSelectorVisible] = useState(false);
+
+    const navigate = useNavigate(); 
+
+     const handleCloseChat = () => {
+        sessionStorage.removeItem('selectedDM');
+        if (typeof onClose === 'function') {
+            onClose();
+        }
+        navigate('/home'); 
+    };
+
 
     useEffect(() => {
         if (directMessageUser) {
@@ -123,14 +135,14 @@ export default function ChatDirectMessages({ directMessageUser, onClose }) {
         setIsGifSelectorVisible(!isGifSelectorVisible);
     };
 
-    const handleCloseChat = () => {
-        sessionStorage.removeItem('selectedDM');
-        if (typeof onClose === 'function') {
-            onClose();
-        }
-    };
+    // const handleCloseChat = () => {
+    //     sessionStorage.removeItem('selectedDM');
+    //     if (typeof onClose === 'function') {
+    //         onClose();
+    //     }
+    // };
 
-    return (
+        return (
         <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 h-full min-h-[600px]">
             <div className="flex items-center justify-between mb-4">
                 <h1 className="text-2xl font-bold text-white">

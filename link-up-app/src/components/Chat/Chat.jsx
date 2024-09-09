@@ -7,6 +7,8 @@ import { db } from '../../config/firebase-config';
 import { get, onValue, ref } from 'firebase/database';
 import { ChannelInfo } from '../ChannelInfo/ChannelInfo';
 import GifSelector from '../GifSelector/GifSelector';
+import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 export default function Chat({ channel, onClose }) {
     const { userData } = useContext(AppContext);
@@ -17,6 +19,7 @@ export default function Chat({ channel, onClose }) {
     const [photoUrls, setPhotoUrls] = useState({});
     const [isChannelInfoVisible, setIsChannelInfoVisible] = useState(false);
     const [isGifSelectorVisible, setIsGifSelectorVisible] = useState(false);
+    const { channelId } = useParams();
 
     useEffect(() => {
         if (channel) {
@@ -152,6 +155,15 @@ export default function Chat({ channel, onClose }) {
         setIsGifSelectorVisible(!isGifSelectorVisible);
     };
 
+    const handleDirectMessageClick = async (username) => {
+        try {
+            const recipient = username;
+            const directMessageId = await createDirectMessage(userData.username, recipient);
+            navigate(`/chat/${directMessageId}`); 
+        } catch (error) {
+            console.error('Error creating direct message:', error);
+        }
+    };
 
 
     return (
