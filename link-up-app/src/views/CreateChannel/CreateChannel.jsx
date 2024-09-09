@@ -139,11 +139,9 @@ export default function CreateChannel({ team, onClose, onChannelCreated }) {
 
 CreateChannel.propTypes = {
     team: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        owner: PropTypes.string,
-        createdOn: PropTypes.string,
+    
         id: PropTypes.string,
-        members: PropTypes.arrayOf(PropTypes.string),
+      
     }),
     onClose: PropTypes.func.isRequired,
     onChannelCreated: PropTypes.func.isRequired,
