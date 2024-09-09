@@ -183,8 +183,6 @@ export const lastSentMessage = async (username, channelId, messageId) => {
 
 export const getLastMessage = async (username, channelId) => {
 
-  const snapshot =  await get(ref(db,`users/${username}/channels/${channelId}/lastMessage`));
-  console.log('channel',channelId,'lastMessage', snapshot.val());
-  
+  const snapshot =  await get(ref(db,`users/${username}/channels/${channelId}/lastMessage`));  
   return snapshot.val();
 }

@@ -4,7 +4,7 @@ import { AppContext } from '../../state/app.context';
 import { deleteMessage, getMessageInfo, sendMessage, sentMessageSaveInChannels, updateMessage } from '../../services/chat.service';
 import { getChannelsMembersByID } from '../../services/channels.service';
 import { db } from '../../config/firebase-config';
-import { get, onValue, ref } from 'firebase/database';
+import { equalTo, get, onValue, orderByChild, query, ref } from 'firebase/database';
 import { ChannelInfo } from '../ChannelInfo/ChannelInfo';
 import GifSelector from '../GifSelector/GifSelector';
 import { ToastContainer, toast } from 'react-toastify';
@@ -37,8 +37,11 @@ export default function Chat({ channel, onClose }) {
     useEffect(() => {
 
         const loadLastMessage = async () => {
-            const lastMessageId = await getLastMessage(userData.username, currentChat.id);
-            setLastMessageSent(lastMessageId);
+            if(userData){
+                const lastMessageId = await getLastMessage(userData.username, currentChat.id);
+                setLastMessageSent(lastMessageId); 
+            }
+           
         }
         loadLastMessage();
     });
@@ -49,25 +52,22 @@ export default function Chat({ channel, onClose }) {
 
         if (currentChat) {
 
-            const messagesRef = ref(db, `channels/${currentChat.id}/messages`);
+            const messagesRef = ref(db, 'messages');
+            const messagesQuery = query(messagesRef, orderByChild('channelId'), equalTo(currentChat.id));
 
-            const unsubscribe = onValue(messagesRef, async (snapshot) => {
+            const unsubscribe = onValue(messagesQuery, async (snapshot) => {      
                 const messagesData = snapshot.val();
                 if (messagesData) {
                     try {
-                        const messageIds = Object.keys(messagesData);
-                        const detailedMessages = await getMessageInfo(messageIds);
+                       const allMessagesInChat = Object.values(messagesData);
+                        // const detailedMessages = await getMessageInfo(messageIds);
                         const userTimestamp = await getUserTimestamp(currentChat.id, userData.username)
-                        const allReadMessages = detailedMessages.filter((m) => m.createdOn <= userTimestamp);
-                        const allUnreadMessages = detailedMessages.filter((m) => m.createdOn > userTimestamp);
-
-                        detailedMessages.map((m) => console.log(m.createdOn < userTimestamp));
-                        console.log('read', allReadMessages);
-                        console.log('unread', allUnreadMessages);
+                        const allReadMessages = allMessagesInChat.filter((m) => m.createdOn <= userTimestamp);
+                        const allUnreadMessages = allMessagesInChat.filter((m) => m.createdOn > userTimestamp);
 
                         setReadMessages(allReadMessages);
                         setUnreadMessages(allUnreadMessages);
-                        setCurrentMessages(detailedMessages);
+                        setCurrentMessages(allMessagesInChat);
                         await updateUserTimestamp(currentChat.id, userData.username)
 
                         //   if(unreadMessages.length > 0 ) {
@@ -199,7 +199,7 @@ export default function Chat({ channel, onClose }) {
                 return toast.warn("Message cannot be empty!");
             }
 
-            await updateMessage(editingMessageId, editingMessageContent);
+            await updateMessage(editingMessageId, editingMessageContent, currentChat.id);
             const isInUnreadMessages = unreadMessages.some(m => m.id === editingMessageId);
 
             if (isInUnreadMessages) {

@@ -76,6 +76,5 @@ export const updateMessage = async ( messageId, content) => {
 
     await update(ref(db), {
         [`messages/${messageId}/message`]: content,
-        [`messages/${messageId}/createdOn`]:  new Date().getTime(),
       })
 };
