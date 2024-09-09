@@ -11,6 +11,8 @@ export const addUserMessage = async (channelId, username, message) => {
       }
     });
   };
+
+
 export const createDirectMessage = async (user1, user2) => {
     const directMessage = {
         participants: [user1, user2],

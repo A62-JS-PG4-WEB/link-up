@@ -41,6 +41,11 @@ export const searchUsers = async (searchTerm) => {
     console.error('Error fetching users:', error);
   }
 };
+
+export const checkEmailFunc = (email) => {
+  const checkEmail = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+  return checkEmail.test(email);
+}
 export const updateAccountInfoDB = async (username, newEmail) => {
   try {
       await update(ref(db, `users/${username}`), { email: newEmail });

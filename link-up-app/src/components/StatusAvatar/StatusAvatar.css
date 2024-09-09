@@ -1,7 +1,21 @@
-.avatar.online .w-10 {
-    border: 2px solid green;
+.avatar {
+    position: relative;
 }
 
-.avatar.offline .w-10 {
-    border: 2px solid gray;
+.avatar .status-indicator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+.avatar.online .status-indicator {
+    background-color: green;
+}
+
+.avatar.offline .status-indicator {
+    background-color: gray;
 }

@@ -149,7 +149,7 @@ export default function SideNav() {
                 {/* Profile and Logout */}
                 <hr className="border-gray-600 w-1/2 mx-auto pb-4" />
                 <div className="mt-auto flex items-center pl-2 pb-6 bg-gray-800 h-20">
-                    <div className={`avatar ${user?.status === 'online' ? 'online' : 'offline'} mr-3`}>
+                    <div className={`avatar ${userData?.status === 'online' ? 'avatar-online' : 'avatar-offline'} mr-3`}>
                         <div
                             className="w-10 rounded-full cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105"
                             onClick={handleProfileClick}
@@ -159,6 +159,7 @@ export default function SideNav() {
                                 alt="User"
                                 className="w-full h-full rounded-full object-cover"
                             />
+                             <div className="status-indicator"></div>
                         </div>
                     </div>
                     {isSidebarOpen && (

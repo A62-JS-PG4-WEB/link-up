@@ -52,11 +52,15 @@ export default function DirectMessages({ onSelectDirectMessage }) {
         }
     };
 
-    const handleDeleteDirectMessage = async (directMessageId) => {
+     const handleDeleteDirectMessage = async (directMessageId) => {
         if (window.confirm("Are you sure you want to delete this direct message?")) {
             try {
                 await deleteDirectMessageById(directMessageId);
-                setDirectMessageUpdated((prev) => !prev);
+                setDirectMessages((prev) => {
+                    if (prev.length > 0) {
+                        return prev.filter((msg) => msg && !(msg.id === directMessageId));
+                    }
+                });
             } catch (error) {
                 toast.error(`Failed to delete direct message: ${error}`);
             }

@@ -31,7 +31,7 @@ export default function Login() {
         }
 
         try {
-            const userDB = await loginUser(user.email, user.password);
+            const userDB = await loginUser(userData.email, user.password);
             const userData = await getUserData(userDB.user.uid);
 
             setAppState({
