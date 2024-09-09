@@ -79,7 +79,7 @@ export default function Chat({ channel, onClose }) {
     useEffect(() => {
         const chatContainer = document.querySelector('.chat-container');
         const firstUnreadMessage = document.querySelector('.unread-message');
-        
+
         if (firstUnreadMessage) {
             firstUnreadMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else if (chatContainer) {
@@ -260,7 +260,7 @@ export default function Chat({ channel, onClose }) {
                             <div className="unread-separator text-center my-1 py-1 text-gray-200 rounded-lg">
                                 <h1 className="unread-message">New messages</h1>
                             </div>
-                            
+
                             {unreadMessages.map((m, index) => {
                                 const showDateSeparator =
                                     index === 0 ||
@@ -328,13 +328,27 @@ export default function Chat({ channel, onClose }) {
             {/* Input area */}
             <form onSubmit={handleSendMessage} className="space-y-6 mt-4">
                 <div className="mt-4 flex items-center space-x-4">
-                    <input
-                        type="text"
-                        placeholder="Type a message..."
-                        className="flex-1 p-4 rounded-lg bg-gray-600 text-white outline-none focus:ring-2 focus:ring-indigo-500"
-                        value={message.message}
-                        onChange={(e) => handleMessageChange('message', e.target.value)}
-                    />
+                    <div className="relative flex-1">
+                        <input
+                            type="text"
+                            placeholder="Type a message..."
+                            className="w-full p-4 rounded-lg bg-gray-600 text-white outline-none focus:ring-2 focus:ring-indigo-500 pr-20"
+                            value={message.message}
+                            onChange={(e) => handleMessageChange('message', e.target.value)}
+                        />
+                        {message.gif && (
+                            <div className="absolute right-0 top-0 h-full flex items-center pr-4">
+                                <img src={message.gif} alt="Selected GIF" className="w-12 h-12 object-cover rounded-lg" />
+                                <button
+                                    type="button"
+                                    className="text-red-500 ml-2"
+                                    onClick={() => handleMessageChange('gif', '')}
+                                >
+                                    &times;
+                                </button>
+                            </div>
+                        )}
+                    </div>
                     <button
                         className="p-4 bg-indigo-500 text-white rounded-lg hover:bg-indigo-400 focus:ring-2 focus:ring-indigo-500 transition-all ease-in-out"
                     >

@@ -40,7 +40,6 @@ export default function Team({ team, onClose }) {
     }, [userData, location.state, team]);
 
     const handleAddClick = () => {
-        console.log("Invite button clicked!");
         setIsPopupOpen(true);
     };
 

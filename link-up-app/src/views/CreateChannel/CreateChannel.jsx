@@ -59,7 +59,7 @@ export default function CreateChannel({ team, onClose, onChannelCreated }) {
         }
     };
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75">
+        <div className="fixed inset-0 flex z-50 items-center justify-center bg-gray-900 bg-opacity-75">
             <div className="bg-gray-800 p-6 rounded-lg w-1/3 relative">
                 <div className="flex items-center justify-between mb-4">
                     <h4 className="text-lg font-semibold">Create New Channel</h4>
