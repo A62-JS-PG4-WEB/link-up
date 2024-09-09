@@ -2,11 +2,11 @@ import { useEffect, useState, useContext, useRef } from "react";
 import { getDirectMessagesInfoById, getUserDirectMessages, deleteDirectMessageById } from "../../services/direct-messages.service.js";
 import CreateDirectMessages from "../../views/CreateDirectMessages/CreateDirectMessages.jsx";
 import PropTypes from 'prop-types';
-import { useLocation } from "react-router-dom";
 import { AppContext } from "../../state/app.context.js";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function DirectMessages({ onSelectDirectMessage }) {
-    const location = useLocation();
     const { userData } = useContext(AppContext);
     const [directMessages, setDirectMessages] = useState([]);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -67,8 +67,6 @@ export default function DirectMessages({ onSelectDirectMessage }) {
         e.preventDefault();
 
         try {
-            // Here you might want to implement a search function for direct messages
-            // For simplicity, assuming that you have a direct messages search API
             const filtered = directMessages.filter(dm => 
                 dm.participants.some(p => p.includes(query))
             );

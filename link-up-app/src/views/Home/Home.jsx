@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Team from '../Team/Team';
 import TextChannelsSection from '../../components/TextChannelsSection/TextChannelsSection';
 import Chat from '../../components/Chat/Chat';
 import SideNav from '../../components/SideNav/SideNav';
-import DirectMessages from '../../components/DirectMessages/DirectMessages';
+import DirectMessages from '../../components/DirectMessages/DirectMessages.jsx';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 
-export default function Home({ team, onSelectDirectMessage }) {
+export default function Home({ team }) {
     const [selectedChat, setSelectedChat] = useState(null);
     const [selectedDirectMessage, setSelectedDirectMessage] = useState(null);
 
-    const handleSelectDirectMessage = (dm) => {
-        setSelectedDirectMessage(dm);
-    };
+    // const handleSelectDirectMessage = (dm) => {
+    //     setSelectedDirectMessage(dm);
+    // };
 
     useEffect(() => {
         const savedChat = sessionStorage.getItem('selectedChat');
@@ -36,14 +36,16 @@ export default function Home({ team, onSelectDirectMessage }) {
         }
     };
 
-    const handleDirectMessageClick = async (dm) => {
+     const handleSelectDirectMessage = (directMessage) => {
+        setSelectedDirectMessage(directMessage);
         try {
-            sessionStorage.setItem('selectedDirectMessage', JSON.stringify(dm));
-            onSelectDirectMessage(dm);
+            sessionStorage.setItem('selectedDirectMessage', JSON.stringify(directMessage));
+            sessionStorage.removeItem('selectedChat');
         } catch (error) {
-            toast.error(`Failed to save Direct Message to sessionStorage: ${error}`);
+            toast.error(`Failed to save direct message to localStorage: ${error}`);
         }
     };
+
 
     return (
         <div className="home">
