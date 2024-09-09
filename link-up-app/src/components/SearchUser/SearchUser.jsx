@@ -1,6 +1,8 @@
-import { useState, useEffect, useRef } from "react";
-import { getUserByUsername, getUserByEmail, getUserData } from "../../services/users.service";
-import { getTeamMembersNames, getTeams, getUserTeams } from "../../services/teams.service";
+import { useState, useEffect, useRef, useContext } from "react";
+import { getUserByUsername, getUserByEmail } from "../../services/users.service";
+import { getTeamMembersNames, getTeams } from "../../services/teams.service";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../state/app.context";
 import './SearchUser.css';
 
 
@@ -9,6 +11,8 @@ const SearchUser = () => {
     const [searchType, setSearchType] = useState("username");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const { userData } = useContext(AppContext); 
+    const navigate = useNavigate(); 
 
     const handleSearch = async (e) => {
         e.preventDefault();
@@ -48,6 +52,11 @@ const SearchUser = () => {
         } catch (error) {
             console.error('Search failed:', error);
         }
+    };
+
+    const handleDirectMessageClick = (username) => {
+        // Navigate to chat for the selected user
+        navigate(`/chat/${username}`);
     };
 
     const handleClickOutside = (e) => {
@@ -111,6 +120,12 @@ const SearchUser = () => {
                                             className=" w-10 h-10 rounded-full border border-white"
                                         />
                                         <span className=" text-white font-medium text-base">{user.username}</span>
+                                        <button
+                                            className="text-sm text-blue-500 hover:text-blue-300 ml-4"
+                                            onClick={() => handleDirectMessageClick(user.username)}  
+                                        >
+                                            DM
+                                        </button>
                                     </div>
                                 </div>
                             ))}
@@ -125,6 +140,12 @@ const SearchUser = () => {
                                         className=" w-10 h-10 rounded-full border border-white"
                                     />
                                     <span className=" text-white font-medium text-base">{searchedUser.username || searchedUser.email}</span>
+                                    <button
+                                        className="text-sm text-blue-500 hover:text-blue-300 ml-4"
+                                        onClick={() => handleDirectMessageClick(searchedUser.username)} 
+                                    >
+                                        DM
+                                    </button>
                                 </div>
                             </div>
                         )
@@ -134,7 +155,5 @@ const SearchUser = () => {
         </>
     );
 }
-
-
 
 export default SearchUser;
