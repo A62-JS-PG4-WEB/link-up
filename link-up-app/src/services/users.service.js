@@ -164,8 +164,7 @@ export const addUserChannel = async (channelId, username) => {
 
 export const getUserTimestamp = async (channelId, username) => {
   const snapshot =  await get(ref(db, `channels/${channelId}/members/${username}`));
-  console.log(snapshot.val());
-  
+
   return snapshot.val();
 }
 
@@ -173,4 +172,19 @@ export const updateUserTimestamp = async(channelId, username) => {
   await update(ref(db), {
     [`channels/${channelId}/members/${username}`]: new Date().getTime(),
 })
+};
+
+export const lastSentMessage = async (username, channelId, messageId) => {
+
+  await update(ref(db), {
+    [`users/${username}/channels/${channelId}/lastMessage`]: messageId,
+  })
+};
+
+export const getLastMessage = async (username, channelId) => {
+
+  const snapshot =  await get(ref(db,`users/${username}/channels/${channelId}/lastMessage`));
+  console.log('channel',channelId,'lastMessage', snapshot.val());
+  
+  return snapshot.val();
 }
