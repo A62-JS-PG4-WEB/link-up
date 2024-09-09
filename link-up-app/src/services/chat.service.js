@@ -1,4 +1,4 @@
-import { get, push, ref, set, update } from "firebase/database";
+import { get, push, ref, remove, set, update } from "firebase/database";
 import { db } from "../config/firebase-config";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -61,4 +61,21 @@ export const getMessageInfo = async (messageIds) => {
         toast.error(`Error getting message info: ${error}`);
         throw error;
     }
+};
+
+export const deleteMessage = async (username, chatID, messageId) => {
+
+    await remove(ref(db, `channels/${chatID}/messages/${messageId}`));
+    await remove(ref(db, `messages/${messageId}`));
+    await update(ref(db), {
+        [`users/${username}/channels/${chatID}/lastMessage`]: null,
+      })
+};
+
+export const updateMessage = async ( messageId, content) => {
+
+    await update(ref(db), {
+        [`messages/${messageId}/message`]: content,
+        [`messages/${messageId}/createdOn`]:  new Date().getTime(),
+      })
 };
