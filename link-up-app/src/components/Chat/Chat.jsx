@@ -60,7 +60,7 @@ export default function Chat({ channel, onClose }) {
                 if (messagesData) {
                     try {
                        const allMessagesInChat = Object.values(messagesData);
-                        // const detailedMessages = await getMessageInfo(messageIds);
+                        // const detailedMessages = await getMessageInfo(messageIds);                        
                         const userTimestamp = await getUserTimestamp(currentChat.id, userData.username)
                         const allReadMessages = allMessagesInChat.filter((m) => m.createdOn <= userTimestamp);
                         const allUnreadMessages = allMessagesInChat.filter((m) => m.createdOn > userTimestamp);
@@ -81,7 +81,7 @@ export default function Chat({ channel, onClose }) {
                         toast.error(`Failed to load messages: ${error}`);
                     }
                 } else {
-                    setCurrentMessages([]);
+                    setReadMessages([]);
                 }
             });
 
@@ -262,7 +262,9 @@ export default function Chat({ channel, onClose }) {
                     </div>
                 </div>
             </div>
-            {/* Chat messages container */}
+          {(readMessages || unreadMessages) ? ( 
+            <>
+            {/* Chat messages container */} 
             <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
                 {/* <ChatView channel={currentChat}/> */}
                 <div className="chat-container">
@@ -487,6 +489,8 @@ export default function Chat({ channel, onClose }) {
                     )}
                 </div>
             </div>
+            </>) : <p>
+            no messages</p>}
             {/* Input area */}
             <form onSubmit={handleSendMessage} className="space-y-6 mt-4">
                 <div className="mt-4 flex items-center space-x-4">
