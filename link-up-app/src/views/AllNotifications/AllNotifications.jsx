@@ -44,10 +44,7 @@ export default function AllNotifications() {
             const teamId = await acceptInvitation(id, userData.username);
 
             await addUserTeam(teamId, userData.username);
-            // const channelsT = await getTeamChannels(teamId);
-            // await addUserToTeamChannels(channelsT, userData.username);
             await addTeamMember(teamId, userData.username);
-
             setNotifications(prevNotifications =>
                 prevNotifications.filter(n => n.id !== id)
             );
