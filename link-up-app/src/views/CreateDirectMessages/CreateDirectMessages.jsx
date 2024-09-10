@@ -11,21 +11,27 @@ export default function CreateDirectMessage({ onClose, onDirectMessageCreated })
 
     const handleCreateDirectMessage = async (e) => {
         e.preventDefault();
-
+    
         if (!userToMessage.trim()) {
             toast.warn('Please enter a username.');
             return;
         }
-
+    
         try {
             const recipient = userToMessage.trim();
             const directMessageId = await createDirectMessage(userData.username, recipient);
+            
             await addUserToDirectMessages([directMessageId], userData.username);
-            await addUserToDirectMessages([directMessageId], recipient);  // Add recipient to the direct message
+            await addUserToDirectMessages([directMessageId], recipient); 
+    
             onDirectMessageCreated(directMessageId);
             onClose();
         } catch (error) {
-            toast.error(error.message);
+            if (error.message.includes("does not exist")) {
+                toast.error('No user found with the username provided.');
+            } else {
+                toast.error('An error occurred while creating the direct message.');
+            }
         }
     };
 

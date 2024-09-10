@@ -12,8 +12,37 @@ export const addUserMessage = async (channelId, username, message) => {
     });
   };
 
+  const userExists = async (username) => {
+    const snapshot = await get(ref(db, `users/${username}`));
+    return snapshot.exists();
+};
+
 
 export const createDirectMessage = async (user1, user2) => {
+    const findExistingConversation = async (user1, user2) => {
+        const user1DMs = await getUserDirectMessages(user1);
+        for (const dmId of user1DMs) {
+            const dmSnapshot = await get(ref(db, `directMessages/${dmId}/participants`));
+            const participants = dmSnapshot.val();
+            if (participants && participants.includes(user2)) {
+                return dmId;
+            }
+        }
+        return null;
+    };
+
+    const existingConversationId = await findExistingConversation(user1, user2);
+    if (existingConversationId) {
+        return existingConversationId;
+    }
+
+    const user1Exists = await userExists(user1);
+    const user2Exists = await userExists(user2);
+
+    if (!user1Exists || !user2Exists) {
+        throw new Error("One or both users do not exist.");
+    }
+
     const directMessage = {
         participants: [user1, user2],
         createdOn: new Date().toString()

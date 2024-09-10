@@ -4,8 +4,7 @@ import Team from '../Team/Team';
 import TextChannelsSection from '../../components/TextChannelsSection/TextChannelsSection';
 import Chat from '../../components/Chat/Chat';
 import SideNav from '../../components/SideNav/SideNav';
-import DirectMessages from '../../components/DirectMessages/DirectMessages';
-
+import DirectMessagesSection from '../../components/DirectMessagesSection/DirectMessagesSection.jsx';
 
 export default function Home({ team }) {
     const [selectedChat, setSelectedChat] = useState(null);
@@ -45,7 +44,7 @@ export default function Home({ team }) {
                         {/* Text Channels */}
                         <TextChannelsSection team={team} onSelectChannel={handleSelectChannel} />
                         {/* Voice Channels */}
-                        <DirectMessages team={team} onSelectDirectMessage={handleDirectMessageClick}/>
+                        <DirectMessagesSection team={team} onSelectDirectMessage={handleDirectMessageClick}/>
                     </div>
                     {/* Chat Section */}
                     {/* Messages Container */}
