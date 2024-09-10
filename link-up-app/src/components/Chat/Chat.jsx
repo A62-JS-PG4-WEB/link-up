@@ -26,6 +26,7 @@ export default function Chat({ channel, onClose }) {
     const [lastMessageSent, setLastMessageSent] = useState('');
     const [editingMessageId, setEditingMessageId] = useState(null);
     const [editingMessageContent, setEditingMessageContent] = useState('');
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
     useEffect(() => {
         if (channel) {
@@ -70,15 +71,8 @@ export default function Chat({ channel, onClose }) {
                         setCurrentMessages(allMessagesInChat);
                         await updateUserTimestamp(currentChat.id, userData.username)
 
-                        //   if(unreadMessages.length > 0 ) {
-                        //     const lastMessageTime = (unreadMessages[unreadMessages.length-1]);
-                        //     console.log(lastMessageTime.createdOn);
-
-                        //     await updateUserTimestamp(currentChat.id, userData.username, lastMessageTime.createdOn )
-                        //   }
-
                     } catch (error) {
-                        toast.error(`Failed to load messages: ${error}`);
+                        //toast.error(`Failed to load messages: ${error}`);
                     }
                 } else {
                     setReadMessages([]);
@@ -274,6 +268,10 @@ export default function Chat({ channel, onClose }) {
         setEditingMessageContent('');
     };
 
+    const addEmoji = (emoji) => {
+        setNewText((prevText) => prevText + emoji.native);
+    };
+
     const toggleGifSelector = () => {
         setIsGifSelectorVisible(!isGifSelectorVisible);
     };
@@ -405,6 +403,12 @@ export default function Chat({ channel, onClose }) {
                                                     {m.message && <div>{m.message}</div>}
                                                     {m.gif && <div className="gif-container-receiver"><img src={m.gif} alt="GIF" /></div>}
                                                 </div>
+                                                {/* <button className="threadButtons" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+                        {showEmojiPicker ? "😜" : "😜"}
+                    </button>
+                    {showEmojiPicker && (
+                        <Picker onEmojiSelect={addEmoji} />
+                    )} */}
                                             </div>
                                         )}
                                     </div>
@@ -529,7 +533,7 @@ export default function Chat({ channel, onClose }) {
                 no messages</p>}
             {/* Input area */}
             <form onSubmit={handleSendMessage} className="space-y-6 mt-4">
-                <div className="mt-4 flex items-center space-x-4">
+                <div className="mt-4 flex items-center space-x-2">
                     <div className="relative flex-1">
                         <input
                             type="text"
@@ -540,7 +544,11 @@ export default function Chat({ channel, onClose }) {
                         />
                         {message.gif && (
                             <div className="absolute right-0 top-0 h-full flex items-center pr-4">
-                                <img src={message.gif} alt="Selected GIF" className="w-12 h-12 object-cover rounded-lg" />
+                                <img
+                                    src={message.gif}
+                                    alt="Selected GIF"
+                                    className="w-10 h-10 object-cover rounded-lg"
+                                />
                                 <button
                                     type="button"
                                     className="text-red-500 ml-2"
@@ -552,7 +560,11 @@ export default function Chat({ channel, onClose }) {
                         )}
                         {message.image && (
                             <div className="absolute right-0 top-0 h-full flex items-center pr-4">
-                                <img src={message.image} alt="Selected Image" className="w-12 h-12 object-cover rounded-lg" />
+                                <img
+                                    src={message.image}
+                                    alt="Selected Image"
+                                    className="w-10 h-10 object-cover rounded-lg"
+                                />
                                 <button
                                     type="button"
                                     className="text-red-500 ml-2"
@@ -563,38 +575,43 @@ export default function Chat({ channel, onClose }) {
                             </div>
                         )}
                     </div>
+
+                    <div className="flex flex-col items-center space-y-1">
+                        <button
+                            type="button"
+                            onClick={toggleGifSelector}
+                            className="p-1 px-6 mb-0 bg-yellow-600 text-white rounded-lg hover:bg-yellow-500 focus:ring-2 focus:ring-yellow-500 transition-all ease-in-out text-xs"
+                        >
+                            GIF
+                        </button>
+
+                        {/* Upload Image Button */}
+                        <div className="relative">
+                            <input
+                                type="file"
+                                id="imageUpload"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => handleImageUpload(e.target.files[0])}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => document.getElementById('imageUpload').click()}
+                                className="p-1 px-3 bg-green-600 text-white rounded-lg hover:bg-green-500 focus:ring-2 focus:ring-green-500 transition-all ease-in-out text-xs"
+                                >
+                                Upload
+                            </button>
+                        </div>
+                    </div>
                     <button
                         type="submit"
-                        className="p-4 bg-indigo-500 text-white rounded-lg hover:bg-indigo-400 focus:ring-2 focus:ring-indigo-500 transition-all ease-in-out"
+                        className="p-4 bg-indigo-500 text-white rounded-lg hover:bg-indigo-400 focus:ring-2 focus:ring-indigo-500 transition-all ease-in-out text-lg"
                     >
                         Send
                     </button>
-                    <button
-                        type="button"
-                        onClick={toggleGifSelector}
-                        className="p-4 bg-yellow-600 text-white rounded-lg hover:bg-yellow-500 focus:ring-2 focus:ring-yellow-500 transition-all ease-in-out"
-                    >
-                        GIF
-                    </button>
-                    {/* Upload Image Button */}
-                    <div className="relative">
-                        <input
-                            type="file"
-                            id="imageUpload"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={(e) => handleImageUpload(e.target.files[0])}
-                        />
-                        <button
-                            type="button"
-                            onClick={() => document.getElementById('imageUpload').click()}
-                            className="p-4 bg-green-600 text-white rounded-lg hover:bg-green-500 focus:ring-2 focus:ring-green-500 transition-all ease-in-out"
-                        >
-                            Upload Image
-                        </button>
-                    </div>
                 </div>
             </form>
+
 
             {isGifSelectorVisible && (
                 <GifSelector onSelect={(url) => handleMessageChange('gif', url)} />
