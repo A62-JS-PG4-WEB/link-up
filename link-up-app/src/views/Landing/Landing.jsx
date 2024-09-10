@@ -10,7 +10,7 @@ export function Landing() {
             <div
                 className="hero min-h-screen"
                 style={{
-                    backgroundImage: "url(https://img.freepik.com/free-photo/long-shot-business-people-meeting_23-2148427153.jpg?t=st=1723898181~exp=1723901781~hmac=aafd5cab694e411236e757fdd11eaf05d53967b6012936c734d1eca35256578d&w=1800)",
+                    backgroundImage: "url(https://imagizer.imageshack.com/v2/1600x1200q70/923/jvbgbq.jpg)",
                 }}>
                 <div className="hero-overlay bg-opacity-60"></div>
                 <div className="hero-content text-neutral-content text-center">
