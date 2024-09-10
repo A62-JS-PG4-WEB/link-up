@@ -71,6 +71,7 @@ export const addTeamMember = async (teamId, member) => {
         [`teams/${teamId}/members/${member}`]: new Date().getTime(),
     });
 };
+ 
 
 export const getTeamChannels = async (teamId) => {
 
