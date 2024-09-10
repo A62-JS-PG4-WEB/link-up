@@ -21,10 +21,10 @@ export default function Profile() {
 
   useEffect(() => {
     if (user) {
-      setUsername(user.username || "");
-      setEmail(user.email || "");
-      setPhoneNumber(user.phoneNumber || "");
-      setImagePreview(user.photoURL || defaultPhotoUrl);
+      setUsername(userData?.username || "");
+      setEmail(userData?.email || "");
+      setPhoneNumber(userData?.phone || "");
+      setImagePreview(userData?.photoURL || defaultPhotoUrl);
     }
   }, [user, userData]);
 
@@ -100,7 +100,7 @@ export default function Profile() {
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="container ">
-        <h1 className="text-2xl font-bold mb-4">Profile</h1>
+        {/* <h1 className="text-2xl font-bold mb-4">Profile</h1> */}
 
         <div className="mb-6">
           <p className="text-lg font-semibold">Current Username: {userData?.username || "User"}</p>
