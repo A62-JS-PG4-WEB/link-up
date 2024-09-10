@@ -69,8 +69,8 @@ export default function Register() {
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <img
                     alt="Your Company"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                    className="mx-auto h-10 w-auto"
+                    src="https://imagizer.imageshack.com/v2/1600x1200q70/922/s4nXvx.png"
+                    className="mx-auto h-16 w-auto"
                 />
                 <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                     Get started with LinkUP
@@ -148,6 +148,7 @@ export default function Register() {
                                 type="password"
                                 required
                                 autoComplete="current-password"
+                                placeholder='Password...'
                                 value={user.password}
                                 onChange={updateUser('password')}
                                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -166,6 +167,7 @@ export default function Register() {
                                 type="password"
                                 required
                                 autoComplete="current-password"
+                                placeholder='Confirm password...'
                                 value={user.confirmPassword}
                                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 onChange={updateUser('confirmPassword')}
