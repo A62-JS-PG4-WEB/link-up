@@ -19,9 +19,13 @@ export function Nav() {
             <div className="flex items-center">
                 <NavLink
                     to={user ? "/home" : "/"}
-                    className="btn btn-ghost text-xl"
+                    className="btn btn-ghost text-xl flex items-center"
                 >
-                    LinkUP
+                    <img
+                        src="https://imagizer.imageshack.com/v2/1600x1200q70/924/KrCL5s.png"
+                        alt="Logo"
+                        className="h-12 w-24 mr-6"
+                    />
                 </NavLink>
             </div>
             <div className="flex-1 flex justify-center items-center">
