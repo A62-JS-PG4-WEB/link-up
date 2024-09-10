@@ -16,10 +16,18 @@ export function Landing() {
                 <div className="hero-content text-neutral-content text-center">
                     <div className="max-w-md">
                         <h1 className="mb-5 text-5xl font-bold">LinkUP</h1>
-                        <p className="mb-5">
-                            Connecting people, one message at a time. Whether you're collaborating with your team, catching up with friends, or building new communities, LinkUP makes communication seamless and fun. Dive in and start connecting today!
+                        <p className="mb-5 text-xl font-semibold">
+                            Connecting People, One Message at a Time!
                         </p>
-                        <button className="btn btn-primary"><NavLink to="/register">Get Started</NavLink></button>
+                        <p className="mb-5">
+                            Welcome to LinkUP, where every message brings people closer together! Whether you're teaming up with colleagues, catching up with friends, or discovering new communities, LinkUP makes every conversation seamless and exciting. Jump in and start connecting today!
+                        </p>
+
+                        <button className="btn btn-primary bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-105 transition duration-300 ease-in-out px-6 py-3 rounded-lg">
+                            <NavLink to="/register" className="flex items-center justify-center">
+                                Get Started
+                            </NavLink>
+                        </button>
                     </div>
                 </div>
 
@@ -27,6 +35,6 @@ export function Landing() {
 
             <Review />
             <Creators />
-        </div>
+        </div >
     )
 }
