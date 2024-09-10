@@ -4,16 +4,27 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { capitalizeFirstLetter } from "../../services/channels.service";
 
-
+/**
+ * Component that displays a list of teams and navigates to the selected team's home page.
+ * 
+ * @component
+ * @param {Object[]} teams - The list of teams available to display.
+ * @returns {JSX.Element} The rendered component.
+ */
 export default function AllTeams({ teams }) {
     const navigate = useNavigate();
     const [selectedTeam, setSelectedTeam] = useState([]);
 
+    /**
+     * Handles team selection and navigation to the home page of the selected team.
+     * 
+     * @function navigatetoHome
+     * @param {Object} team - The selected team object.
+     */
     const navigatetoHome = (team) => {
         setSelectedTeam(team)
         try {
             localStorage.setItem('selectedTeam', JSON.stringify(team));
-            // localStorage.removeItem('selectedChat');  
         } catch (error) {
             toast.error(`Failed to save team to localStorage: ${error}`);
         }

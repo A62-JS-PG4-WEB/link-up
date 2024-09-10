@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../state/app.context";
 import { MAX_CHANNEL_NAME_LENGTH, MIN_CHANNEL_NAME_LENGTH } from "../../common/constants";
 import { addUserChannel } from "../../services/users.service";
@@ -9,10 +8,24 @@ import PropTypes from 'prop-types';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+/**
+ * CreateChannel component allows users to create a new channel within a team.
+ *
+ * @component
+ * @param {Object} team - The selected team object.
+ * @param {function} onClose - Function to close the channel creation modal.
+ * @param {function} onChannelCreated - Function to call after a channel is created successfully.
+ * @returns {JSX.Element} The rendered CreateChannel component.
+ */
 export default function CreateChannel({ team, onClose, onChannelCreated }) {
     const [channel, setChannel] = useState({ name: '' });
     const { userData } = useContext(AppContext);
 
+    /**
+     * Handles the click outside the popup to close the modal.
+     * 
+     * @function useEffect
+     */
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (event.target.classList.contains('popup-overlay')) {
@@ -27,6 +40,13 @@ export default function CreateChannel({ team, onClose, onChannelCreated }) {
         };
     }, [onClose, userData]);
 
+    /**
+     * Updates the channel object when the input value changes.
+     *
+     * @function updateChannel
+     * @param {string} key - The key of the channel object to update.
+     * @param {string} value - The new value for the specified key.
+     */
     const updateChannel = (key, value) => {
         if (channel[key] !== value) {
             setChannel({
@@ -36,6 +56,12 @@ export default function CreateChannel({ team, onClose, onChannelCreated }) {
         }
     };
 
+    /**
+    * Handles the form submission to create a new channel.
+    *
+    * @function handleCreateChannel
+    * @param {Object} e - The form submit event object.
+    */
     const handleCreateChannel = async (e) => {
         e.preventDefault();
 
@@ -89,7 +115,7 @@ export default function CreateChannel({ team, onClose, onChannelCreated }) {
                         <button
                             type="submit"
                             className="px-3 py-1 bg-indigo-500 text-white rounded-lg hover:bg-indigo-400 focus:ring-2 focus:ring-indigo-400 "
-                            >
+                        >
                             Create
                         </button>
                     </div>
@@ -97,51 +123,13 @@ export default function CreateChannel({ team, onClose, onChannelCreated }) {
             </div>
         </div>
     );
-    
-        // <div className="popup-overlay fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-60 z-50">
-        //     <div className="bg-gray-400 p-6 rounded shadow-lg relative">
-        //         <button
-        //             onClick={onClose}
-        //             className="absolute top-2 right-2 text-gray-700 hover:text-red-800 p-2 rounded"
-        //         >
-        //             &times;
-        //         </button>
-        //         <h2 className="text-lg font-semibold text-gray-900">Create New Channel</h2>
-        //         <form onSubmit={handleCreateChannel} className="space-y-6 mt-4">
-        //             <div>
-        //                 <div className="mt-2">
-        //                     <input
-        //                         id="name"
-        //                         name="name"
-        //                         type="text"
-        //                         required
-        //                         autoComplete="name"
-        //                         placeholder="Name your Channel"
-        //                         value={channel.name}
-        //                         onChange={(e) => updateChannel('name', e.target.value)}
-        //                         className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm"
-        //                     />
-        //                 </div>
-        //             </div>
-        //             <div>
-        //                 <button
-        //                     type="submit"
-        //                     className="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-pink-600"
-        //                 >
-        //                     Create
-        //                 </button>
-        //             </div>
-        //         </form>
-        //     </div>
-        // </div>
-    // );
-}
+};
 
 CreateChannel.propTypes = {
     team: PropTypes.shape({
-    
+
         id: PropTypes.string,
-      
+
     }),
     onClose: PropTypes.func.isRequired,
     onChannelCreated: PropTypes.func.isRequired,

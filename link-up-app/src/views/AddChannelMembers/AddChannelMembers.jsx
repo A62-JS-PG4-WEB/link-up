@@ -7,6 +7,18 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { addUserToChannel, getChannelsMembersByID } from "../../services/channels.service";
 
+/**
+ * A popup component to add members to a specific channel.
+ *
+ * It fetches team members from the current team, allowing the user to select one or multiple members to add to the selected channel.
+ * The user can also select all members at once. Members are filtered to exclude the current user.
+ *
+ * @component
+ * @param {Object} props - The props object.
+ * @param {Function} props.onClose - Function to handle closing the popup.
+ * @param {Object} props.channel - The current channel object selected by the user.
+ * @returns {JSX.Element} The rendered component.
+ */
 export default function AddChannelMembers({ onClose, channel }) {
     const { userData } = useContext(AppContext);
     const [selectedOptions, setSelectedOptions] = useState([]);
@@ -15,11 +27,17 @@ export default function AddChannelMembers({ onClose, channel }) {
     const [teamMembers, setTeamMembers] = useState([]);
     const options = ["Star Wars", "Harry Potter", "Lord of the Rings"];
 
+    /**
+    * Fetches the team members from the currently selected team,
+    * excluding the current user.
+    *
+    * @async
+    * @function loadMembers
+    * @returns {Promise<void>} Promise representing the completion of the member loading operation.
+    */
     useEffect(() => {
 
         const teamId = JSON.parse(localStorage.getItem('selectedTeam')).id;
-        // console.log('team members loading');
-
         const loadMembers = async () => {
             try {
                 const members = await getTeamMembersNames(teamId);
@@ -33,6 +51,12 @@ export default function AddChannelMembers({ onClose, channel }) {
         loadMembers();
     }, []);
 
+    /**
+    * Handles closing the popup when clicking outside of it.
+    *
+    * @function handleClickOutside
+    * @param {MouseEvent} event - The mouse event triggered when the user clicks.
+    */
     useEffect(() => {
         console.log('pop up open');
 
@@ -51,6 +75,14 @@ export default function AddChannelMembers({ onClose, channel }) {
         };
     }, []);
 
+    /**
+     * Adds the selected members to the channel.
+     *
+     * @async
+     * @function handleAddMembers
+     * @param {React.FormEvent} e - The form event triggered on submit.
+     * @returns {Promise<void>} Promise representing the completion of the member addition.
+     */
     const handleAddMembers = async (e) => {
         e.preventDefault();
 
@@ -69,6 +101,12 @@ export default function AddChannelMembers({ onClose, channel }) {
         }
     };
 
+    /**
+    * Handles selection or deselection of a single member.
+    *
+    * @function handleOptionChange
+    * @param {string} memberName - The name of the member being selected or deselected.
+    */
     const handleOptionChange = (memberName) => {
         if (selectedOptions.includes(memberName)) {
             setSelectedOptions(selectedOptions.filter(item => item !== memberName));
@@ -77,6 +115,11 @@ export default function AddChannelMembers({ onClose, channel }) {
         }
     };
 
+    /**
+    * Toggles selection of all members.
+    *
+    * @function handleSelectAll
+    */
     const handleSelectAll = () => {
         if (selectAll) {
             setSelectedOptions([]);

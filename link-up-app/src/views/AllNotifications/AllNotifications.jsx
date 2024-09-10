@@ -7,15 +7,27 @@ import SideNav from '../../components/SideNav/SideNav';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+/**
+ * Component for displaying and managing user notifications, specifically invitations.
+ * Users can accept or reject pending invitations and view accepted and rejected invitations.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered component.
+ */
 export default function AllNotifications() {
     const { userData } = useContext(AppContext);
     const [notifications, setNotifications] = useState([]);
     const [acceptedInvitations, setAcceptedInvitations] = useState([]);
     const [rejectedInvitations, setRejectedInvitations] = useState([]);
 
+    /**
+    * Loads user notifications (pending, accepted, and rejected invitations) based on the user's email.
+    *
+    * @async
+    * @function loadNotifications
+    * @returns {Promise<void>} Promise representing the completion of the notifications loading.
+    */
     useEffect(() => {
-
-
         const loadNotifications = async () => {
             try {
                 if (!userData || !userData.email) {
@@ -39,6 +51,14 @@ export default function AllNotifications() {
         loadNotifications()
     }, [userData, setNotifications])
 
+    /**
+   * Handles the acceptance of an invitation. Adds the user to the corresponding team.
+   *
+   * @async
+   * @function handleAccept
+   * @param {string} id - The ID of the invitation to be accepted.
+   * @returns {Promise<void>} Promise representing the completion of the invitation acceptance.
+   */
     const handleAccept = async (id) => {
         try {
             const teamId = await acceptInvitation(id, userData.username);
@@ -60,6 +80,14 @@ export default function AllNotifications() {
         }
     };
 
+    /**
+     * Handles the rejection of an invitation. Removes it from the list of pending notifications.
+     *
+     * @async
+     * @function handleReject
+     * @param {string} id - The ID of the invitation to be rejected.
+     * @returns {Promise<void>} Promise representing the completion of the invitation rejection.
+     */
     const handleReject = async (id) => {
         try {
             await rejectInvitation(id, userData.username);

@@ -1,15 +1,27 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../state/app.context";
-import { createTeam } from "../../services/teams.service";
-import { addUserTeam } from "../../services/users.service";
+import PropTypes from 'prop-types';
 import { createInvitation } from "../../services/invitations.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function InviteTeamMember({ onClose, team }) {
+/**
+ * Component for inviting a team member to a team.
+ *
+ * @param {Object} props - The component props.
+ * @param {Function} props.onClose - Function to close the popup.
+ * @param {Object} props.team - The team to which the member will be invited.
+ * @returns {JSX.Element} The rendered component.
+ */
+export default function InviteTeamMember({ onClose }) {
     const [emailInput, setEmailInput] = useState({ email: '' });
     const { userData } = useContext(AppContext);
 
+    /**
+   * Handles clicks outside of the popup to close it.
+   * 
+   * @param {MouseEvent} event - The click event.
+   */
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (event.target.classList.contains('popup-overlay')) {
@@ -24,8 +36,13 @@ export default function InviteTeamMember({ onClose, team }) {
         };
     }, [onClose]);
 
+    /**
+   * Updates the email input state.
+   * 
+   * @param {string} key - The key to update in the state.
+   * @param {string} value - The new value for the key.
+   */
     const updateEmailInput = (key, value) => {
-
         if (emailInput[key] !== value) {
             setEmailInput({
                 ...emailInput,
@@ -34,12 +51,14 @@ export default function InviteTeamMember({ onClose, team }) {
         }
     };
 
+    /**
+  * Handles the form submission to add a team member.
+  * 
+  * @param {FormEvent} e - The form submit event.
+  */
     const handleAddMembers = async (e) => {
-
         e.preventDefault();
-
         try {
-
             const teamName = JSON.parse(localStorage.getItem('selectedTeam')).name;
             const teamId = JSON.parse(localStorage.getItem('selectedTeam')).id;
 
@@ -104,3 +123,6 @@ export default function InviteTeamMember({ onClose, team }) {
 
     );
 }
+InviteTeamMember.propTypes = {
+    onClose: PropTypes.func.isRequired,
+};

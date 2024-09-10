@@ -8,9 +8,21 @@ import { deleteChannelById } from "../../services/channels.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../Channels/Channels.css';
-import { equalTo, query, onValue, orderByChild, ref } from "firebase/database";
-import { db } from "../../config/firebase-config";
 
+/**
+ * Renders the list of channels for a given team, allows searching, joining, creating, and deleting channels.
+ *
+ * @component
+ * @param {Object} props - The props object.
+ * @param {Object} props.team - The current team object.
+ * @param {string} props.team.name - The name of the team.
+ * @param {string} props.team.owner - The owner of the team.
+ * @param {string} props.team.createdOn - The date the team was created.
+ * @param {string} props.team.id - The ID of the team.
+ * @param {Array<string>} props.team.members - The members of the team.
+ * @param {Function} props.onSelectChannel - Function to handle selecting a channel.
+ * @returns {JSX.Element} The rendered component.
+ */
 export default function Channels({ team, onSelectChannel }) {
     const location = useLocation();
     const { userData } = useContext(AppContext);
@@ -24,6 +36,9 @@ export default function Channels({ team, onSelectChannel }) {
     const dropdownRef = useRef(null);
     const [activeChannelId, setActiveChannelId] = useState('');
 
+    /**
+    * Loads the current team from local storage if no team is provided via props.
+    */
     useEffect(() => {
         if (!team) {
             const savedTeam = localStorage.getItem("selectedTeam");
@@ -40,16 +55,20 @@ export default function Channels({ team, onSelectChannel }) {
         }
     }, [location.state, team]);
 
+    /**
+   * Loads channels for the current user and team, filtering based on the selected team.
+   * Updates the channel list whenever the team or `channelUpdated` state changes.
+   */
     useEffect(() => {
         let isMounted = true;
-    
+
         const loadChannels = async () => {
             try {
                 if (userData && userData.username && currentTeam) {
                     const allChannels = await getUserChannels(userData.username);
                     const listChannels = await getChannelsInfoById(allChannels);
                     const relevantChannels = listChannels.filter((ch) => ch?.team === currentTeam.id);
-                    
+
                     if (isMounted) {
                         setChannels(relevantChannels);
                     }
@@ -60,13 +79,17 @@ export default function Channels({ team, onSelectChannel }) {
                 }
             }
         };
-    
+
         loadChannels();
-    
+
         return () => {
             isMounted = false;
         };
     }, [userData, currentTeam, channelUpdated]);
+
+    /**
+   * Adds an event listener to detect clicks outside the dropdown and close it.
+   */
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
@@ -74,17 +97,35 @@ export default function Channels({ team, onSelectChannel }) {
         };
     }, []);
 
+    /**
+  * Toggles the `channelUpdated` state when a new channel is created to trigger a re-fetch of channels.
+  */
     const handleChannelCreated = () => {
         setChannelUpdated((prev) => !prev);
     };
 
+    /**
+    * Opens the create channel popup.
+    */
     const handleCreateChannelClick = () => {
         setIsPopupOpen(true);
     };
 
+    /**
+    * Closes the create channel popup.
+    */
     const handleClosePopup = () => {
         setIsPopupOpen(false);
     };
+
+    /**
+     * Handles selecting a channel, saving the selected channel to session storage,
+     * updating the UI to mark the channel as active, and notifying the parent component.
+     *
+     * @param {Object} channel - The selected channel object.
+     * @param {string} channel.id - The ID of the channel.
+     * @param {string} channel.name - The name of the channel.
+     */
     const handleChannelClick = async (channel) => {
         try {
             sessionStorage.setItem('selectedChat', JSON.stringify(channel));
@@ -94,13 +135,18 @@ export default function Channels({ team, onSelectChannel }) {
                     ch.id === channel.id ? { ...ch, hasNewMessages: false } : ch
                 )
             );
-    
-            onSelectChannel(channel); 
+
+            onSelectChannel(channel);
         } catch (error) {
             toast.error(`Failed to save Chat to session storage: ${error}`);
         }
     };
 
+    /**
+    * Deletes a channel after user confirmation, updates the channels list after deletion.
+    *
+    * @param {string} channelId - The ID of the channel to delete.
+    */
     const handleDeleteChannel = async (channelId) => {
         if (window.confirm("Are you sure you want to delete this channel?")) {
             try {
@@ -112,6 +158,11 @@ export default function Channels({ team, onSelectChannel }) {
         }
     };
 
+    /**
+    * Searches for a channel by name based on the user's input.
+    *
+    * @param {Object} e - The form submit event.
+    */
     const handleSearch = async (e) => {
         e.preventDefault();
 
@@ -126,18 +177,23 @@ export default function Channels({ team, onSelectChannel }) {
             toast.error('Search failed:', error);
         }
     };
-    const handleResultClick = (result) => {
-        console.log('Selected result:', result);
-        setIsDropdownOpen(false);
-    };
 
-
+    /**
+    * Handles detecting clicks outside the search dropdown and closes it.
+    *
+    * @param {Object} e - The event object.
+    */
     const handleClickOutside = (e) => {
         if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
             setIsDropdownOpen(false);
         }
     };
 
+    /**
+     * Adds the user to a selected channel and updates the channel list.
+     *
+     * @param {Object} ch - The selected channel object.
+     */
     const handleJoinChannel = async (ch) => {
         console.log('joined', ch.name);
         await addUserToChannel(ch.id, userData.username);
@@ -150,14 +206,12 @@ export default function Channels({ team, onSelectChannel }) {
         <div className="channels relative">
             <div className="flex items-center justify-between mb-2">
                 <h3 className="text-lg font-semibold">Channels</h3>
-                {/* {userData?.username === currentTeam?.owner && ( */}
                 <button
                     onClick={handleCreateChannelClick}
                     className="px-1 py-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white text-sm font-medium rounded-md shadow-sm hover:from-gray-700 hover:to-gray-800 transition duration-300 ease-in-out transform hover:scale-105"
                 >
                     +
                 </button>
-                {/* )} */}
             </div>
             <form onSubmit={handleSearch} >
                 <input
@@ -192,35 +246,34 @@ export default function Channels({ team, onSelectChannel }) {
                     </div>
                 </div>
             )}
-            
+
             <div className="space-y-2">
-            <div className="channelsList rounded-lg max-h-60 overflow-y-auto">
-                {channels.length > 0 ? (
-                    channels.map((ch) => (
-                        <div key={ch.id} 
-                        className={`flex justify-between items-center w-full p-2 rounded-md ${
-                            activeChannelId === ch.id ? "bg-gray-600" : "hover:bg-gray-600"
-                        }`}
-                             >
-                                  <button
-                                onClick={() => handleChannelClick(ch)}
-                                className="text-left">
-                                # {ch.name.toLowerCase()}
-                            </button>
-                            {userData?.username === currentTeam?.owner && (
+                <div className="channelsList rounded-lg max-h-60 overflow-y-auto">
+                    {channels.length > 0 ? (
+                        channels.map((ch) => (
+                            <div key={ch.id}
+                                className={`flex justify-between items-center w-full p-2 rounded-md ${activeChannelId === ch.id ? "bg-gray-600" : "hover:bg-gray-600"
+                                    }`}
+                            >
                                 <button
-                                    onClick={() => handleDeleteChannel(ch.id)}
-                                    className="text-white hover:text-red-500 p-2 rounded-full"
-                                    aria-label="Close"
-                                >
-                                    &times;
+                                    onClick={() => handleChannelClick(ch)}
+                                    className="text-left">
+                                    # {ch.name.toLowerCase()}
                                 </button>
-                            )}
-                        </div>
-                    ))
-                ) : (
-                    <p className="text-gray-400">No text channels available</p>
-                )}
+                                {userData?.username === currentTeam?.owner && (
+                                    <button
+                                        onClick={() => handleDeleteChannel(ch.id)}
+                                        className="text-white hover:text-red-500 p-2 rounded-full"
+                                        aria-label="Close"
+                                    >
+                                        &times;
+                                    </button>
+                                )}
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-gray-400">No text channels available</p>
+                    )}
                 </div>
             </div>
             {isPopupOpen && (

@@ -7,6 +7,22 @@ import { AppContext } from "../../state/app.context";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+/**
+ * ChannelInfo component displays information about a specific chat channel, including its name,
+ * associated team, and members. It allows the user to add members to the channel and leave the channel.
+ * 
+ * @component
+ * @param {Object} props - React props
+ * @param {Object} props.channel - The current channel object with details like name, id, members, etc.
+ * @param {string} props.channel.name - The name of the channel
+ * @param {string} props.channel.id - The ID of the channel
+ * @param {Object} props.channel.members - The members of the channel
+ * @param {Object} props.channel.messages - The messages in the channel
+ * @param {function} props.onClose - Function to handle closing the ChannelInfo popup
+ * 
+ * @example
+ * <ChannelInfo channel={selectedChannel} onClose={closePopup} />
+ */
 export function ChannelInfo({ channel, onClose }) {
     const { userData } = useContext(AppContext);
     const [currentChat, setCurrentChat] = useState(channel || location.state?.channel);
@@ -14,7 +30,10 @@ export function ChannelInfo({ channel, onClose }) {
     const [members, setMembers] = useState([]);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-
+    /**
+    * Load current channel from sessionStorage if not passed as a prop.
+    * Effect is triggered whenever the `channel` prop changes.
+    */
     useEffect(() => {
         if (!channel) {
             const savedChat = sessionStorage.getItem('selectedChat');
@@ -32,6 +51,10 @@ export function ChannelInfo({ channel, onClose }) {
 
     }, [channel]);
 
+    /**
+    * Fetch the team information associated with the current chat.
+    * The effect runs whenever `currentChat` changes.
+    */
     useEffect(() => {
         if (currentChat && currentChat.team) {
             const loadInfo = async () => {
@@ -46,7 +69,10 @@ export function ChannelInfo({ channel, onClose }) {
         }
     }, [currentChat]);
 
-
+    /**
+         * Fetch the members of the current channel and update the component state.
+         * The effect runs whenever `currentChat` changes.
+         */
     useEffect(() => {
         if (currentChat) {
             const loadMembers = async () => {
@@ -65,13 +91,17 @@ export function ChannelInfo({ channel, onClose }) {
         }
     }, [currentChat]);
 
-    useEffect(() => {
-    }, [chatInTeam]);
-
+    /**
+     * Open the AddChannelMembers popup.
+     */
     const handleAddClick = () => {
         setIsPopupOpen(true);
     };
 
+    /**
+    * Handle leaving the channel by the user.
+    * Prompts for confirmation and removes the user from the channel if confirmed.
+    */
     const handleLeaveChannel = async () => {
 
         const confirmation = window.confirm('You sure you wanna leave chat?');
@@ -80,6 +110,9 @@ export function ChannelInfo({ channel, onClose }) {
         }
     };
 
+    /**
+    * Close the AddChannelMembers popup.
+    */
     const handleClosePopup = () => {
         setIsPopupOpen(false);
     };
