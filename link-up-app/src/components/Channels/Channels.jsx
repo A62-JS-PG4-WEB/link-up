@@ -8,6 +8,8 @@ import { deleteChannelById } from "../../services/channels.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../Channels/Channels.css';
+import { equalTo, query, onValue, orderByChild, ref } from "firebase/database";
+import { db } from "../../config/firebase-config";
 
 export default function Channels({ team, onSelectChannel }) {
     const location = useLocation();
@@ -16,10 +18,11 @@ export default function Channels({ team, onSelectChannel }) {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [channels, setChannels] = useState([]);
     const [channelUpdated, setChannelUpdated] = useState(false);
-    const [query, setQuery] = useState('');
+    const [search, setSearch] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const [activeChannelId, setActiveChannelId] = useState('');
 
     useEffect(() => {
         if (!team) {
@@ -38,24 +41,32 @@ export default function Channels({ team, onSelectChannel }) {
     }, [location.state, team]);
 
     useEffect(() => {
-
+        let isMounted = true;
+    
         const loadChannels = async () => {
             try {
                 if (userData && userData.username && currentTeam) {
-
-
                     const allChannels = await getUserChannels(userData.username);
                     const listChannels = await getChannelsInfoById(allChannels);
                     const relevantChannels = listChannels.filter((ch) => ch?.team === currentTeam.id);
-                    setChannels(relevantChannels);
+                    
+                    if (isMounted) {
+                        setChannels(relevantChannels);
+                    }
                 }
             } catch (e) {
-                toast.error(`Error loading Channels: ${e}`);
+                if (isMounted) {
+                    toast.error(`Error loading Channels: ${e}`);
+                }
             }
         };
+    
         loadChannels();
+    
+        return () => {
+            isMounted = false;
+        };
     }, [userData, currentTeam, channelUpdated]);
-
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
@@ -74,13 +85,19 @@ export default function Channels({ team, onSelectChannel }) {
     const handleClosePopup = () => {
         setIsPopupOpen(false);
     };
-
     const handleChannelClick = async (channel) => {
         try {
             sessionStorage.setItem('selectedChat', JSON.stringify(channel));
-            onSelectChannel(channel);
+            setActiveChannelId(channel.id);
+            setChannels((prevChannels) =>
+                prevChannels.map((ch) =>
+                    ch.id === channel.id ? { ...ch, hasNewMessages: false } : ch
+                )
+            );
+    
+            onSelectChannel(channel); 
         } catch (error) {
-            toast.error(`Failed to save Chat to localStorage: ${error}`);
+            toast.error(`Failed to save Chat to session storage: ${error}`);
         }
     };
 
@@ -99,10 +116,10 @@ export default function Channels({ team, onSelectChannel }) {
         e.preventDefault();
 
         try {
-            const channelFromDb = await getChannelByName(query, currentTeam.id);
+            const channelFromDb = await getChannelByName(search, currentTeam.id);
             setSearchResults(channelFromDb);
             setIsDropdownOpen(true);
-            setQuery('');
+            setSearch('');
 
 
         } catch (error) {
@@ -146,8 +163,8 @@ export default function Channels({ team, onSelectChannel }) {
                 <input
                     type="text"
                     placeholder="Search #Channels..."
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     name="query"
                     className="mb-3 flex justify-between items-center w-full p-2 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-1 focus:ring-gray-200 text-sm"
                 />
@@ -180,8 +197,12 @@ export default function Channels({ team, onSelectChannel }) {
             <div className="channelsList rounded-lg max-h-60 overflow-y-auto">
                 {channels.length > 0 ? (
                     channels.map((ch) => (
-                        <div key={ch.id} className="flex justify-between items-center w-full p-2 rounded-md hover:bg-gray-600">
-                            <button
+                        <div key={ch.id} 
+                        className={`flex justify-between items-center w-full p-2 rounded-md ${
+                            activeChannelId === ch.id ? "bg-gray-600" : "hover:bg-gray-600"
+                        }`}
+                             >
+                                  <button
                                 onClick={() => handleChannelClick(ch)}
                                 className="text-left">
                                 # {ch.name.toLowerCase()}
