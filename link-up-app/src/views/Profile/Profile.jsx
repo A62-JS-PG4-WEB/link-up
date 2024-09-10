@@ -135,20 +135,6 @@ export default function Profile() {
         {/* Profile Form */}
         <div className="flex flex-col space-y-4">
 
-          {/* Email */}
-
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Email</span>
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input input-bordered w-full"
-            />
-          </div>
-
 
       {/* Phone Number */}
       <div className="form-control w-full">

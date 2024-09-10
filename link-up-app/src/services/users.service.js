@@ -1,7 +1,7 @@
 import { get, set, ref, query, equalTo, orderByChild, update } from 'firebase/database';
 import { db } from '../config/firebase-config';
 import { auth } from '../config/firebase-config';
-import { updateProfile, updateEmail, updatePassword, sendEmailVerification, reauthenticateWithCredential, EmailAuthProvider  } from "firebase/auth";
+import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
 import { collection, where, getDocs } from 'firebase/firestore';
 
 export const updateUserOnlineStatus = async (username, isOnline) => {
@@ -42,44 +42,6 @@ export const searchUsers = async (searchTerm) => {
   }
 };
 
-export const checkEmailFunc = (email) => {
-  const checkEmail = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
-  return checkEmail.test(email);
-}
-export const updateAccountInfoDB = async (username, newEmail) => {
-  try {
-      await update(ref(db, `users/${username}`), { email: newEmail });
-  } catch (error) {
-      console.error('Error updating personal info:', error);
-      throw new Error(error.message);
-  }
-};
-
-export const sendVerificationEmail = async (user) => {
-try {
-  await sendEmailVerification(user);
-  console.log('Verification email sent.');
-} catch (error) {
-  console.error('Error sending verification email:', error);
-}
-};
-
-export const updateUserEmail = async (newEmail, currentPassword) => {
-try {
-
-  const user = auth.currentUser;
-  if (!user) {
-    throw new Error('No user is currently signed in.');
-  }
-
-  await reauthenticateUser(currentPassword);
-  await updateEmail(user, newEmail);
-
-  console.log('Email updated successfully. Please verify the new email address.');
-} catch (error) {
-  throw new Error(`Failed to update email: ${error.message}`);
-}
-};
 export const reauthenticateUser = async (currentPassword) => {
 const user = auth.currentUser;
 if (!user) {
@@ -147,7 +109,6 @@ export const getUserByUsername = async (username) => {
 
 export const getUserByEmail = async (email) => {
   try {
-    // Make sure the email field is correctly indexed in Firebase Realtime Database.
     const snapshot = await get(query(ref(db, 'users'), orderByChild('email'), equalTo(email)));
     
     if (snapshot.exists()) {
