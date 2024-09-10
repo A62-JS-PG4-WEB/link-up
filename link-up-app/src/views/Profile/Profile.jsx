@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { AppContext } from "../../state/app.context";
-import { updateProfilePicture, updateUserEmail, updateUserPassword, updateUserPhoneNumber, updateAccountInfoDB } from "../../services/users.service";
+import { updateProfilePicture, updateUserPassword, updateUserPhoneNumber } from "../../services/users.service";
 import { auth } from "../../config/firebase-config";
 import { getDownloadURL, ref, uploadBytes, getStorage } from "firebase/storage";
 
