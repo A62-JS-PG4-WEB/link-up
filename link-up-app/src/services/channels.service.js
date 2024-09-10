@@ -26,10 +26,10 @@ export const getUserChannels = async (username) => {
 export const addUserToChannel = async (channelId, username) => {
 
     try {
-            await addUserChannel(channelId, username);
-            await update(ref(db), {
-                [`channels/${channelId}/members/${username}`]: new Date().getTime(),
-            })
+        await addUserChannel(channelId, username);
+        await update(ref(db), {
+            [`channels/${channelId}/members/${username}`]: new Date().getTime(),
+        })
     } catch (error) {
         toast.error(`Error deleting channel: ${error}`);
         throw error;
@@ -112,19 +112,15 @@ export const leaveChannel = async (username, channelId, channelName) => {
     }
 };
 
-
-export const getChannelByName = async (channelName) => {
+export const getChannelByName = async (search, teamId) => {
     try {
-        const snapshot = await get(query(ref(db, 'channels'), orderByChild('name'), equalTo(channelName)));
-      
+        const snapshot = await get(query(ref(db, 'channels'), orderByChild('team'), equalTo(teamId)));
+        if (!snapshot.exists()) return [];
 
-        if (snapshot.exists()) {
-            const channels = [];
-            snapshot.forEach(childSnapshot => {
-                const channel = childSnapshot.val(); 
-                channels.push(channel); 
-            });
-            return Object.values(snapshot.val());
+        const allChannels = Object.values(snapshot.val())
+
+        if (allChannels) {
+            return allChannels.filter(ch => ch.name.toLowerCase().includes(search.toLowerCase()));
         } else {
             return [];
         }

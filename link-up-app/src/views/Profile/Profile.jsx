@@ -61,14 +61,12 @@ export default function Profile() {
     setMessage("");
     try {
       const user = auth.currentUser;
-
-      if (email && email !== user.email) {
+        if (email && email !== user.email) {
         if (!oldPassword) {
           setMessage("Old password is required to update email.");
           setLoading(false);
           return;
-        }
-
+        }  
         await updateAccountInfoDB(userData.username, email);
 
         const successMessage = await updateUserEmail(email, oldPassword);
@@ -79,20 +77,19 @@ export default function Profile() {
           userData: { ...prevState.userData, email },
         }));
       }
-
+ 
       if (oldPassword && newPassword) {
         await updateUserPassword(oldPassword, newPassword);
       }
-
+  
       if (phoneNumber && phoneNumber !== user.phoneNumber) {
-        await updateUserPhoneNumber(userData, phoneNumber);
-      }
-
-      setAppState((prevState) => ({
+        await updateUserPhoneNumber(userData, phoneNumber); 
+        }
+        setAppState((prevState) => ({
         ...prevState,
         user: { ...prevState.userData, email, phoneNumber },
       }));
-
+  
       setMessage("Profile updated successfully!");
     } catch (error) {
       setMessage(`Error: ${error.message}`);
@@ -100,10 +97,9 @@ export default function Profile() {
       setLoading(false);
     }
   };
-
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="container mx-auto p-8 bg-white rounded-lg shadow-lg max-w-lg">
+    <div className="flex justify-center items-center min-h-screen bg-gray-700">
+      <div className="container mx-auto p-8 bg-gray-900 rounded-lg shadow-lg max-w-lg">
         <h1 className="text-2xl font-bold mb-4">Profile</h1>
 
         <div className="mb-6">
@@ -113,34 +109,34 @@ export default function Profile() {
         {/* Profile Picture Upload */}
         <div className="flex items-center justify-center mb-6">
           <div className="avatar">
-            <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+            <div className="w-24 rounded-full ring  bg-indigo-500 ring-offset-base-100 ring-offset-2">
               <img src={imagePreview} alt="User avatar" />
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center mb-6">
+        <div className="flex text-slate-400 flex-col items-center mb-6">
           <input
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="file-input file-input-bordered file-input-primary w-full max-w-xs mb-4"
+            className="file-input file-input-bordered  bg-indigo-500 text-white hover:bg-indigo-400 mt-2 w-full max-w-xs mb-4"
           />
           <button
             onClick={handleImageUpload}
-            className="btn btn-primary mt-2"
+            className="btn  bg-indigo-500 text-white hover:bg-indigo-400 mt-2"
           >
             Upload Photo
           </button>
         </div>
 
         {/* Profile Form */}
-        <div className="flex flex-col space-y-4">
+        <div className="text-slate-400 flex flex-col space-y-4">
 
           {/* Email */}
 
           <div className="form-control w-full">
             <label className="label">
-              <span className="label-text">Email</span>
+              <span className="label-text text-white">Email</span>
             </label>
             <input
               type="email"
@@ -152,9 +148,9 @@ export default function Profile() {
 
 
           {/* Phone Number */}
-          <div className="form-control w-full">
+          <div className=" text-slate-400 form-control w-full">
             <label className="label">
-              <span className="label-text">Phone Number</span>
+              <span className="label-text text-white">Phone Number</span>
             </label>
             <input
               type="tel"
@@ -166,9 +162,9 @@ export default function Profile() {
 
 
           {/* Old Password */}
-          <div className="form-control w-full">
+          <div className=" text-slate-400 form-control w-full">
             <label className="label">
-              <span className="label-text">Old Password</span>
+              <span className="label-text text-white">Old Password</span>
             </label>
             <input
               type="password"
@@ -179,9 +175,9 @@ export default function Profile() {
           </div>
 
           {/* New Password */}
-          <div className="form-control w-full">
+          <div className=" text-slate-400 form-control w-full">
             <label className="label">
-              <span className="label-text">New Password</span>
+              <span className="label-text  text-white">New Password</span>
             </label>
             <input
               type="password"
@@ -195,7 +191,7 @@ export default function Profile() {
           <div>
             <button
               onClick={handleSave}
-              className={`btn btn-primary mt-4 ${loading ? "loading" : ""}`}
+              className={`btn bg-indigo-500 hover:bg-indigo-400 text-white mt-4 ${loading ? "loading" : ""}`}
             >
               {loading ? "Saving..." : "Save Changes"}
             </button>

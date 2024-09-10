@@ -35,13 +35,13 @@ export const updateAccountInfoDB = async (username, newEmail) => {
   }
 };
 
-export const sendVerificationEmail = async (user) => {
-  try {
-    await sendEmailVerification(user);
-  } catch (error) {
-    toast.error(`Error sending verification email: ${error}`);
-  }
-};
+// export const sendVerificationEmail = async (user) => {
+//   try {
+//     await sendEmailVerification(user);
+//   } catch (error) {
+//     toast.error(`Error sending verification email: ${error}`);
+//   }
+// };
 
 export const updateUserEmail = async (newEmail, currentPassword) => {
   try {

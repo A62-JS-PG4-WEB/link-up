@@ -97,16 +97,10 @@ export default function Channels({ team, onSelectChannel }) {
 
     const handleSearch = async (e) => {
         e.preventDefault();
-        console.log(query);
 
         try {
-            const channelFromDb = await getChannelByName(query);
-
-            const filtered = channelFromDb.filter(ch => ch.team === currentTeam.id);
-
-            console.log(filtered);
-
-            setSearchResults(filtered);
+            const channelFromDb = await getChannelByName(query, currentTeam.id);
+            setSearchResults(channelFromDb);
             setIsDropdownOpen(true);
             setQuery('');
 
