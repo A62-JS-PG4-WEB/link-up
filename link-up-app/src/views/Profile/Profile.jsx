@@ -132,7 +132,7 @@ export default function Profile() {
         {/* Profile Form */}
         <div className="text-slate-400 flex flex-col space-y-4">
 
-          {/* Email */}
+          {/* Email
 
           <div className="form-control w-full">
             <label className="label">
@@ -144,7 +144,7 @@ export default function Profile() {
               onChange={(e) => setEmail(e.target.value)}
               className="input input-bordered w-full"
             />
-          </div>
+          </div> */}
 
 
           {/* Phone Number */}
