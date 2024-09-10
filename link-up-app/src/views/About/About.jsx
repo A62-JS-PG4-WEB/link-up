@@ -1,7 +1,7 @@
 export default function About(){
     return(
         <>
-            <div className="about-container p-8 text-gray-900 bg-gradient-to-r from-gray-100 to-indigo-300">
+            <div className="about-container p-8 text-gray-900 bg-gradient-to-l from-white to-indigo-100">
                 <h1 className="text-4xl font-bold mb-4">About Us</h1>
                 <p className="mb-6 text-lg">Welcome to LinkUP! 🎉💬</p>
 
