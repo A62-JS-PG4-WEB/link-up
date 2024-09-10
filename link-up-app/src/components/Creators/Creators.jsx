@@ -12,7 +12,7 @@ export default function Creators() {
         },
         {
             name: "Lyuboslava",
-            imageUrl: "https://imageshack.com/i/pmuGDDfxj",
+            imageUrl: "https://imagizer.imageshack.com/v2/240x247q70/c/r/923/wd35P4.jpg",
             githubUrl: "https://github.com/Lyuboslava1"
         }
     ];
