@@ -9,7 +9,7 @@ export function Review() {
                 <figure className="mt-10">
                     <blockquote className="text-center text-xl font-semibold leading-8 text-gray-900 sm:text-2xl sm:leading-9">
                         <p>
-                            “This application has been an invaluable tool for collaborating with my team. It’s intuitive and efficient, making communication seamless and enjoyable. The overall experience is highly positive and greatly enhances our productivity.”
+                            “LinkUP has proven to be an indispensable asset for team collaboration. Its intuitive design and efficiency streamline communication, making interactions both seamless and enjoyable. The overall experience with LinkUP is exceptionally positive, significantly boosting our productivity and enhancing our workflow”
                         </p>
                     </blockquote>
                     <figcaption className="mt-10">
