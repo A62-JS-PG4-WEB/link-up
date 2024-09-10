@@ -23,6 +23,7 @@ import SearchUser from './components/SearchUser/SearchUser.jsx';
 import Authenticated from './hoc/Authenticated.jsx'
 import Error from './views/404/Error.jsx'
 import Chat from './components/Chat/Chat.jsx'
+import ChatDirectMessages from './components/ChatDirectMessages/ChatDirectMessages.jsx'
 
 
 function App() {
@@ -75,7 +76,7 @@ function App() {
             <Route path='/register' element={<Register />} />
             <Route path='/home' element={<Authenticated><Home /></Authenticated>} />
             <Route path='/notifications' element={<Authenticated><AllNotifications /></Authenticated>} />
-            <Route path='/chat/:channelId' element={<Authenticated><Chat /></Authenticated>} /> 
+            <Route path='/chat/:channelId' element={<Authenticated><ChatDirectMessages /></Authenticated>} /> 
             {/* {does not exist} */}
             {/* <Route path='/create-team' element={<Authenticated><CreateTeam /></Authenticated>} /> */}
             {/* {does not exist} */}
