@@ -8,7 +8,7 @@ export function Footer() {
                 <nav className="grid grid-flow-col gap-4">
                     <a className="link link-hover" href="/about">About us</a>
                     <a className="link link-hover" href="/contact">Contact</a>
-                    <a className="link link-hover" href="">Careers</a>
+                    <a className="link link-hover" href="/careers">Careers</a>
                 </nav>
                 <nav>
                     <div className="grid grid-flow-col gap-4">

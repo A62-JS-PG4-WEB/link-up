@@ -24,6 +24,7 @@ import Authenticated from './hoc/Authenticated.jsx'
 import Error from './views/404/Error.jsx'
 import About from './views/About/About.jsx'
 import Contact from './views/Contact/Contact.jsx'
+import Careers from './views/Careers/Careers.jsx'
 
 
 function App() {
@@ -79,6 +80,7 @@ function App() {
             <Route path='/' element={<Landing />} />
             <Route path='/about' element={<About />} />
             <Route path='/contact' element={<Contact />} />
+            <Route path='/careers' element={<Careers />} />
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
             <Route path='/home' element={<Authenticated><Home /></Authenticated>} />
