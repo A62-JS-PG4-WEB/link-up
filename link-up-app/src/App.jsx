@@ -22,6 +22,7 @@ import Profile from './views/Profile/Profile.jsx';
 import SearchUser from './components/SearchUser/SearchUser.jsx';
 import Authenticated from './hoc/Authenticated.jsx'
 import Error from './views/404/Error.jsx'
+import About from './views/About/About.jsx'
 
 
 function App() {
@@ -75,6 +76,7 @@ function App() {
 
           <Routes>
             <Route path='/' element={<Landing />} />
+            <Route path='/about' element={<About />} />
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
             <Route path='/home' element={<Authenticated><Home /></Authenticated>} />

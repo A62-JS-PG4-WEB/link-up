@@ -68,9 +68,10 @@ export const addChannelToTeam = async (teamID, channelID) => {
 
 export const addTeamMember = async (teamId, member) => {
     await update(ref(db), {
-        [`teams / ${teamId} / members / ${member}`]: new Date().getTime(),
+        [`teams/${teamId}/members/${member}`]: new Date().getTime(),
     });
 };
+ 
 
 export const getTeamChannels = async (teamId) => {
 
