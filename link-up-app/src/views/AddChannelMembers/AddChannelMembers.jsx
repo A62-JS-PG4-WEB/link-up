@@ -63,9 +63,6 @@ export default function AddChannelMembers({ onClose, channel }) {
                 toast.success(`${username} added to #${channel.name}`)
 
             })
-            //     await createInvitation(invitation);
-            // await createInvitation(notification);
-
             onClose();
         } catch (error) {
             toast.error(error.message);

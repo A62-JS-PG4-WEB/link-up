@@ -139,22 +139,25 @@ export default function Team({ team, onClose }) {
                                                 : "Show Members"}
                                         </button>
                                         {isDropdownOpen && (
-                                            <ul className="ml-4 mt-2">
-                                                {Object.keys(members).map((memberKey, index) => (
-                                                    <li
-                                                        key={index}
-                                                        className="flex justify-between items-center"
-                                                    >
-                                                        <span>{memberKey}</span>
-                                                        {userData?.username === currentTeam.owner && (
-                                                            <button
-                                                                className="text-white mr-2 hover:text-red-800"
-                                                                onClick={() => handleRemoveMember(memberKey)}
-                                                            >
-                                                                x
-                                                            </button>)}
-                                                    </li>
-                                                ))}
+                                            <ul className="ml-2 mt-2 max-h-40 overflow-y-auto">
+                                                <div className="channelsList rounded-lg max-h-20 overflow-y-auto">
+                                                    {Object.keys(members).map((memberKey, index) => (
+                                                        <li
+                                                            key={index}
+                                                            className="flex justify-between items-center p-1 bg-gray-700 hover:bg-gray-600 rounded-md mb-1"
+                                                        >
+                                                            <span>{memberKey}</span>
+                                                            {userData?.username === currentTeam.owner && (
+                                                                <button
+                                                                    className="text-white mr-2 hover:text-red-800"
+                                                                    onClick={() => handleRemoveMember(memberKey)}
+                                                                >
+                                                                    &times;
+                                                                </button>
+                                                            )}
+                                                        </li>
+                                                    ))}
+                                                </div>
                                             </ul>
                                         )}
                                     </div>

@@ -1,0 +1,27 @@
+/* styles.css */
+.custom-checkbox {
+    appearance: none;
+    background-color: #4a5568; /* Gray-700 */
+    border-radius: 0.25rem; /* rounded-md */
+    border: 1px solid #4a5568; /* Gray-700 */
+    width: 1rem;
+    height: 1rem;
+    position: relative;
+    cursor: pointer;
+}
+
+.custom-checkbox:checked {
+    background-color: #6366f1; /* Indigo-500 */
+    border-color: #6366f1; /* Indigo-500 */
+}
+
+.custom-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    top: 0.25rem;
+    left: 0.25rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: white;
+    clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
+}
