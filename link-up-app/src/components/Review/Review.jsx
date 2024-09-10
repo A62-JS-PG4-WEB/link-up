@@ -9,8 +9,7 @@ export function Review() {
                 <figure className="mt-10">
                     <blockquote className="text-center text-xl font-semibold leading-8 text-gray-900 sm:text-2xl sm:leading-9">
                         <p>
-                            “Blestqshto prilojenie da si lafim s kolegite, pruskame sa ot kef. Ponqkoga imam chuvstvoto che e ot maikrosoft shot lagva ama nqq problemi.”
-                        </p>
+                            “This application has been an invaluable tool for collaborating with my team. It’s intuitive and efficient, making communication seamless and enjoyable. Despite occasional minor glitches, the overall experience is highly positive and greatly enhances our productivity.”                        </p>
                     </blockquote>
                     <figcaption className="mt-10">
                         <img
@@ -19,11 +18,11 @@ export function Review() {
                             className="mx-auto h-10 w-10 rounded-full"
                         />
                         <div className="mt-4 flex items-center justify-center space-x-3 text-base">
-                            <div className="font-semibold text-gray-900">Gosho Pesho</div>
+                            <div className="font-semibold text-gray-900">Gergana Mihaleva</div>
                             <svg width={3} height={3} viewBox="0 0 2 2" aria-hidden="true" className="fill-gray-900">
                                 <circle r={1} cx={1} cy={1} />
                             </svg>
-                            <div className="text-gray-600">CEO of Kamioni</div>
+                            <div className="text-gray-600">CEO of Workcation</div>
                         </div>
                     </figcaption>
                 </figure>

@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { Review } from "../../components/Review/Review";
+import Creators from "../../components/Creators/Creators";
 
 export function Landing() {
 
@@ -25,6 +26,7 @@ export function Landing() {
             </div>
 
             <Review />
+            <Creators />
         </div>
     )
 }
