@@ -18,7 +18,7 @@ export default function AddChannelMembers({ onClose, channel }) {
     useEffect(() => {
 
         const teamId = JSON.parse(localStorage.getItem('selectedTeam')).id;
-        console.log('team members loading');
+        // console.log('team members loading');
 
         const loadMembers = async () => {
             try {

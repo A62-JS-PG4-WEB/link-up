@@ -57,7 +57,10 @@ function App() {
   }, [user]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="loading-container">
+      <span className="loading loading-dots loading-lg"></span>
+    </div>
+      ;
   }
 
   return (

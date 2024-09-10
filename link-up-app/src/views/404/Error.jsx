@@ -8,6 +8,7 @@ export default function Error() {
                 <p className="text-2xl md:text-3xl font-semibold mt-4">
                     Oops! Page not found.
                 </p>
+                <span className="loading loading-dots loading-lg"></span>
                 <p className="mt-2 mb-8 text-gray-500">
                     The page you are looking for doesn’t exist or has been moved.
                 </p>
