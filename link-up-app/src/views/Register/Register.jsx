@@ -65,7 +65,7 @@ export default function Register() {
     };
 
     return (
-        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-base-200">
+        <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-l from-white to-indigo-100">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <img
                     alt="Your Company"
