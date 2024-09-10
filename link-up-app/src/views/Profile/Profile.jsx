@@ -9,7 +9,6 @@ const storage = getStorage();
 export default function Profile() {
   const { userData, user, setAppState } = useContext(AppContext);
   const [username, setUsername,] = useState("");
-  const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -21,7 +20,6 @@ export default function Profile() {
   useEffect(() => {
     if (user) {
       setUsername(userData?.username || "");
-      setEmail(userData?.email || "");
       setPhoneNumber(userData?.phone || "");
       setImagePreview(user?.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp");
     }
@@ -61,26 +59,12 @@ export default function Profile() {
     try {
       const user = auth.currentUser;
 
-      if (email && email !== user.email) {
-        if (!oldPassword) {
-          setMessage("Old password is required to update email.");
-          setLoading(false);
-          return;
-        }
-
-        await updateAccountInfoDB(userData.username, email);
-
-        const successMessage = await updateUserEmail(email, oldPassword);
-        setMessage(successMessage);
-
-        setAppState((prevState) => ({
-          ...prevState,
-          userData: { ...prevState.userData, email },
-        }));
-      }
-
       if (oldPassword && newPassword) {
         await updateUserPassword(oldPassword, newPassword);
+      } else if (newPassword) {
+        setMessage("Old password is required to update the new password.");
+        setLoading(false);
+        return;
       }
 
       if (phoneNumber && phoneNumber !== user.phoneNumber) {
@@ -89,7 +73,7 @@ export default function Profile() {
 
       setAppState((prevState) => ({
         ...prevState,
-        user: { ...prevState.userData, email, phoneNumber },
+        user: { ...prevState.user, phoneNumber },
       }));
 
       setMessage("Profile updated successfully!");
@@ -99,6 +83,7 @@ export default function Profile() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
