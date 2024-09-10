@@ -98,8 +98,8 @@ export default function Profile() {
     }
   };
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-700">
-      <div className="container mx-auto p-8 bg-gray-900 rounded-lg shadow-lg max-w-lg">
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="container ">
         <h1 className="text-2xl font-bold mb-4">Profile</h1>
 
         <div className="mb-6">
