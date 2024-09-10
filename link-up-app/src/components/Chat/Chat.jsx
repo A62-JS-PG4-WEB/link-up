@@ -16,7 +16,7 @@ export default function Chat({ channel, onClose }) {
     const { userData } = useContext(AppContext);
     const [currentChat, setCurrentChat] = useState(channel || location.state?.channel);
     const [currentTeam, setCurrentTeam] = useState([]);
-    const [message, setMessage] = useState({ message: '', gif: '' });
+    const [message, setMessage] = useState({ message: '', gif: '', image: null, });
     const [currentMessages, setCurrentMessages] = useState([]);
     const [photoUrls, setPhotoUrls] = useState({});
     const [isChannelInfoVisible, setIsChannelInfoVisible] = useState(false);
@@ -37,11 +37,11 @@ export default function Chat({ channel, onClose }) {
     useEffect(() => {
 
         const loadLastMessage = async () => {
-            if(userData){
+            if (userData) {
                 const lastMessageId = await getLastMessage(userData.username, currentChat.id);
-                setLastMessageSent(lastMessageId); 
+                setLastMessageSent(lastMessageId);
             }
-           
+
         }
         loadLastMessage();
     });
@@ -55,11 +55,11 @@ export default function Chat({ channel, onClose }) {
             const messagesRef = ref(db, 'messages');
             const messagesQuery = query(messagesRef, orderByChild('channelId'), equalTo(currentChat.id));
 
-            const unsubscribe = onValue(messagesQuery, async (snapshot) => {      
+            const unsubscribe = onValue(messagesQuery, async (snapshot) => {
                 const messagesData = snapshot.val();
                 if (messagesData) {
                     try {
-                       const allMessagesInChat = Object.values(messagesData);
+                        const allMessagesInChat = Object.values(messagesData);
                         // const detailedMessages = await getMessageInfo(messageIds);                        
                         const userTimestamp = await getUserTimestamp(currentChat.id, userData.username)
                         const allReadMessages = allMessagesInChat.filter((m) => m.createdOn <= userTimestamp);
@@ -116,14 +116,50 @@ export default function Chat({ channel, onClose }) {
     }, [currentMessages]);
 
     const handleMessageChange = (key, value) => {
-        setMessage({
-            ...message,
+        setMessage((prev) => ({
+            ...prev,
             [key]: value,
-        });
+        }));
         if (key === 'gif') {
             setIsGifSelectorVisible(false);
         }
     };
+
+    const handleImageUpload = (file) => {
+        // Check if file is present
+        if (!file) return;
+
+        // Check if file is an image
+        if (!file.type.startsWith('image/')) {
+            toast.warn('Please select a valid image file!');
+            return;
+        }
+
+        // Define the size limit (e.g., 5 MB)
+        const sizeLimit = 5 * 1024 * 1024; // 5 MB in bytes
+
+        // Check if file size exceeds the limit
+        if (file.size > sizeLimit) {
+            toast.warn('The file size exceeds the 5 MB limit. Please upload a smaller image.');
+            return;
+        }
+
+        // Create a FileReader instance
+        const reader = new FileReader();
+
+        // On load, update the state with the image data
+        reader.onload = (e) => {
+            setMessage((prev) => ({
+                ...prev,
+                image: e.target.result,
+            }));
+        };
+
+        // Read the file as a data URL
+        reader.readAsDataURL(file);
+    };
+
+
 
     const handleSendMessage = async (e) => {
         e.preventDefault();
@@ -262,127 +298,16 @@ export default function Chat({ channel, onClose }) {
                     </div>
                 </div>
             </div>
-          {(readMessages || unreadMessages) ? ( 
-            <>
-            {/* Chat messages container */} 
-            <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
-                {/* <ChatView channel={currentChat}/> */}
-                <div className="chat-container">
-                    {readMessages.map((m, index) => {
-                        const showDateSeparator =
-                            index === 0 ||
-                            new Date(readMessages[index - 1].createdOn).toDateString() !== new Date(m.createdOn).toDateString();
-
-                        return (
-                            <div key={m.id}>
-                                {/* Date separator */}
-                                {showDateSeparator && (
-                                    <div className="date-separator text-center my-2 text-gray-500">
-                                        {new Date(m.createdOn).toLocaleDateString()}
-                                    </div>
-                                )}
-                                {/* User message */}
-                                {m.senderUsername === userData.username ? (
-                                    <div className="chat chat-end mb-4">
-                                        <div className="chat-image avatar"></div>
-                                        <div className="chat-header">
-                                            me
-                                            <time className="text-xs opacity-50 ml-1">
-                                                {new Date(m.createdOn).toLocaleTimeString()}
-                                            </time>
-                                        </div>
-                                        <div className="chat-bubble">
-                                            {editingMessageId === m.id ? (
-                                                <form onSubmit={handleUpdateMessage}>
-                                                    <input
-                                                        type="text"
-                                                        value={editingMessageContent}
-                                                        onChange={handleChange}
-                                                        className="w-full p-1.5 bg-gray-700 text-white rounded-md border border-gray-600 placeholder-gray-400 focus:ring-2"
-                                                    />
-                                                    <div>
-                                                        <button
-                                                            type="submit"
-                                                            className="mt-2 px-3  bg-indigo-500 text-white rounded-lg hover:bg-indigo-400 focus:ring-2 focus:ring-indigo-400"
-                                                        >
-                                                            Save
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className='text-red-500 px-8'
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                handleDeleteMessage(m.id)
-                                                            }}
-                                                        >
-                                                            Delete
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setEditingMessageId(null)}
-                                                            className="text-white hover:text-red-500  p-2 rounded-full"
-                                                            aria-label="Close"
-                                                        >
-                                                            &times;
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            ) : (
-                                                <>
-                                                    {m.message && <div>{m.message}</div>}
-                                                    {m.gif && <div className="gif-container"><img src={m.gif} alt="GIF" /></div>}
-                                                </>
-                                            )}
-                                        </div>
-                                        {lastMessageSent &&
-                                            (lastMessageSent === m.id && <button
-                                                className='text-white'
-                                                onClick={() => handleEditMessage(m.id, m.message)}
-                                            >
-                                                Edit
-                                            </button>)}
-                                    </div>
-                                ) : (
-                                    <div className="chat chat-start">
-                                        <div className="chat-image avatar">
-                                            <div className="w-10 rounded-full">
-                                                {photoUrls[m.senderUsername] ? (
-                                                    <img
-                                                        alt="User avatar"
-                                                        src={photoUrls[m.senderUsername]}
-                                                        className="w-full h-full rounded-full object-cover"
-                                                    />
-                                                ) : (
-                                                    <span className="flex items-center justify-center w-full h-full rounded-full bg-indigo-500 text-white font-bold text-lg">
-                                                        {m.senderUsername.charAt(0).toUpperCase()}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-                                        <div className="chat-header">
-                                            {m.senderUsername}
-                                            <time className="text-xs opacity-50 ml-1">
-                                                {new Date(m.createdOn).toLocaleTimeString()}
-                                            </time>
-                                        </div>
-                                        <div className="chat-bubble">
-                                            {m.message && <div>{m.message}</div>}
-                                            {m.gif && <div className="gif-container-receiver"><img src={m.gif} alt="GIF" /></div>}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })}
-                    {unreadMessages.length > 0 && (
-                        <>
-                            <div className="unread-separator text-center my-1 py-1 text-gray-200 rounded-lg">
-                                <h1 className="unread-message">New messages</h1>
-                            </div>
-                            {unreadMessages.map((m, index) => {
+            {(readMessages || unreadMessages) ? (
+                <>
+                    {/* Chat messages container */}
+                    <div className="flex-1 bg-gray-700 p-4 rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+                        {/* <ChatView channel={currentChat}/> */}
+                        <div className="chat-container">
+                            {readMessages.map((m, index) => {
                                 const showDateSeparator =
                                     index === 0 ||
-                                    new Date(unreadMessages[index - 1].createdOn).toDateString() !== new Date(m.createdOn).toDateString();
+                                    new Date(readMessages[index - 1].createdOn).toDateString() !== new Date(m.createdOn).toDateString();
 
                                 return (
                                     <div key={m.id}>
@@ -485,12 +410,123 @@ export default function Chat({ channel, onClose }) {
                                     </div>
                                 );
                             })}
-                        </>
-                    )}
-                </div>
-            </div>
-            </>) : <p>
-            no messages</p>}
+                            {unreadMessages.length > 0 && (
+                                <>
+                                    <div className="unread-separator text-center my-1 py-1 text-gray-200 rounded-lg">
+                                        <h1 className="unread-message">New messages</h1>
+                                    </div>
+                                    {unreadMessages.map((m, index) => {
+                                        const showDateSeparator =
+                                            index === 0 ||
+                                            new Date(unreadMessages[index - 1].createdOn).toDateString() !== new Date(m.createdOn).toDateString();
+
+                                        return (
+                                            <div key={m.id}>
+                                                {/* Date separator */}
+                                                {showDateSeparator && (
+                                                    <div className="date-separator text-center my-2 text-gray-500">
+                                                        {new Date(m.createdOn).toLocaleDateString()}
+                                                    </div>
+                                                )}
+                                                {/* User message */}
+                                                {m.senderUsername === userData.username ? (
+                                                    <div className="chat chat-end mb-4">
+                                                        <div className="chat-image avatar"></div>
+                                                        <div className="chat-header">
+                                                            me
+                                                            <time className="text-xs opacity-50 ml-1">
+                                                                {new Date(m.createdOn).toLocaleTimeString()}
+                                                            </time>
+                                                        </div>
+                                                        <div className="chat-bubble">
+                                                            {editingMessageId === m.id ? (
+                                                                <form onSubmit={handleUpdateMessage}>
+                                                                    <input
+                                                                        type="text"
+                                                                        value={editingMessageContent}
+                                                                        onChange={handleChange}
+                                                                        className="w-full p-1.5 bg-gray-700 text-white rounded-md border border-gray-600 placeholder-gray-400 focus:ring-2"
+                                                                    />
+                                                                    <div>
+                                                                        <button
+                                                                            type="submit"
+                                                                            className="mt-2 px-3  bg-indigo-500 text-white rounded-lg hover:bg-indigo-400 focus:ring-2 focus:ring-indigo-400"
+                                                                        >
+                                                                            Save
+                                                                        </button>
+                                                                        <button
+                                                                            type="button"
+                                                                            className='text-red-500 px-8'
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                handleDeleteMessage(m.id)
+                                                                            }}
+                                                                        >
+                                                                            Delete
+                                                                        </button>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => setEditingMessageId(null)}
+                                                                            className="text-white hover:text-red-500  p-2 rounded-full"
+                                                                            aria-label="Close"
+                                                                        >
+                                                                            &times;
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                            ) : (
+                                                                <>
+                                                                    {m.message && <div>{m.message}</div>}
+                                                                    {m.gif && <div className="gif-container"><img src={m.gif} alt="GIF" /></div>}
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                        {lastMessageSent &&
+                                                            (lastMessageSent === m.id && <button
+                                                                className='text-white'
+                                                                onClick={() => handleEditMessage(m.id, m.message)}
+                                                            >
+                                                                Edit
+                                                            </button>)}
+                                                    </div>
+                                                ) : (
+                                                    <div className="chat chat-start">
+                                                        <div className="chat-image avatar">
+                                                            <div className="w-10 rounded-full">
+                                                                {photoUrls[m.senderUsername] ? (
+                                                                    <img
+                                                                        alt="User avatar"
+                                                                        src={photoUrls[m.senderUsername]}
+                                                                        className="w-full h-full rounded-full object-cover"
+                                                                    />
+                                                                ) : (
+                                                                    <span className="flex items-center justify-center w-full h-full rounded-full bg-indigo-500 text-white font-bold text-lg">
+                                                                        {m.senderUsername.charAt(0).toUpperCase()}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="chat-header">
+                                                            {m.senderUsername}
+                                                            <time className="text-xs opacity-50 ml-1">
+                                                                {new Date(m.createdOn).toLocaleTimeString()}
+                                                            </time>
+                                                        </div>
+                                                        <div className="chat-bubble">
+                                                            {m.message && <div>{m.message}</div>}
+                                                            {m.gif && <div className="gif-container-receiver"><img src={m.gif} alt="GIF" /></div>}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </>) : <p>
+                no messages</p>}
             {/* Input area */}
             <form onSubmit={handleSendMessage} className="space-y-6 mt-4">
                 <div className="mt-4 flex items-center space-x-4">
@@ -514,8 +550,21 @@ export default function Chat({ channel, onClose }) {
                                 </button>
                             </div>
                         )}
+                        {message.image && (
+                            <div className="absolute right-0 top-0 h-full flex items-center pr-4">
+                                <img src={message.image} alt="Selected Image" className="w-12 h-12 object-cover rounded-lg" />
+                                <button
+                                    type="button"
+                                    className="text-red-500 ml-2"
+                                    onClick={() => handleMessageChange('image', null)}
+                                >
+                                    &times;
+                                </button>
+                            </div>
+                        )}
                     </div>
                     <button
+                        type="submit"
                         className="p-4 bg-indigo-500 text-white rounded-lg hover:bg-indigo-400 focus:ring-2 focus:ring-indigo-500 transition-all ease-in-out"
                     >
                         Send
@@ -527,6 +576,23 @@ export default function Chat({ channel, onClose }) {
                     >
                         GIF
                     </button>
+                    {/* Upload Image Button */}
+                    <div className="relative">
+                        <input
+                            type="file"
+                            id="imageUpload"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => handleImageUpload(e.target.files[0])}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => document.getElementById('imageUpload').click()}
+                            className="p-4 bg-green-600 text-white rounded-lg hover:bg-green-500 focus:ring-2 focus:ring-green-500 transition-all ease-in-out"
+                        >
+                            Upload Image
+                        </button>
+                    </div>
                 </div>
             </form>
 
