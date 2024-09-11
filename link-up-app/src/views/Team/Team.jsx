@@ -8,6 +8,18 @@ import { removeUserFromTeam } from "../../services/teams.service";
 import InviteTeamMember from "../InviteTeamMember/InviteTeamMember";
 import { capitalizeFirstLetter } from "../../services/channels.service";
 
+/**
+ * Team component that displays detailed information about the team,
+ * including team members, the team owner, and functionality to invite members
+ * or remove them from the team. It handles team data loading, member management,
+ * and stateful UI changes.
+ *
+ * @component
+ * @param {object} props - The properties passed to the component.
+ * @param {object} props.team - The team data to display. If not provided, uses data from localStorage.
+ * @param {function} props.onClose - Callback function to handle the closing of the team panel.
+ * @returns {JSX.Element} The rendered Team component.
+ */
 export default function Team({ team, onClose }) {
 
     const location = useLocation();
@@ -18,6 +30,12 @@ export default function Team({ team, onClose }) {
     const [isTeamInfoVisible, setIsTeamsInfoVisible] = useState(false);
     const [members, setMembers] = useState(currentTeam?.members || {});
 
+    /**
+    * useEffect hook to load team data either from the provided `team` prop
+    * or from localStorage if no team is passed. It also sets members list and manages errors.
+    *
+    * @returns {void}
+    */
     useEffect(() => {
 
         if (!team) {
@@ -39,23 +57,46 @@ export default function Team({ team, onClose }) {
 
     }, [userData, location.state, team]);
 
+    /**
+     * Handles the click event to open the Invite Member popup.
+     * @returns {void}
+     */
     const handleAddClick = () => {
         setIsPopupOpen(true);
     };
 
+    /**
+   * Handles closing of the Invite Member popup.
+   * @returns {void}
+   */
     const handleClosePopup = () => {
         setIsPopupOpen(false);
     };
 
+    /**
+     * Toggles the visibility of the dropdown that shows the team members.
+     * @returns {void}
+     */
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
+    /**
+        * Toggles the visibility of the team's detailed information panel.
+        * @returns {void}
+        */
     const handleToggleTeamsList = () => {
         setIsTeamsInfoVisible(!isTeamInfoVisible);
     };
 
 
+    /**
+    * Handles the removal of a member from the team.
+    * Prompts the user for confirmation, removes the member from the backend and updates the state.
+    *
+    * @param {string} username - The username of the member to be removed.
+    * @returns {Promise<void>} Resolves when the member is removed.
+    */
     const handleRemoveMember = async (username) => {
         const confirmRemoval = window.confirm(`Confirm removal of ${username} from ${currentTeam.name}`);
 

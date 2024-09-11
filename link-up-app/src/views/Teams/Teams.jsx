@@ -4,15 +4,28 @@ import { getTeamsInfoById, getUserTeams } from "../../services/teams.service";
 import CreateTeam from "../CreateTeam/CreateTeam";
 import AllTeams from "../AllTeams/AllTeams";
 import './Teams.css';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+/**
+ * Teams component responsible for displaying the user's list of teams, 
+ * creating new teams, and showing all team details. It manages the 
+ * state for team loading, popup visibility, and interaction.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Teams component.
+ */
 export default function Teams() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isTeamsListVisible, setIsTeamsListVisible] = useState(false);
     const { userData } = useContext(AppContext);
     const [teams, setTeams] = useState([]);
 
+      /**
+     * useEffect hook to load all the teams for the current user.
+     * Fetches team data if the user is logged in and the teams list is visible.
+     *
+     * @returns {void}
+     */
     useEffect(() => {
         const loadTeams = async () => {
             try {
@@ -31,19 +44,37 @@ export default function Teams() {
         }
     }, [userData, isTeamsListVisible]);
 
+      /**
+     * Toggles the visibility of the teams list.
+     * @returns {void}
+     */
     const handleToggleTeamsList = () => {
         setIsTeamsListVisible(!isTeamsListVisible);
     };
 
+    /**
+     * Handles the creation of a new team. Opens the CreateTeam popup.
+     * @returns {void}
+     */
     const handleCreateTeamClick = () => {
-        // navigate('/create-team'); when redirection happens it opens a new window with the pop up on top <<< check!
         setIsPopupOpen(true);
     };
 
+/**
+     * Closes the CreateTeam popup.
+     * @returns {void}
+     */    
     const handleClosePopup = () => {
         setIsPopupOpen(false);
     };
 
+      /**
+     * Handles the event when a new team is created.
+     * Adds the new team to the list of existing teams.
+     *
+     * @param {object} newTeam - The newly created team object.
+     * @returns {void}
+     */
     const handleTeamCreated = (newTeam) => {
         setTeams((prevTeams) => [...prevTeams, newTeam]);
     };

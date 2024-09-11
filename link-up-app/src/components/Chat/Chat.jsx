@@ -211,9 +211,7 @@ export default function Chat({ channel, onClose }) {
 
     const handleEditMessage = (messageId, messageContent) => {
         setEditingMessageId(messageId);
-        console.log(messageId);
         setEditingMessageContent(messageContent);
-        console.log(messageContent);
     };
 
     const handleChange = (e) => {
