@@ -5,7 +5,7 @@ import Creators from "../../components/Creators/Creators";
 export function Landing() {
 
     return (
-        <div data-theme="light dark">
+        <div data-theme="light dark bg-red-200">
 
             <div
                 className="hero min-h-screen"
@@ -32,6 +32,7 @@ export function Landing() {
                 </div>
 
             </div>
+
 
             <Review />
             <Creators />

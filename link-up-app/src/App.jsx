@@ -14,7 +14,6 @@ import { getUserData } from './services/users.service.js'
 import Home from './views/Home/Home.jsx'
 import CreateTeam from './views/CreateTeam/CreateTeam.jsx'
 import SideNav from './components/SideNav/SideNav.jsx'
-import Test from './Test.jsx'
 import AllNotifications from './views/AllNotifications/AllNotifications.jsx'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -85,13 +84,6 @@ function App() {
             <Route path='/register' element={<Register />} />
             <Route path='/home' element={<Authenticated><Home /></Authenticated>} />
             <Route path='/notifications' element={<Authenticated><AllNotifications /></Authenticated>} />
-            {/* {does not exist} */}
-            {/* <Route path='/create-team' element={<Authenticated><CreateTeam /></Authenticated>} /> */}
-            {/* {does not exist} */}
-            {/* <Route path='/profile' element={<Authenticated><Profile /></Authenticated>} /> */}
-            {/* {does not exist} */}
-            {/* <Route path='/search-user' element={<Authenticated><SearchUser /></Authenticated>} /> */}
-            {/* {create 404} */}
             <Route path='*' element={<Error />} />
           </Routes>
           {!user && <Footer />}
