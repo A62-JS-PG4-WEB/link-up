@@ -4,6 +4,7 @@ import CreateVoiceChannelPopup from "../../views/CreateVoiceChannel/CreateVoiceC
 import PropTypes from 'prop-types';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SearchUser from "../SearchUser/SearchUser.jsx";
 
 export default function VoiceChannels({ team }) {
     const [voiceChannels, setVoiceChannels] = useState([]);
@@ -43,13 +44,21 @@ export default function VoiceChannels({ team }) {
         <div className="bg-gray-800 p-4 rounded-lg">
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">Direct Messages</h3>
-                <button
-                    onClick={handleCreateVoiceChannelClick}
-                    className="px-1 py-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white text-sm font-medium rounded-md shadow-sm hover:from-gray-700 hover:to-gray-800 transition duration-300 ease-in-out transform hover:scale-105"
-                >
-                    +
-                </button>
+             
             </div>
+            <div className="flex flex-col p-4 text-white hover:bg-gray-700">
+                        <div className="flex items-center">
+                            <div className="flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                </svg>
+                            </div>
+
+                                <div className="ml-4 flex-grow">
+                                    <SearchUser />
+                                </div>   
+                        </div>
+                    </div>
             <div className="space-y-2">
                 {voiceChannels.length > 0 ? (
                     voiceChannels.map((channel) => (

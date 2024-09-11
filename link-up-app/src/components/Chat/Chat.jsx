@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from '../../state/app.context';
-import { deleteMessage, getMessageInfo, sendMessage, sentMessageSaveInChannels, updateMessage } from '../../services/chat.service';
+import { deleteMessage, sendMessage, sentMessageSaveInChannels, updateMessage } from '../../services/chat.service';
 import { getChannelsMembersByID } from '../../services/channels.service';
 import { db } from '../../config/firebase-config';
 import { equalTo, get, onValue, orderByChild, query, ref } from 'firebase/database';
@@ -26,7 +26,6 @@ export default function Chat({ channel, onClose }) {
     const [lastMessageSent, setLastMessageSent] = useState('');
     const [editingMessageId, setEditingMessageId] = useState(null);
     const [editingMessageContent, setEditingMessageContent] = useState('');
-    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
     useEffect(() => {
         if (channel) {
@@ -402,13 +401,7 @@ export default function Chat({ channel, onClose }) {
                                                 <div className="chat-bubble">
                                                     {m.message && <div>{m.message}</div>}
                                                     {m.gif && <div className="gif-container-receiver"><img src={m.gif} alt="GIF" /></div>}
-                                                </div>
-                                                {/* <button className="threadButtons" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
-                        {showEmojiPicker ? "😜" : "😜"}
-                    </button>
-                    {showEmojiPicker && (
-                        <Picker onEmojiSelect={addEmoji} />
-                    )} */}
+                                                </div>                        
                                             </div>
                                         )}
                                     </div>

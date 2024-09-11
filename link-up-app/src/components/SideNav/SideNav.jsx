@@ -114,7 +114,7 @@ export default function SideNav() {
                         {isSidebarOpen && <Invitations />}
                     </a>
                     {/* Search */}
-                    <div className="flex flex-col p-4 text-white hover:bg-gray-700">
+                    {/* <div className="flex flex-col p-4 text-white hover:bg-gray-700">
                         <div className="flex items-center">
                             <div className="flex-shrink-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
@@ -128,7 +128,7 @@ export default function SideNav() {
                                 </div>
                             )}
                         </div>
-                    </div>
+                    </div> */}
 
 
 

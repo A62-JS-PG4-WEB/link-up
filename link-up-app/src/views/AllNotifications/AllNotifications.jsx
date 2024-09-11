@@ -49,7 +49,7 @@ export default function AllNotifications() {
         }
 
         loadNotifications()
-    }, [userData, setNotifications])
+    }, [userData, setNotifications, setAcceptedInvitations, setRejectedInvitations])
 
     /**
    * Handles the acceptance of an invitation. Adds the user to the corresponding team.
