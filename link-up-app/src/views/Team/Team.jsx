@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import AddMembers from "../InviteTeamMember/InviteTeamMember";
 import { AppContext } from "../../state/app.context";
-import { ToastContainer, toast } from 'react-toastify';
+import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { removeUserFromTeam } from "../../services/teams.service";
 import InviteTeamMember from "../InviteTeamMember/InviteTeamMember";
@@ -218,4 +218,16 @@ export default function Team({ team, onClose }) {
             )}
         </div>
     );
-}
+};
+
+// Define PropTypes for the Team component
+Team.propTypes = {
+    team: PropTypes.shape({
+        id: PropTypes.string,
+        name: PropTypes.string,
+        owner: PropTypes.string,
+        createdOn: PropTypes.number,
+        members: PropTypes.objectOf(PropTypes.number)
+    }),
+    onClose: PropTypes.func.isRequired
+};

@@ -4,7 +4,7 @@ import { createTeam, getTeams } from "../../services/teams.service";
 import { MAX_TEAM_NAME_LENGTH, MIN_TEAM_NAME_LENGTH } from "../../common/constants";
 import { addUserTeam } from "../../services/users.service";
 import PropTypes from 'prop-types';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 /**

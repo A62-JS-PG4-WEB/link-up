@@ -5,7 +5,7 @@ import CreateChannel from "../../views/CreateChannel/CreateChannel";
 import { addUserToChannel, getChannelByName, getChannelsInfoById, getUserChannels } from "../../services/channels.service";
 import PropTypes from 'prop-types';
 import { deleteChannelById } from "../../services/channels.service";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../Channels/Channels.css';
 

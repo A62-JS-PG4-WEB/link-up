@@ -1,18 +1,10 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Counter } from "../Counter/Counter";
 import { useContext } from "react";
 import { AppContext } from "../../state/app.context";
-import { logoutUser } from "../../services/auth.service";
 
 export function Nav() {
-    const { user, setAppState } = useContext(AppContext);
-    const navigate = useNavigate();
-
-    const logout = async () => {
-        await logoutUser();
-        setAppState({ user: null, userData: null });
-        navigate('/login');
-    };
+    const { user } = useContext(AppContext);
 
     return (
         <div className="navbar bg-base-100">

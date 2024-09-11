@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { getVoiceChannelsInfoById, getUserVoiceChannels, createVoiceChannel } from "../../services/voice.service.js";
+import { getVoiceChannelsInfoById, getUserVoiceChannels } from "../../services/voice.service.js";
 import CreateVoiceChannelPopup from "../../views/CreateVoiceChannel/CreateVoiceChannel.jsx";
 import PropTypes from 'prop-types';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SearchUser from "../SearchUser/SearchUser.jsx";
 

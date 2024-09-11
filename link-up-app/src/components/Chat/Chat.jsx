@@ -7,7 +7,7 @@ import { db } from '../../config/firebase-config';
 import { equalTo, get, onValue, orderByChild, query, ref } from 'firebase/database';
 import { ChannelInfo } from '../ChannelInfo/ChannelInfo';
 import GifSelector from '../GifSelector/GifSelector';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../Chat/Chat.css'
 import { getLastMessage, getUserTimestamp, lastSentMessage, updateUserTimestamp } from '../../services/users.service';
@@ -71,7 +71,7 @@ export default function Chat({ channel, onClose }) {
                         await updateUserTimestamp(currentChat.id, userData.username)
 
                     } catch (error) {
-                        //toast.error(`Failed to load messages: ${error}`);
+                        console.log.error(`Failed to load messages: ${error}`);
                     }
                 } else {
                     setReadMessages([]);
@@ -263,10 +263,6 @@ export default function Chat({ channel, onClose }) {
         }
         setEditingMessageId(null);
         setEditingMessageContent('');
-    };
-
-    const addEmoji = (emoji) => {
-        setNewText((prevText) => prevText + emoji.native);
     };
 
     const toggleGifSelector = () => {

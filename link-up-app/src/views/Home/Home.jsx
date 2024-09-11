@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Team from '../Team/Team';
 import TextChannelsSection from '../../components/TextChannelsSection/TextChannelsSection';
 import VoiceChannels from '../../components/VoiceChannels/VoiceChannels';
 import Chat from '../../components/Chat/Chat';
 import SideNav from '../../components/SideNav/SideNav';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home({ team }) {

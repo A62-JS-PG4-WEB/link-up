@@ -3,7 +3,7 @@ import { db } from '../config/firebase-config';
 import { auth } from '../config/firebase-config';
 import { updateProfile, updateEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
 import { collection, where, getDocs } from 'firebase/firestore';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -13,7 +13,7 @@ export const searchUsers = async (searchTerm) => {
     const q = query(usersRef, where('username', '==', searchTerm));
     const querySnapshot = await getDocs(q);
 
-    const users = querySnapshot.docs.map(doc => ({
+   querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));

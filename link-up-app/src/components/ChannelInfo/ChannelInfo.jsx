@@ -4,7 +4,6 @@ import { getTeamInfoById } from "../../services/teams.service";
 import { capitalizeFirstLetter, getChannelsMembersByID, leaveChannel } from "../../services/channels.service";
 import AddChannelMembers from "../../views/AddChannelMembers/AddChannelMembers";
 import { AppContext } from "../../state/app.context";
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 /**
