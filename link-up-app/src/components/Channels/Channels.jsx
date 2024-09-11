@@ -195,7 +195,6 @@ export default function Channels({ team, onSelectChannel }) {
      * @param {Object} ch - The selected channel object.
      */
     const handleJoinChannel = async (ch) => {
-        console.log('joined', ch.name);
         await addUserToChannel(ch.id, userData.username);
         handleChannelCreated()
         setIsDropdownOpen(false);

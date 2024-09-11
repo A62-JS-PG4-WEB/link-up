@@ -7,6 +7,14 @@ import { MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "../../common/constants
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+/**
+ * Register component for handling user registration.
+ * Contains form fields for email, username, phone, password, and confirm password.
+ * Validates form data and submits it for user registration.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Register component.
+ */
 export default function Register() {
     const [user, setUser] = useState({
         username: '',
@@ -18,6 +26,13 @@ export default function Register() {
     const { setAppState } = useContext(AppContext);
     const navigate = useNavigate();
 
+    /**
+    * Function to update user state based on form inputs.
+    * Uses property name as a key and updates the corresponding state value.
+    *
+    * @param {string} prop - The key of the property being updated (e.g., 'username', 'email').
+    * @returns {function} A function to handle the event and update state accordingly.
+    */
     const updateUser = prop => e => {
         setUser({
             ...user,
@@ -25,6 +40,14 @@ export default function Register() {
         });
     };
 
+    /**
+   * Handles form submission for registering a new user.
+   * Validates the input data, checks for existing user accounts, registers the user,
+   * and updates the application state upon success.
+   *
+   * @param {Event} e - The form submission event.
+   * @returns {Promise<void>} Resolves when registration is complete or validation fails.
+   */
     const register = async (e) => {
         e.preventDefault();
 

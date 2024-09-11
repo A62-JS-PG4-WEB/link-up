@@ -33,8 +33,6 @@ export default function GifSelector({ onSelect }) {
         fetchGifs(term);
     };
 
-    console.log(gifs)
-
     return (
         <div className="gif-selector bg-slate-700">
             <input

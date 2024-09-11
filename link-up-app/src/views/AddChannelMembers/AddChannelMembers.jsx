@@ -58,8 +58,6 @@ export default function AddChannelMembers({ onClose, channel }) {
     * @param {MouseEvent} event - The mouse event triggered when the user clicks.
     */
     useEffect(() => {
-        console.log('pop up open');
-
         const handleClickOutside = (event) => {
             if (event.target.classList.contains('popup-overlay')) {
                 onClose();

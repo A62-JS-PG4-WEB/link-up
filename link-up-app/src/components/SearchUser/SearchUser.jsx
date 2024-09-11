@@ -54,10 +54,7 @@ const SearchUser = () => {
         }
     };
 
-    const handleDM = async (user) =>{
-        console.log(`chat with ${user.username}`);
-        // await createChannel(user.username, userData.username, user.username );
-    
+    const handleDM = async (user) =>{   
         setIsDropdownOpen(false);
         
     }
