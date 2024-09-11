@@ -35,22 +35,20 @@ export default function Home({ team }) {
         <div className="home">
             <SideNav />
             <div className="flex h-screen content">
-                {/* Main Content */}
                 <div className="flex-1 flex p-8 text-white">
                     <div className="w-1/8 space-y-3">
                         <Team team={team} onClose={() => setSelectedChat(null)} />
-                        {/* Text Channels */}
                         <TextChannelsSection team={team} onSelectChannel={handleSelectChannel} />
-                        {/* Voice Channels */}
                         <VoiceChannels team={team} />
                     </div>
-                    {/* Chat Section */}
-                    {/* Messages Container */}
                     <div className="flex-1">
                         {selectedChat ? (
                             <Chat channel={selectedChat} onClose={() => setSelectedChat(null)} />
                         ) : (
-                            <div className="text-white">Please select a channel to start chatting.</div>
+                            <div className="flex-1 bg-gray-800 p-6 rounded-lg flex flex-col ml-6 mt-7 h-full min-h-[400px]">
+
+                            <div className="text-white">Select Channel to start chatting.</div>
+                            </div>
                         )}
                     </div>
                 </div>
