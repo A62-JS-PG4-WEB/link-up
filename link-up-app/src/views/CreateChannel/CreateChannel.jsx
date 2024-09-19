@@ -5,7 +5,7 @@ import { addUserChannel } from "../../services/users.service";
 import { createChannel } from "../../services/channels.service";
 import { addChannelToTeam } from "../../services/teams.service";
 import PropTypes from 'prop-types';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 /**

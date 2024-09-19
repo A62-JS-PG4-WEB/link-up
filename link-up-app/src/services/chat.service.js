@@ -1,6 +1,6 @@
-import { get, push, ref, remove, set, update } from "firebase/database";
+import { get, push, ref, remove, update } from "firebase/database";
 import { db } from "../config/firebase-config";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 /**

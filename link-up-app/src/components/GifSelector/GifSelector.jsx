@@ -1,7 +1,5 @@
-// src/components/GifSelector.js
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
-// import axios from 'axios';
 import { GIPHY_API_KEY, GIPHY_SEARCH_URL } from '../../common/constants';
 import './GifSelector.css';
 import 'react-toastify/dist/ReactToastify.css';

@@ -1,14 +1,11 @@
-import { useState, useEffect, useRef, useContext } from "react";
-import { getUserByUsername, getUserByEmail, getUserData } from "../../services/users.service";
-import { getTeamMembersNames, getTeams, getUserTeams } from "../../services/teams.service";
+import { useState, useEffect, useRef } from "react";
+import { getUserByUsername, getUserByEmail } from "../../services/users.service";
+import { getTeamMembersNames, getTeams } from "../../services/teams.service";
 import './SearchUser.css';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { createChannel } from "../../services/channels.service";
-import { AppContext } from "../../state/app.context";
 
 const SearchUser = () => {
-    const { userData } = useContext(AppContext);
     const [searchedUser, setSearchedUser] = useState(null);
     const [searchType, setSearchType] = useState("username");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -54,7 +51,7 @@ const SearchUser = () => {
         }
     };
 
-    const handleDM = async (user) =>{   
+    const handleDM = async () =>{   
         setIsDropdownOpen(false);
         
     }

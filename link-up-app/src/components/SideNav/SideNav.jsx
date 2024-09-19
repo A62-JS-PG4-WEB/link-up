@@ -5,8 +5,7 @@ import { AppContext } from "../../state/app.context";
 import { useNavigate, useLocation } from "react-router-dom";
 import Profile from "../../views/Profile/Profile";
 import Invitations from "../../views/Invitations/Invitations";
-import SearchUser from "../SearchUser/SearchUser";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { defaultPhotoUrl } from '../../common/constants.js'
 
@@ -113,26 +112,7 @@ export default function SideNav() {
 
                         {isSidebarOpen && <Invitations />}
                     </a>
-                    {/* Search */}
-                    {/* <div className="flex flex-col p-4 text-white hover:bg-gray-700">
-                        <div className="flex items-center">
-                            <div className="flex-shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
-                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                                </svg>
-                            </div>
-
-                            {isSidebarOpen && (
-                                <div className="ml-4 flex-grow">
-                                    <SearchUser />
-                                </div>
-                            )}
-                        </div>
-                    </div> */}
-
-
-
-                </nav>
+                           </nav>
 
                 {/* Profile and Logout */}
                 <hr className="border-gray-600 w-1/2 mx-auto pb-4" />

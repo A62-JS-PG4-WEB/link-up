@@ -1,7 +1,7 @@
 import { get, push, ref, update, remove, query, orderByChild, equalTo } from "firebase/database";
 import { db } from "../config/firebase-config";
 import { addUserChannel } from "./users.service";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 /**

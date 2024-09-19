@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { onValue } from 'firebase/database';
 import { AppContext } from '../../state/app.context';
 import { invitationsQuery } from '../../services/invitations.service';

@@ -1,6 +1,6 @@
-import { equalTo, get, orderByChild, orderByValue, push, query, ref, remove, update } from "firebase/database";
+import { equalTo, get, orderByChild, push, query, ref, remove, update } from "firebase/database";
 import { db } from "../config/firebase-config";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 /**

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from 'prop-types';
 import { createVoiceChannel } from "../../services/voice.service.js";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function CreateVoiceChannelPopup({ team, onClose, onVoiceChannelCreated }) {

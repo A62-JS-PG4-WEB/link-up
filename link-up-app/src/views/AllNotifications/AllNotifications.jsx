@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AppContext } from "../../state/app.context";
 import { acceptInvitation, getInvitations, rejectInvitation } from "../../services/invitations.service";
 import { addUserTeam } from '../../services/users.service';
 import { addTeamMember } from '../../services/teams.service';
 import SideNav from '../../components/SideNav/SideNav';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 /**

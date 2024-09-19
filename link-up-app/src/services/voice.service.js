@@ -1,6 +1,6 @@
-import { ref, get, set, remove, push, update } from "firebase/database";
+import { ref, get, remove, push, update } from "firebase/database";
 import { db } from '../config/firebase-config';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const createVoiceChannel = async (name, owner, teamID) => {

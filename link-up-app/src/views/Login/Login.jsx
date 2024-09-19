@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../state/app.context";
 import { loginUser } from "../../services/auth.service";
 import { getUserData } from "../../services/users.service";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login() {
@@ -13,8 +13,6 @@ export default function Login() {
     });
     const { setAppState } = useContext(AppContext);
     const navigate = useNavigate();
-    const location = useLocation();
-
     const updateUser = (prop) => (e) => {
         setUser({
             ...user,

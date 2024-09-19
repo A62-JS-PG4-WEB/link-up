@@ -9,16 +9,11 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { AppContext } from './state/app.context.js'
 import { auth } from './config/firebase-config.js'
 import Login from './views/Login/Login.jsx'
-import Teams from './views/CreateTeam/CreateTeam.jsx'
 import { getUserData } from './services/users.service.js'
 import Home from './views/Home/Home.jsx'
-import CreateTeam from './views/CreateTeam/CreateTeam.jsx'
-import SideNav from './components/SideNav/SideNav.jsx'
 import AllNotifications from './views/AllNotifications/AllNotifications.jsx'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Profile from './views/Profile/Profile.jsx';
-import SearchUser from './components/SearchUser/SearchUser.jsx';
 import Authenticated from './hoc/Authenticated.jsx'
 import Error from './views/404/Error.jsx'
 import About from './views/About/About.jsx'

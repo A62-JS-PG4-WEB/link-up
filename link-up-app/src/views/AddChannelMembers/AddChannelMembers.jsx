@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../state/app.context";
-import { createTeam, getTeamInfoById, getTeamMembersNames } from "../../services/teams.service";
-import { addUserChannel, addUserTeam } from "../../services/users.service";
-import { createInvitation } from "../../services/invitations.service";
-import { ToastContainer, toast } from 'react-toastify';
+import { getTeamMembersNames } from "../../services/teams.service";
+import PropTypes from 'prop-types';
+import { addUserChannel } from "../../services/users.service";
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { addUserToChannel, getChannelsMembersByID } from "../../services/channels.service";
+import { addUserToChannel } from "../../services/channels.service";
 
 /**
  * A popup component to add members to a specific channel.
@@ -19,13 +19,12 @@ import { addUserToChannel, getChannelsMembersByID } from "../../services/channel
  * @param {Object} props.channel - The current channel object selected by the user.
  * @returns {JSX.Element} The rendered component.
  */
-export default function AddChannelMembers({ onClose, channel }) {
+export default function AddChannelMembers({ onClose }) {
     const { userData } = useContext(AppContext);
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [teamMembers, setTeamMembers] = useState([]);
-    const options = ["Star Wars", "Harry Potter", "Lord of the Rings"];
 
     /**
     * Fetches the team members from the currently selected team,
@@ -191,4 +190,8 @@ export default function AddChannelMembers({ onClose, channel }) {
             </div>
         </div>
     );
+};
+// Define PropTypes for the AddChannelMembers component
+AddChannelMembers.propTypes = {
+    onClose: PropTypes.func.isRequired,
 };
